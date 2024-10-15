@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="1. 高度自定义控件1. 中间滑动的slider2. doubleSpinBox3. iSet新建项目的两种模式ListWidget、选中状态设置为图标模式4.QTreeWidget 框架、表头、样式表、代理 Qt QTreeWidget树形控件用法详解_qtreewidget用法_睿科知识云的博客-CSDN博客 2. Qt大模块1. Qt DP指针2. 视图模型机制3. 视图框架4. QStyl">
+<meta property="og:type" content="article">
+<meta property="og:title" content="控台项目与iSet项目已使用Qt技能点整理">
+<meta property="og:url" content="http://example.com/2024/10/15/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/index.html">
+<meta property="og:site_name" content="tldrIKC 的博客">
+<meta property="og:description" content="1. 高度自定义控件1. 中间滑动的slider2. doubleSpinBox3. iSet新建项目的两种模式ListWidget、选中状态设置为图标模式4.QTreeWidget 框架、表头、样式表、代理 Qt QTreeWidget树形控件用法详解_qtreewidget用法_睿科知识云的博客-CSDN博客 2. Qt大模块1. Qt DP指针2. 视图模型机制3. 视图框架4. QStyl">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-10-15T12:49:44.668Z">
+<meta property="article:modified_time" content="2023-11-02T03:52:02.000Z">
+<meta property="article:author" content="tldrIKC">
+<meta property="article:tag" content="OS">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>控台项目与iSet项目已使用Qt技能点整理</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Index</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Articles</a></li><!--
+     --><!--
+       --><li><a href="/projects/">Projects</a></li><!--
+     --><!--
+       --><li><a href="/ToDo/">ToDo</a></li><!--
+     --><!--
+       --><li><a href="/profile/">Dream profile</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2024/10/15/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2024/10/15/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/&text=控台项目与iSet项目已使用Qt技能点整理"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2024/10/15/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/&title=控台项目与iSet项目已使用Qt技能点整理"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2024/10/15/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/&is_video=false&description=控台项目与iSet项目已使用Qt技能点整理"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=控台项目与iSet项目已使用Qt技能点整理&body=Check out this article: http://example.com/2024/10/15/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2024/10/15/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/&title=控台项目与iSet项目已使用Qt技能点整理"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2024/10/15/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/&title=控台项目与iSet项目已使用Qt技能点整理"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2024/10/15/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/&title=控台项目与iSet项目已使用Qt技能点整理"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2024/10/15/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/&title=控台项目与iSet项目已使用Qt技能点整理"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2024/10/15/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/&name=控台项目与iSet项目已使用Qt技能点整理&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2024/10/15/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/&t=控台项目与iSet项目已使用Qt技能点整理"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E9%AB%98%E5%BA%A6%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8E%A7%E4%BB%B6"><span class="toc-number">1.</span> <span class="toc-text">1. 高度自定义控件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%B8%AD%E9%97%B4%E6%BB%91%E5%8A%A8%E7%9A%84slider"><span class="toc-number">1.1.</span> <span class="toc-text">1. 中间滑动的slider</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-doubleSpinBox"><span class="toc-number">1.2.</span> <span class="toc-text">2. doubleSpinBox</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-iSet%E6%96%B0%E5%BB%BA%E9%A1%B9%E7%9B%AE%E7%9A%84%E4%B8%A4%E7%A7%8D%E6%A8%A1%E5%BC%8FListWidget%E3%80%81%E9%80%89%E4%B8%AD%E7%8A%B6%E6%80%81%E8%AE%BE%E7%BD%AE%E4%B8%BA%E5%9B%BE%E6%A0%87%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.3.</span> <span class="toc-text">3. iSet新建项目的两种模式ListWidget、选中状态设置为图标模式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Qt%E5%A4%A7%E6%A8%A1%E5%9D%97"><span class="toc-number">2.</span> <span class="toc-text">2. Qt大模块</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-Qt-DP%E6%8C%87%E9%92%88"><span class="toc-number">2.1.</span> <span class="toc-text">1. Qt DP指针</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%A7%86%E5%9B%BE%E6%A8%A1%E5%9E%8B%E6%9C%BA%E5%88%B6"><span class="toc-number">2.2.</span> <span class="toc-text">2. 视图模型机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E8%A7%86%E5%9B%BE%E6%A1%86%E6%9E%B6"><span class="toc-number">2.3.</span> <span class="toc-text">3. 视图框架</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-QStyle-%E9%AB%98%E5%BA%A6%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AE%9E%E7%8E%B0"><span class="toc-number">2.4.</span> <span class="toc-text">4. QStyle 高度自定义实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%85%83%E5%AF%B9%E8%B1%A1%E4%B8%8E%E4%BF%A1%E5%8F%B7%E6%A7%BD%E6%9C%BA%E5%88%B6"><span class="toc-number">2.5.</span> <span class="toc-text">5. 元对象与信号槽机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E6%9E%84%E5%BB%BA%E7%B3%BB%E7%BB%9F"><span class="toc-number">2.6.</span> <span class="toc-text">6.构建系统</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-QInvokeMethod"><span class="toc-number">2.7.</span> <span class="toc-text">7.QInvokeMethod</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-%E5%9B%BD%E9%99%85%E5%8C%96"><span class="toc-number">2.8.</span> <span class="toc-text">8.国际化</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Qt%E7%BB%86%E8%8A%82"><span class="toc-number">3.</span> <span class="toc-text">3. Qt细节</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%9F%BA%E7%A1%80%E6%8E%A7%E4%BB%B6"><span class="toc-number">3.1.</span> <span class="toc-text">1. 基础控件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Undo%E6%93%8D%E4%BD%9C"><span class="toc-number">3.2.</span> <span class="toc-text">2. Undo操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-svg%E6%93%8D%E4%BD%9C"><span class="toc-number">3.3.</span> <span class="toc-text">3. svg操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-Qt%E4%B8%8D%E5%9C%A8%E5%AF%B9%E8%B1%A1%E6%A0%91%E7%9A%84%E5%B7%A5%E5%85%B7%E6%B1%87%E6%80%BB"><span class="toc-number">3.4.</span> <span class="toc-text">4. Qt不在对象树的工具汇总</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Qt%E9%94%A6%E4%B8%8A%E6%B7%BB%E8%8A%B1"><span class="toc-number">4.</span> <span class="toc-text">4. Qt锦上添花</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%8A%A8%E7%94%BB%E7%9F%A5%E8%AF%86"><span class="toc-number">4.1.</span> <span class="toc-text">1. 动画知识</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%8B%96%E6%8B%BD"><span class="toc-number">4.2.</span> <span class="toc-text">2. 拖拽</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%8F%92%E4%BB%B6%E6%9C%BA%E5%88%B6"><span class="toc-number">4.3.</span> <span class="toc-text">3. 插件机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%A8%A1%E5%9D%97%E5%8C%96%E6%9E%84%E5%BB%BA"><span class="toc-number">4.4.</span> <span class="toc-text">4.模块化构建</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-Qt%E4%B8%AD%E7%9A%84%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F"><span class="toc-number">5.</span> <span class="toc-text">5. Qt中的设计模式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F"><span class="toc-number">5.1.</span> <span class="toc-text">1. 单例模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%B4%A3%E4%BB%BB%E9%93%BE%E6%A8%A1%E5%BC%8F"><span class="toc-number">5.2.</span> <span class="toc-text">2. 责任链模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%8E%A5%E5%8F%A3%E6%A8%A1%E5%BC%8F"><span class="toc-number">5.3.</span> <span class="toc-text">3. 接口模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F"><span class="toc-number">5.4.</span> <span class="toc-text">4. 适配器模式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-C-%E7%9F%A5%E8%AF%86"><span class="toc-number">6.</span> <span class="toc-text">6. C++知识</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#std-shared-ptr"><span class="toc-number">6.1.</span> <span class="toc-text">std::shared_ptr</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8"><span class="toc-number">6.2.</span> <span class="toc-text">右值引用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#C-%E5%8F%8D%E5%B0%84"><span class="toc-number">6.3.</span> <span class="toc-text">C++反射</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%83%E7%BC%96%E7%A8%8B"><span class="toc-number">6.4.</span> <span class="toc-text">元编程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E6%9D%82%E9%A1%B9"><span class="toc-number">7.</span> <span class="toc-text">7.杂项</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#QStatusBar"><span class="toc-number">7.1.</span> <span class="toc-text">QStatusBar</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8F%92%E4%BB%B6%E6%9C%BA%E5%88%B6%E8%A7%A3%E8%80%A6"><span class="toc-number">7.2.</span> <span class="toc-text">插件机制解耦</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BF%AB%E6%8D%B7%E9%94%AE"><span class="toc-number">7.3.</span> <span class="toc-text">快捷键</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ISet7-0-%E6%8E%A5%E5%8F%A3%E8%AE%BE%E8%AE%A1-MVC"><span class="toc-number">7.4.</span> <span class="toc-text">ISet7.0 接口设计 MVC</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E8%BD%AE%E5%AD%90"><span class="toc-number">8.</span> <span class="toc-text">8.轮子</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%8D%95%E4%BE%8B"><span class="toc-number">8.1.</span> <span class="toc-text">1.单例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%B7%A5%E4%BD%9C%E7%BA%BF%E7%A8%8B%E5%B0%81%E8%A3%85"><span class="toc-number">8.2.</span> <span class="toc-text">2.工作线程封装</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%A5%E9%94%99%E6%95%B4%E7%90%86%EF%BC%9A"><span class="toc-number">9.</span> <span class="toc-text">报错整理：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8"><span class="toc-number">10.</span> <span class="toc-text">工具使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#AddressSanitizer%EF%BC%88%E4%B8%8D%E9%80%82%E7%94%A8%E4%B8%8EMinGW%EF%BC%89"><span class="toc-number">10.1.</span> <span class="toc-text">AddressSanitizer（不适用与MinGW）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MTuner%E8%BD%AF%E4%BB%B6"><span class="toc-number">10.2.</span> <span class="toc-text">MTuner软件</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        控台项目与iSet项目已使用Qt技能点整理
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">tldrIKC</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-10-15T12:49:44.668Z" class="dt-published" itemprop="datePublished">2024-10-15</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="1-高度自定义控件"><a href="#1-高度自定义控件" class="headerlink" title="1. 高度自定义控件"></a>1. 高度自定义控件</h2><h3 id="1-中间滑动的slider"><a href="#1-中间滑动的slider" class="headerlink" title="1. 中间滑动的slider"></a>1. 中间滑动的slider</h3><h3 id="2-doubleSpinBox"><a href="#2-doubleSpinBox" class="headerlink" title="2. doubleSpinBox"></a>2. doubleSpinBox</h3><h3 id="3-iSet新建项目的两种模式ListWidget、选中状态设置为图标模式"><a href="#3-iSet新建项目的两种模式ListWidget、选中状态设置为图标模式" class="headerlink" title="3. iSet新建项目的两种模式ListWidget、选中状态设置为图标模式"></a>3. iSet新建项目的两种模式ListWidget、选中状态设置为图标模式</h3><p>4.QTreeWidget 框架、表头、样式表、代理</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/ccc369639963/article/details/122698853">Qt QTreeWidget树形控件用法详解_qtreewidget用法_睿科知识云的博客-CSDN博客</a></p>
+<h2 id="2-Qt大模块"><a href="#2-Qt大模块" class="headerlink" title="2. Qt大模块"></a>2. Qt大模块</h2><h3 id="1-Qt-DP指针"><a href="#1-Qt-DP指针" class="headerlink" title="1. Qt DP指针"></a>1. Qt DP指针</h3><h3 id="2-视图模型机制"><a href="#2-视图模型机制" class="headerlink" title="2. 视图模型机制"></a>2. 视图模型机制</h3><h3 id="3-视图框架"><a href="#3-视图框架" class="headerlink" title="3. 视图框架"></a>3. 视图框架</h3><h3 id="4-QStyle-高度自定义实现"><a href="#4-QStyle-高度自定义实现" class="headerlink" title="4. QStyle 高度自定义实现"></a>4. QStyle 高度自定义实现</h3><h3 id="5-元对象与信号槽机制"><a href="#5-元对象与信号槽机制" class="headerlink" title="5. 元对象与信号槽机制"></a>5. 元对象与信号槽机制</h3><h3 id="6-构建系统"><a href="#6-构建系统" class="headerlink" title="6.构建系统"></a>6.构建系统</h3><h3 id="7-QInvokeMethod"><a href="#7-QInvokeMethod" class="headerlink" title="7.QInvokeMethod"></a>7.QInvokeMethod</h3><h3 id="8-国际化"><a href="#8-国际化" class="headerlink" title="8.国际化"></a>8.国际化</h3><h2 id="3-Qt细节"><a href="#3-Qt细节" class="headerlink" title="3. Qt细节"></a>3. Qt细节</h2><h3 id="1-基础控件"><a href="#1-基础控件" class="headerlink" title="1. 基础控件"></a>1. 基础控件</h3><h3 id="2-Undo操作"><a href="#2-Undo操作" class="headerlink" title="2. Undo操作"></a>2. Undo操作</h3><h3 id="3-svg操作"><a href="#3-svg操作" class="headerlink" title="3. svg操作"></a>3. svg操作</h3><h3 id="4-Qt不在对象树的工具汇总"><a href="#4-Qt不在对象树的工具汇总" class="headerlink" title="4. Qt不在对象树的工具汇总"></a>4. Qt不在对象树的工具汇总</h3><p>5.Qt中有有用的宏：Q_LIKELY</p>
+<p>6.paint在install中绘制</p>
+<h2 id="4-Qt锦上添花"><a href="#4-Qt锦上添花" class="headerlink" title="4. Qt锦上添花"></a>4. Qt锦上添花</h2><h3 id="1-动画知识"><a href="#1-动画知识" class="headerlink" title="1. 动画知识"></a>1. 动画知识</h3><h3 id="2-拖拽"><a href="#2-拖拽" class="headerlink" title="2. 拖拽"></a>2. 拖拽</h3><h3 id="3-插件机制"><a href="#3-插件机制" class="headerlink" title="3. 插件机制"></a>3. 插件机制</h3><h3 id="4-模块化构建"><a href="#4-模块化构建" class="headerlink" title="4.模块化构建"></a>4.模块化构建</h3><h2 id="5-Qt中的设计模式"><a href="#5-Qt中的设计模式" class="headerlink" title="5. Qt中的设计模式"></a>5. Qt中的设计模式</h2><h3 id="1-单例模式"><a href="#1-单例模式" class="headerlink" title="1. 单例模式"></a>1. 单例模式</h3><h3 id="2-责任链模式"><a href="#2-责任链模式" class="headerlink" title="2. 责任链模式"></a>2. 责任链模式</h3><h3 id="3-接口模式"><a href="#3-接口模式" class="headerlink" title="3. 接口模式"></a>3. 接口模式</h3><h3 id="4-适配器模式"><a href="#4-适配器模式" class="headerlink" title="4. 适配器模式"></a>4. 适配器模式</h3><p>5.观察者模式， 线程观察、时间压缩</p>
+<p>6.全局信号单例转发类</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">MAINOPERATIONVIEW_EXPORT <span class="type">bool</span> <span class="title">MainOperationView_Init</span><span class="params">(IISetWidget ** ppWidget, QWidget * parent)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (ppWidget == <span class="literal">nullptr</span> || parent == <span class="literal">nullptr</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">    *ppWidget = <span class="keyword">new</span> <span class="built_in">CMainOperationView</span>(parent);</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="6-C-知识"><a href="#6-C-知识" class="headerlink" title="6. C++知识"></a>6. C++知识</h2><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/139515439">c++11新特性，所有知识点都在这了！ - 知乎 (zhihu.com)</a></p>
+<p>this_thread</p>
+<p>++ lambda的坑</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="type">int</span> id = enCoef9_Rr ; id &lt;= enCoef9_Bb ;id++)&#123;</span><br><span class="line">    <span class="built_in">connect</span>(m_spinBoxs[id],QOverload&lt;<span class="type">double</span>&gt;::<span class="built_in">of</span>(&amp;QDoubleSpinBox::valueChanged),<span class="keyword">this</span>,[&amp;](<span class="type">double</span> value)&#123;</span><br><span class="line">        <span class="built_in">OnCoefMatrixSlot</span>(id,value);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>id 恒等于 0</p>
+<p>多继承与QOBject</p>
+<p>private 虚继承</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">CBase</span>&#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">virtualPrivateFuntion</span><span class="params">()</span></span>&#123;</span><br><span class="line">		std::cout&lt;&lt;<span class="string">&quot;base virtualPrivateFuntion&quot;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;；</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">CSub</span> :<span class="keyword">public</span> CBase&#123;</span><br><span class="line">	<span class="keyword">private</span>:</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">virtualPrivateFuntion</span><span class="params">()</span> <span class="keyword">override</span></span>&#123;</span><br><span class="line">		std::cout&lt;&lt;<span class="string">&quot;sub virtualPrivateFuntion&quot;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	CBase* pObject = <span class="keyword">new</span> <span class="built_in">CSub</span>();</span><br><span class="line">	pObject-&gt;<span class="built_in">virtualPrivateFuntion</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//结果：sub virtualPrivateFuntion，</span></span><br><span class="line"><span class="comment">//结论：子类继承父类的private virtual可以重写</span></span><br></pre></td></tr></table></figure>
+
+<p>可变参数、变参模板</p>
+<p>函数包装器</p>
+<h3 id="std-shared-ptr"><a href="#std-shared-ptr" class="headerlink" title="std::shared_ptr"></a>std::shared_ptr</h3><p>reset、make_shared</p>
+<h3 id="右值引用"><a href="#右值引用" class="headerlink" title="右值引用"></a><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/335994370#:~:text=1%20%E4%BB%8E%E6%80%A7%E8%83%BD%E4%B8%8A%E8%AE%B2%EF%BC%8C%E5%B7%A6%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E6%B2%A1%E6%9C%89%E5%8C%BA%E5%88%AB%EF%BC%8C%E4%BC%A0%E5%8F%82%E4%BD%BF%E7%94%A8%E5%B7%A6%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E9%83%BD%E5%8F%AF%E4%BB%A5%E9%81%BF%E5%85%8D%E6%8B%B7%E8%B4%9D%E3%80%82%202%20%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E5%8F%AF%E4%BB%A5%E7%9B%B4%E6%8E%A5%E6%8C%87%E5%90%91%E5%8F%B3%E5%80%BC%EF%BC%8C%E4%B9%9F%E5%8F%AF%E4%BB%A5%E9%80%9A%E8%BF%87std%3A%3Amove%E6%8C%87%E5%90%91%E5%B7%A6%E5%80%BC%EF%BC%9B%E8%80%8C%E5%B7%A6%E5%80%BC%E5%BC%95%E7%94%A8%E5%8F%AA%E8%83%BD%E6%8C%87%E5%90%91%E5%B7%A6%E5%80%BC,%28const%E5%B7%A6%E5%80%BC%E5%BC%95%E7%94%A8%E4%B9%9F%E8%83%BD%E6%8C%87%E5%90%91%E5%8F%B3%E5%80%BC%29%E3%80%82%203%20%E4%BD%9C%E4%B8%BA%E5%87%BD%E6%95%B0%E5%BD%A2%E5%8F%82%E6%97%B6%EF%BC%8C%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E6%9B%B4%E7%81%B5%E6%B4%BB%E3%80%82%20%E8%99%BD%E7%84%B6const%E5%B7%A6%E5%80%BC%E5%BC%95%E7%94%A8%E4%B9%9F%E5%8F%AF%E4%BB%A5%E5%81%9A%E5%88%B0%E5%B7%A6%E5%8F%B3%E5%80%BC%E9%83%BD%E6%8E%A5%E5%8F%97%EF%BC%8C%E4%BD%86%E5%AE%83%E6%97%A0%E6%B3%95%E4%BF%AE%E6%94%B9%EF%BC%8C%E6%9C%89%E4%B8%80%E5%AE%9A%E5%B1%80%E9%99%90%E6%80%A7%E3%80%82">右值引用</a></h3><h3 id="C-反射"><a href="#C-反射" class="headerlink" title="C++反射"></a>C++反射</h3><h3 id="元编程"><a href="#元编程" class="headerlink" title="元编程"></a><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/378355217">元编程</a></h3><p>Metaprogram is a program about a program. </p>
+<h2 id="7-杂项"><a href="#7-杂项" class="headerlink" title="7.杂项"></a>7.杂项</h2><h3 id="QStatusBar"><a href="#QStatusBar" class="headerlink" title="QStatusBar"></a>QStatusBar</h3><h3 id="插件机制解耦"><a href="#插件机制解耦" class="headerlink" title="插件机制解耦"></a>插件机制解耦</h3><h3 id="快捷键"><a href="#快捷键" class="headerlink" title="快捷键"></a>快捷键</h3><h3 id="ISet7-0-接口设计-MVC"><a href="#ISet7-0-接口设计-MVC" class="headerlink" title="ISet7.0 接口设计 MVC"></a>ISet7.0 接口设计 MVC</h3><h2 id="8-轮子"><a href="#8-轮子" class="headerlink" title="8.轮子"></a>8.轮子</h2><h3 id="1-单例"><a href="#1-单例" class="headerlink" title="1.单例"></a>1.单例</h3><h3 id="2-工作线程封装"><a href="#2-工作线程封装" class="headerlink" title="2.工作线程封装"></a>2.工作线程封装</h3><h2 id="报错整理："><a href="#报错整理：" class="headerlink" title="报错整理："></a>报错整理：</h2><ol>
+<li>QMenu 没有添加Action时，不能直接visible或这exec；</li>
+<li>setGeometry: Unable to set geometry 的一种解决办法是重写sizehint，而不是使用setFixedSize；</li>
+</ol>
+<h2 id="工具使用"><a href="#工具使用" class="headerlink" title="工具使用"></a>工具使用</h2><h3 id="AddressSanitizer（不适用与MinGW）"><a href="#AddressSanitizer（不适用与MinGW）" class="headerlink" title="AddressSanitizer（不适用与MinGW）"></a>AddressSanitizer（不适用与MinGW）</h3><p>[AddressSanitizer 定位嵌入式c&#x2F;c++内存错误 - 知乎 (zhihu.com)](<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/436177229#:~:text=AddressSanitizer">https://zhuanlan.zhihu.com/p/436177229#:~:text=AddressSanitizer</a> （又名 ASan）是 C%2FC%2B%2B 的内存错误检测器。 AddressSanitizer 由 google,的一部分，而从 4.8 版开始逐渐成为 GCC 的一部分。 这也意味着如果交叉编译器版本低于 4.8 ，是无法使用的。)</p>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/0adfda858d7d">Qt 拾遗 008 在 Qt 中使用 Address Sanitizer - 简书 (jianshu.com)</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.qt.io/zh-cn/blog/2013/04/22/using-gccs-4-8-0-address-sanitizer-with-qt">在Qt中使用gcc 4.8.0的地址消毒剂(Address Sanitizer)</a></p>
+<h3 id="MTuner软件"><a href="#MTuner软件" class="headerlink" title="MTuner软件"></a>MTuner软件</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/yantuguiguziPGJ/article/details/118112278">【精选】基于MTuner软件进行qt的mingw编译程序的内存泄漏检测_mtuner怎么使用_yantuguiguziPGJ的博客-CSDN博客</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Index</a></li>
+        
+          <li><a href="/archives/">Articles</a></li>
+        
+          <li><a href="/projects/">Projects</a></li>
+        
+          <li><a href="/ToDo/">ToDo</a></li>
+        
+          <li><a href="/profile/">Dream profile</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E9%AB%98%E5%BA%A6%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8E%A7%E4%BB%B6"><span class="toc-number">1.</span> <span class="toc-text">1. 高度自定义控件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%B8%AD%E9%97%B4%E6%BB%91%E5%8A%A8%E7%9A%84slider"><span class="toc-number">1.1.</span> <span class="toc-text">1. 中间滑动的slider</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-doubleSpinBox"><span class="toc-number">1.2.</span> <span class="toc-text">2. doubleSpinBox</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-iSet%E6%96%B0%E5%BB%BA%E9%A1%B9%E7%9B%AE%E7%9A%84%E4%B8%A4%E7%A7%8D%E6%A8%A1%E5%BC%8FListWidget%E3%80%81%E9%80%89%E4%B8%AD%E7%8A%B6%E6%80%81%E8%AE%BE%E7%BD%AE%E4%B8%BA%E5%9B%BE%E6%A0%87%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.3.</span> <span class="toc-text">3. iSet新建项目的两种模式ListWidget、选中状态设置为图标模式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Qt%E5%A4%A7%E6%A8%A1%E5%9D%97"><span class="toc-number">2.</span> <span class="toc-text">2. Qt大模块</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-Qt-DP%E6%8C%87%E9%92%88"><span class="toc-number">2.1.</span> <span class="toc-text">1. Qt DP指针</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%A7%86%E5%9B%BE%E6%A8%A1%E5%9E%8B%E6%9C%BA%E5%88%B6"><span class="toc-number">2.2.</span> <span class="toc-text">2. 视图模型机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E8%A7%86%E5%9B%BE%E6%A1%86%E6%9E%B6"><span class="toc-number">2.3.</span> <span class="toc-text">3. 视图框架</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-QStyle-%E9%AB%98%E5%BA%A6%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AE%9E%E7%8E%B0"><span class="toc-number">2.4.</span> <span class="toc-text">4. QStyle 高度自定义实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%85%83%E5%AF%B9%E8%B1%A1%E4%B8%8E%E4%BF%A1%E5%8F%B7%E6%A7%BD%E6%9C%BA%E5%88%B6"><span class="toc-number">2.5.</span> <span class="toc-text">5. 元对象与信号槽机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E6%9E%84%E5%BB%BA%E7%B3%BB%E7%BB%9F"><span class="toc-number">2.6.</span> <span class="toc-text">6.构建系统</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-QInvokeMethod"><span class="toc-number">2.7.</span> <span class="toc-text">7.QInvokeMethod</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-%E5%9B%BD%E9%99%85%E5%8C%96"><span class="toc-number">2.8.</span> <span class="toc-text">8.国际化</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Qt%E7%BB%86%E8%8A%82"><span class="toc-number">3.</span> <span class="toc-text">3. Qt细节</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%9F%BA%E7%A1%80%E6%8E%A7%E4%BB%B6"><span class="toc-number">3.1.</span> <span class="toc-text">1. 基础控件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Undo%E6%93%8D%E4%BD%9C"><span class="toc-number">3.2.</span> <span class="toc-text">2. Undo操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-svg%E6%93%8D%E4%BD%9C"><span class="toc-number">3.3.</span> <span class="toc-text">3. svg操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-Qt%E4%B8%8D%E5%9C%A8%E5%AF%B9%E8%B1%A1%E6%A0%91%E7%9A%84%E5%B7%A5%E5%85%B7%E6%B1%87%E6%80%BB"><span class="toc-number">3.4.</span> <span class="toc-text">4. Qt不在对象树的工具汇总</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Qt%E9%94%A6%E4%B8%8A%E6%B7%BB%E8%8A%B1"><span class="toc-number">4.</span> <span class="toc-text">4. Qt锦上添花</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%8A%A8%E7%94%BB%E7%9F%A5%E8%AF%86"><span class="toc-number">4.1.</span> <span class="toc-text">1. 动画知识</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%8B%96%E6%8B%BD"><span class="toc-number">4.2.</span> <span class="toc-text">2. 拖拽</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%8F%92%E4%BB%B6%E6%9C%BA%E5%88%B6"><span class="toc-number">4.3.</span> <span class="toc-text">3. 插件机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%A8%A1%E5%9D%97%E5%8C%96%E6%9E%84%E5%BB%BA"><span class="toc-number">4.4.</span> <span class="toc-text">4.模块化构建</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-Qt%E4%B8%AD%E7%9A%84%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F"><span class="toc-number">5.</span> <span class="toc-text">5. Qt中的设计模式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F"><span class="toc-number">5.1.</span> <span class="toc-text">1. 单例模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%B4%A3%E4%BB%BB%E9%93%BE%E6%A8%A1%E5%BC%8F"><span class="toc-number">5.2.</span> <span class="toc-text">2. 责任链模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%8E%A5%E5%8F%A3%E6%A8%A1%E5%BC%8F"><span class="toc-number">5.3.</span> <span class="toc-text">3. 接口模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F"><span class="toc-number">5.4.</span> <span class="toc-text">4. 适配器模式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-C-%E7%9F%A5%E8%AF%86"><span class="toc-number">6.</span> <span class="toc-text">6. C++知识</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#std-shared-ptr"><span class="toc-number">6.1.</span> <span class="toc-text">std::shared_ptr</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8"><span class="toc-number">6.2.</span> <span class="toc-text">右值引用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#C-%E5%8F%8D%E5%B0%84"><span class="toc-number">6.3.</span> <span class="toc-text">C++反射</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%83%E7%BC%96%E7%A8%8B"><span class="toc-number">6.4.</span> <span class="toc-text">元编程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E6%9D%82%E9%A1%B9"><span class="toc-number">7.</span> <span class="toc-text">7.杂项</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#QStatusBar"><span class="toc-number">7.1.</span> <span class="toc-text">QStatusBar</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8F%92%E4%BB%B6%E6%9C%BA%E5%88%B6%E8%A7%A3%E8%80%A6"><span class="toc-number">7.2.</span> <span class="toc-text">插件机制解耦</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BF%AB%E6%8D%B7%E9%94%AE"><span class="toc-number">7.3.</span> <span class="toc-text">快捷键</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ISet7-0-%E6%8E%A5%E5%8F%A3%E8%AE%BE%E8%AE%A1-MVC"><span class="toc-number">7.4.</span> <span class="toc-text">ISet7.0 接口设计 MVC</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E8%BD%AE%E5%AD%90"><span class="toc-number">8.</span> <span class="toc-text">8.轮子</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%8D%95%E4%BE%8B"><span class="toc-number">8.1.</span> <span class="toc-text">1.单例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%B7%A5%E4%BD%9C%E7%BA%BF%E7%A8%8B%E5%B0%81%E8%A3%85"><span class="toc-number">8.2.</span> <span class="toc-text">2.工作线程封装</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%A5%E9%94%99%E6%95%B4%E7%90%86%EF%BC%9A"><span class="toc-number">9.</span> <span class="toc-text">报错整理：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8"><span class="toc-number">10.</span> <span class="toc-text">工具使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#AddressSanitizer%EF%BC%88%E4%B8%8D%E9%80%82%E7%94%A8%E4%B8%8EMinGW%EF%BC%89"><span class="toc-number">10.1.</span> <span class="toc-text">AddressSanitizer（不适用与MinGW）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MTuner%E8%BD%AF%E4%BB%B6"><span class="toc-number">10.2.</span> <span class="toc-text">MTuner软件</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2024/10/15/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2024/10/15/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/&text=控台项目与iSet项目已使用Qt技能点整理"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2024/10/15/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/&title=控台项目与iSet项目已使用Qt技能点整理"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2024/10/15/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/&is_video=false&description=控台项目与iSet项目已使用Qt技能点整理"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=控台项目与iSet项目已使用Qt技能点整理&body=Check out this article: http://example.com/2024/10/15/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2024/10/15/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/&title=控台项目与iSet项目已使用Qt技能点整理"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2024/10/15/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/&title=控台项目与iSet项目已使用Qt技能点整理"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2024/10/15/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/&title=控台项目与iSet项目已使用Qt技能点整理"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2024/10/15/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/&title=控台项目与iSet项目已使用Qt技能点整理"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2024/10/15/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/&name=控台项目与iSet项目已使用Qt技能点整理&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2024/10/15/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/&t=控台项目与iSet项目已使用Qt技能点整理"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2023-2024
+    tldrIKC
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Index</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Articles</a></li><!--
+     --><!--
+       --><li><a href="/projects/">Projects</a></li><!--
+     --><!--
+       --><li><a href="/ToDo/">ToDo</a></li><!--
+     --><!--
+       --><li><a href="/profile/">Dream profile</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
