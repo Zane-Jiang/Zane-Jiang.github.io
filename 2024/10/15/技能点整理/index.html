@@ -51,14 +51,28 @@
 
     <!-- persian styles -->
     
+      
+<link rel="stylesheet" href="/css/rtl.css">
+
+    
     <!-- rss -->
     
     
 	<!-- mathjax -->
 	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
 <meta name="generator" content="Hexo 7.3.0"></head>
 
-<body class="max-width mx-auto px3 ltr">
+<body class="max-width mx-auto px3 rtl">
     
       <div id="header-post">
   <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
@@ -140,6 +154,8 @@
       
         <time datetime="2024-10-15T12:49:44.668Z" class="dt-published" itemprop="datePublished">2024-10-15</time>
         
+        (Updated: <time datetime="2023-11-02T03:52:02.000Z" class="dt-updated" itemprop="dateModified">2023-11-02</time>)
+        
       
     </div>
 
@@ -188,6 +204,12 @@
 
   </div>
 </article>
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
 
 
 
@@ -325,6 +347,18 @@
 <!-- Cloudflare Analytics -->
 
 <!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'cactus-1';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
 
 <!-- utterances Comments -->
 
