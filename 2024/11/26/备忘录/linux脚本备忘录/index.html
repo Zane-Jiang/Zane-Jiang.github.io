@@ -20,15 +20,15 @@
   <title>linux脚本备忘录 - Zane Jiang'blog</title>
 
   
-    <meta name="description" content="Linux脚本备忘录安装系统后的环境准备添加新用户 12adduser #封装命令，处理完添加用户的全部过程 su到新用户显示$:useradd #底层命令，什么都没有加，su到新用户显示username@hostname~$:  用户添加sudo组 1234567usermod -aG sudo new_user#加完以后记得:newgrp sudo#作用有3：#1.切换到指定的组上下文#2.即">
+    <meta name="description" content="Linux脚本备忘录安装系统后的环境准备添加新用户 123456adduser #封装命令，处理完添加用户的全部过程 su到新用户显示username@hostname~$:useradd #底层命令，什么都没有加,su到新用户显示$:# 生成 8 位强密码PASSWORD&#x3D;$(openssl rand -base64 6 | cut -c1-8)echo &quot;Password: $PAS">
 <meta property="og:type" content="article">
 <meta property="og:title" content="linux脚本备忘录">
 <meta property="og:url" content="http://example.com/2024/11/26/%E5%A4%87%E5%BF%98%E5%BD%95/linux%E8%84%9A%E6%9C%AC%E5%A4%87%E5%BF%98%E5%BD%95/index.html">
 <meta property="og:site_name" content="Zane Jiang&#39;blog">
-<meta property="og:description" content="Linux脚本备忘录安装系统后的环境准备添加新用户 12adduser #封装命令，处理完添加用户的全部过程 su到新用户显示$:useradd #底层命令，什么都没有加，su到新用户显示username@hostname~$:  用户添加sudo组 1234567usermod -aG sudo new_user#加完以后记得:newgrp sudo#作用有3：#1.切换到指定的组上下文#2.即">
+<meta property="og:description" content="Linux脚本备忘录安装系统后的环境准备添加新用户 123456adduser #封装命令，处理完添加用户的全部过程 su到新用户显示username@hostname~$:useradd #底层命令，什么都没有加,su到新用户显示$:# 生成 8 位强密码PASSWORD&#x3D;$(openssl rand -base64 6 | cut -c1-8)echo &quot;Password: $PAS">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-11-25T16:07:30.000Z">
-<meta property="article:modified_time" content="2024-11-25T16:08:32.650Z">
+<meta property="article:modified_time" content="2024-11-26T06:06:46.397Z">
 <meta property="article:author" content="Zane Jiang">
 <meta property="article:tag" content="OS">
 <meta name="twitter:card" content="summary">
@@ -77,7 +77,7 @@
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">Home</a>
 <span class="sep"></span><a class="cap breadcrumb" href="/">Blog</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">Posted on: <time datetime="2024-11-25T16:07:30.000Z">2024-11-26</time></span><span class="sep updated"></span><span class="text updated">Updated on: <time datetime="2024-11-25T16:08:32.650Z">2024-11-26</time></span></div></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">Posted on: <time datetime="2024-11-25T16:07:30.000Z">2024-11-26</time></span><span class="sep updated"></span><span class="text updated">Updated on: <time datetime="2024-11-26T06:06:46.397Z">2024-11-26</time></span></div></div></div>
     
     <div class="bottom only-title">
       
@@ -89,7 +89,7 @@
     
   </div>
   </div><article class="md-text content"><h1 id="Linux脚本备忘录"><a href="#Linux脚本备忘录" class="headerlink" title="Linux脚本备忘录"></a>Linux脚本备忘录</h1><h2 id="安装系统后的环境准备"><a href="#安装系统后的环境准备" class="headerlink" title="安装系统后的环境准备"></a>安装系统后的环境准备</h2><p>添加新用户</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">adduser <span class="comment">#封装命令，处理完添加用户的全部过程 su到新用户显示$:</span></span><br><span class="line">useradd <span class="comment">#底层命令，什么都没有加，su到新用户显示username@hostname~$:</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">adduser <span class="comment">#封装命令，处理完添加用户的全部过程 su到新用户显示username@hostname~$:</span></span><br><span class="line">useradd <span class="comment">#底层命令，什么都没有加,su到新用户显示$:</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成 8 位强密码</span></span><br><span class="line">PASSWORD=$(openssl rand -<span class="built_in">base64</span> 6 | <span class="built_in">cut</span> -c1-8)</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Password: <span class="variable">$PASSWORD</span>&quot;</span> </span><br></pre></td></tr></table></figure>
 
 <p>用户添加sudo组</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">usermod -aG <span class="built_in">sudo</span> new_user</span><br><span class="line"><span class="comment">#加完以后记得:</span></span><br><span class="line">newgrp <span class="built_in">sudo</span></span><br><span class="line"><span class="comment">#作用有3：</span></span><br><span class="line"><span class="comment">#1.切换到指定的组上下文</span></span><br><span class="line"><span class="comment">#2.即时生效组更改</span></span><br><span class="line"><span class="comment">#3.启动一个子 shell</span></span><br></pre></td></tr></table></figure>
