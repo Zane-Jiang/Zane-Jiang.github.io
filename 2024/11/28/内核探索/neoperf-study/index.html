@@ -27,14 +27,13 @@
 <meta property="og:site_name" content="Zane Jiang&#39;blog">
 <meta property="og:description" content="NeoPerf study 本文主要为学习论文《NeoMem: Hardware&#x2F;Software Co-Design for CXL-Native Memory Tiering》在主机端内核部分的工作，开源仓库地址为：  PKUZHOU&#x2F;linux  代码基于linux内核代码6.0开始修改。 由于初步探索linux内核代码，所以没有按照自顶向下的视角分析代码，而是基于git">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/2024/11/28/%E5%86%85%E6%A0%B8%E6%8E%A2%E7%B4%A2/neoperf-study/image-20241128201430600.png">
-<meta property="og:image" content="http://example.com/2024/11/28/%E5%86%85%E6%A0%B8%E6%8E%A2%E7%B4%A2/neoperf-study/image-20241128211434876.png">
+<meta property="og:image" content="http://example.com/2024/11/28/%E5%86%85%E6%A0%B8%E6%8E%A2%E7%B4%A2/neoperf-study/10/15/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/eoperf-study/image-20241128201430600.png">
 <meta property="article:published_time" content="2024-11-28T11:55:34.000Z">
-<meta property="article:modified_time" content="2024-11-28T13:14:38.099Z">
+<meta property="article:modified_time" content="2024-11-28T13:16:44.940Z">
 <meta property="article:author" content="Zane Jiang">
 <meta property="article:tag" content="OS">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2024/11/28/%E5%86%85%E6%A0%B8%E6%8E%A2%E7%B4%A2/neoperf-study/image-20241128201430600.png">
+<meta name="twitter:image" content="http://example.com/2024/11/28/%E5%86%85%E6%A0%B8%E6%8E%A2%E7%B4%A2/neoperf-study/10/15/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/eoperf-study/image-20241128201430600.png">
   
   
   
@@ -80,7 +79,7 @@
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">Home</a>
 <span class="sep"></span><a class="cap breadcrumb" href="/">Blog</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">Posted on: <time datetime="2024-11-28T11:55:34.000Z">2024-11-28</time></span><span class="sep updated"></span><span class="text updated">Updated on: <time datetime="2024-11-28T13:14:38.099Z">2024-11-28</time></span></div></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">Posted on: <time datetime="2024-11-28T11:55:34.000Z">2024-11-28</time></span><span class="sep updated"></span><span class="text updated">Updated on: <time datetime="2024-11-28T13:16:44.940Z">2024-11-28</time></span></div></div></div>
     
     <div class="bottom only-title">
       
@@ -102,8 +101,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#Kconfig文件</span></span><br><span class="line">config NEOPROF#定义了一个名为`NEOPROF`的内核配置选项，将在内核配置菜单中创建选项</span><br><span class="line">	bool <span class="string">&quot;Enable Neoprofiler&quot;</span> <span class="comment">#bool类型，是否启用</span></span><br><span class="line">    default n <span class="comment">#默认不启用</span></span><br></pre></td></tr></table></figure>
 
 <p>在内核编译过程中可以在Drivers下查找到</p>
-<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2024/11/28/%E5%86%85%E6%A0%B8%E6%8E%A2%E7%B4%A2/neoperf-study/image-20241128201430600.png" alt="image-20241128201430600"></p>
-<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2024/11/28/%E5%86%85%E6%A0%B8%E6%8E%A2%E7%B4%A2/neoperf-study/image-20241128211434876.png" alt="image-20241128211434876"></p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2024/11/28/%E5%86%85%E6%A0%B8%E6%8E%A2%E7%B4%A2/neoperf-study/10/15/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/eoperf-study/image-20241128201430600.png" alt="image-20241128201430600"></p>
 
 <div class="article-footer fs14">
     <section id="license">
