@@ -27,13 +27,13 @@
 <meta property="og:site_name" content="Zane Jiang&#39;blog">
 <meta property="og:description" content="NeoPerf study 本文主要为学习论文《NeoMem: Hardware&#x2F;Software Co-Design for CXL-Native Memory Tiering》在主机端内核部分的工作，开源仓库地址为：  PKUZHOU&#x2F;linux  代码基于linux内核代码6.0开始修改。 由于初步探索linux内核代码，所以没有按照自顶向下的视角分析代码，而是基于git">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="d:\CodeRepo\Zane-Jiang.github.io\source_posts\%E5%86%85%E6%A0%B8%E6%8E%A2%E7%B4%A2\neoperf-study.assets\image-20241128201430600-1732796081185-1.png">
+<meta property="og:image" content="http://example.com/2024/10/15/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/eoperf-study/image-20241128201430600-1732796081185-1.png">
 <meta property="article:published_time" content="2024-11-28T11:55:34.000Z">
-<meta property="article:modified_time" content="2024-11-28T12:20:35.449Z">
+<meta property="article:modified_time" content="2024-11-28T12:55:37.416Z">
 <meta property="article:author" content="Zane Jiang">
 <meta property="article:tag" content="OS">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="d:\CodeRepo\Zane-Jiang.github.io\source_posts\%E5%86%85%E6%A0%B8%E6%8E%A2%E7%B4%A2\neoperf-study.assets\image-20241128201430600-1732796081185-1.png">
+<meta name="twitter:image" content="http://example.com/2024/10/15/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/eoperf-study/image-20241128201430600-1732796081185-1.png">
   
   
   
@@ -66,7 +66,7 @@
 <div class="widgets">
 
 
-<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">Recent Update</span></div><div class="widget-body fs14"><a class="item title" href="/2024/11/28/%E5%9B%BE%E7%89%87%E6%B5%8B%E8%AF%95/"><span class="title">图片测试</span></a><a class="item title" href="/2024/11/28/%E5%86%85%E6%A0%B8%E6%8E%A2%E7%B4%A2/neoperf-study/"><span class="title">内核探索-neoperf_study</span></a><a class="item title" href="/2024/11/26/%E5%A4%87%E5%BF%98%E5%BD%95/linux%E8%84%9A%E6%9C%AC%E5%A4%87%E5%BF%98%E5%BD%95/"><span class="title">linux脚本备忘录</span></a><a class="item title" href="/2024/10/15/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/"><span class="title">控台项目与iSet项目已使用Qt技能点整理</span></a></div></widget>
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">Recent Update</span></div><div class="widget-body fs14"><a class="item title" href="/2024/11/28/%E5%86%85%E6%A0%B8%E6%8E%A2%E7%B4%A2/neoperf-study/"><span class="title">内核探索-neoperf_study</span></a><a class="item title" href="/2024/11/26/%E5%A4%87%E5%BF%98%E5%BD%95/linux%E8%84%9A%E6%9C%AC%E5%A4%87%E5%BF%98%E5%BD%95/"><span class="title">linux脚本备忘录</span></a><a class="item title" href="/2024/10/15/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/"><span class="title">控台项目与iSet项目已使用Qt技能点整理</span></a></div></widget>
 </div>
 
 </div></aside><div class="l_main" id="main">
@@ -79,7 +79,7 @@
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">Home</a>
 <span class="sep"></span><a class="cap breadcrumb" href="/">Blog</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">Posted on: <time datetime="2024-11-28T11:55:34.000Z">2024-11-28</time></span><span class="sep updated"></span><span class="text updated">Updated on: <time datetime="2024-11-28T12:20:35.449Z">2024-11-28</time></span></div></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">Posted on: <time datetime="2024-11-28T11:55:34.000Z">2024-11-28</time></span><span class="sep updated"></span><span class="text updated">Updated on: <time datetime="2024-11-28T12:55:37.416Z">2024-11-28</time></span></div></div></div>
     
     <div class="bottom only-title">
       
@@ -101,7 +101,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#Kconfig文件</span></span><br><span class="line">config NEOPROF#定义了一个名为`NEOPROF`的内核配置选项，将在内核配置菜单中创建选项</span><br><span class="line">	bool <span class="string">&quot;Enable Neoprofiler&quot;</span> <span class="comment">#bool类型，是否启用</span></span><br><span class="line">    default n <span class="comment">#默认不启用</span></span><br></pre></td></tr></table></figure>
 
 <p>在内核编译过程中可以在Drivers下查找到</p>
-<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="D:\CodeRepo\Zane-Jiang.github.io\source_posts\内核探索\neoperf-study.assets\image-20241128201430600-1732796081185-1.png" alt="image-20241128201430600"></p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2024/10/15/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/eoperf-study/image-20241128201430600-1732796081185-1.png" alt="image-20241128201430600"></p>
 
 <div class="article-footer fs14">
     <section id="license">
@@ -111,7 +111,7 @@
     </section>
     </div>
 </article>
-<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">Newer</div><a href="/2024/11/28/%E5%9B%BE%E7%89%87%E6%B5%8B%E8%AF%95/">图片测试</a></div><div class="item" id="next"><div class="note">Older</div><a href="/2024/11/26/%E5%A4%87%E5%BF%98%E5%BD%95/linux%E8%84%9A%E6%9C%AC%E5%A4%87%E5%BF%98%E5%BD%95/">linux脚本备忘录</a></div></section></div>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"></div><div class="item" id="next"><div class="note">Older</div><a href="/2024/11/26/%E5%A4%87%E5%BF%98%E5%BD%95/linux%E8%84%9A%E6%9C%AC%E5%A4%87%E5%BF%98%E5%BD%95/">linux脚本备忘录</a></div></section></div>
 
 
 
