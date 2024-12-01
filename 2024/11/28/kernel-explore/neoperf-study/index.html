@@ -17,22 +17,21 @@
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
   <meta name="theme-color" content="#f9fafb">
   
-  <title>内核探索-neoperf_study - Zane Jiang'blog</title>
+  <title>kernel-explore-neoperf_study - Zane Jiang'blog</title>
 
   
     <meta name="description" content="NeoPerf study 本文主要为学习论文《NeoMem: Hardware&#x2F;Software Co-Design for CXL-Native Memory Tiering》在主机端内核部分的工作，开源仓库地址为：  PKUZHOU&#x2F;linux  代码基于linux内核代码6.0开始修改。 由于初步探索linux内核代码，所以没有按照自顶向下的视角分析代码，而是基于git">
 <meta property="og:type" content="article">
-<meta property="og:title" content="内核探索-neoperf_study">
+<meta property="og:title" content="kernel-explore-neoperf_study">
 <meta property="og:url" content="http://example.com/2024/11/28/kernel-explore/neoperf-study/index.html">
 <meta property="og:site_name" content="Zane Jiang&#39;blog">
 <meta property="og:description" content="NeoPerf study 本文主要为学习论文《NeoMem: Hardware&#x2F;Software Co-Design for CXL-Native Memory Tiering》在主机端内核部分的工作，开源仓库地址为：  PKUZHOU&#x2F;linux  代码基于linux内核代码6.0开始修改。 由于初步探索linux内核代码，所以没有按照自顶向下的视角分析代码，而是基于git">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/2024/11/28/kernel-explore/neoperf-study/image-20241128201430600.png">
-<meta property="og:image" content="http://example.com/2024/11/28/kernel-explore/neoperf-study/image-20241128220246780.png">
 <meta property="article:published_time" content="2024-11-28T11:55:34.000Z">
-<meta property="article:modified_time" content="2024-11-28T14:05:01.270Z">
+<meta property="article:modified_time" content="2024-11-29T08:20:49.167Z">
 <meta property="article:author" content="Zane Jiang">
-<meta property="article:tag" content="OS">
+<meta property="article:tag" content="CXL , linux-kernel">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/2024/11/28/kernel-explore/neoperf-study/image-20241128201430600.png">
   
@@ -67,7 +66,7 @@
 <div class="widgets">
 
 
-<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">Recent Update</span></div><div class="widget-body fs14"><a class="item title" href="/2024/11/28/Hexo/hexo/"><span class="title">Hexo</span></a><a class="item title" href="/2024/11/28/kernel-explore/neoperf-study/"><span class="title">内核探索-neoperf_study</span></a><a class="item title" href="/2024/11/26/%E5%A4%87%E5%BF%98%E5%BD%95/linux%E8%84%9A%E6%9C%AC%E5%A4%87%E5%BF%98%E5%BD%95/"><span class="title">linux脚本备忘录</span></a><a class="item title" href="/2024/10/15/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/"><span class="title">控台项目与iSet项目已使用Qt技能点整理</span></a></div></widget>
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">Recent Update</span></div><div class="widget-body fs14"><a class="item title" href="/2024/11/28/kernel-explore/neoperf-study/"><span class="title">kernel-explore-neoperf_study</span></a><a class="item title" href="/2024/10/15/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/"><span class="title">控台项目与iSet项目已使用Qt技能点整理</span></a><a class="item title" href="/2024/11/28/Hexo/hexo/"><span class="title">Hexo</span></a><a class="item title" href="/2024/11/26/%E5%A4%87%E5%BF%98%E5%BD%95/linux%E8%84%9A%E6%9C%AC%E5%A4%87%E5%BF%98%E5%BD%95/"><span class="title">linux脚本备忘录</span></a></div></widget>
 </div>
 
 </div></aside><div class="l_main" id="main">
@@ -80,12 +79,12 @@
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">Home</a>
 <span class="sep"></span><a class="cap breadcrumb" href="/">Blog</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">Posted on: <time datetime="2024-11-28T11:55:34.000Z">2024-11-28</time></span><span class="sep updated"></span><span class="text updated">Updated on: <time datetime="2024-11-28T14:05:01.270Z">2024-11-28</time></span></div></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">Posted on: <time datetime="2024-11-28T11:55:34.000Z">2024-11-28</time></span><span class="sep updated"></span><span class="text updated">Updated on: <time datetime="2024-11-29T08:20:49.167Z">2024-11-29</time></span></div></div></div>
     
     <div class="bottom only-title">
       
       <div class="text-area">
-        <h1 class="text title"><span>内核探索-neoperf_study</span></h1>
+        <h1 class="text title"><span>kernel-explore-neoperf_study</span></h1>
         
       </div>
     </div>
@@ -95,9 +94,10 @@
 <p>本文主要为学习论文《NeoMem: Hardware&#x2F;Software Co-Design for CXL-Native Memory Tiering》在主机端内核部分的工作，开源仓库地址为：  <a target="_blank" rel="noopener" href="https://github.com/PKUZHOU/linux">PKUZHOU&#x2F;linux</a></p>
 </blockquote>
 <p>代码基于linux内核代码6.0开始修改。</p>
-<p>由于初步探索linux内核代码，所以没有按照自顶向下的视角分析代码，而是基于git提交记录，借助AI与互联网知识，平铺遇到的相关知识。版本不断更新……</p>
-<h2 id="a-naive-neoprof-driver"><a href="#a-naive-neoprof-driver" class="headerlink" title="a naive neoprof driver"></a>a naive neoprof driver</h2><p>commit ID 9bd35383372872e5676988f628a9cda88900c70c</p>
+<p>由于初步探索linux内核代码，所以没有按照自顶向下的视角分析代码，而是基于git提交记录，借助AI与互联网搜索，平铺遇到的相关知识。版本不断更新……</p>
+<h2 id="a-naive-neoprof-driver"><a href="#a-naive-neoprof-driver" class="headerlink" title="a naive neoprof driver"></a>a naive neoprof driver</h2><p>commit ID <code>9bd35383</code></p>
 <p>本次主要在driver目录下提交了一个驱动neoperf:</p>
+<p>主要是实现了一些对外设的IO操作</p>
 <h3 id="Linux内核配置文件Kconfig"><a href="#Linux内核配置文件Kconfig" class="headerlink" title="Linux内核配置文件Kconfig"></a>Linux内核配置文件<code>Kconfig</code></h3><p><code>Kconfig</code>文件用于定义内核配置菜单，这些菜单可以在编译内核时启用或禁用特定的功能。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#Kconfig文件</span></span><br><span class="line">config NEOPROF#定义了一个名为`NEOPROF`的内核配置选项，将在内核配置菜单中创建选项</span><br><span class="line">	bool <span class="string">&quot;Enable Neoprofiler&quot;</span> <span class="comment">#bool类型，是否启用</span></span><br><span class="line">    default n <span class="comment">#默认不启用</span></span><br></pre></td></tr></table></figure>
 
@@ -105,7 +105,41 @@
 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2024/11/28/kernel-explore/neoperf-study/image-20241128201430600.png" class="lazy" title="aba">
 
 <p>Kconfig有其独特的语法，也是可以一层一层包裹下去：<code>menu</code>、<code>source</code>、<code>endmenu</code>等组成了编译选项配置过程中的树状菜单</p>
-<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2024/11/28/kernel-explore/neoperf-study/image-20241128220246780.png" class="lazy" title="image-20241128220246780">
+<p>Kconfig设置对应的编译变量后，makefile指导构建编译的过程中会利用这些变量，从而实现选择性的编译</p>
+<h3 id="neoperf-h"><a href="#neoperf-h" class="headerlink" title="neoperf.h"></a>neoperf.h</h3><p>主要新增了四个接口，对neoprof设备（此处指Type2-CXL设备）进行访问：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    * The following functions are used to access the neoprof device</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">u64 <span class="title function_">get_nr_hotpages</span><span class="params">(<span class="type">void</span>)</span>;<span class="comment">//获取当前系统中的热页数量</span></span><br><span class="line"></span><br><span class="line">u64*  <span class="title function_">get_hotpages</span><span class="params">(<span class="type">void</span>)</span>;<span class="comment">//获取热页</span></span><br><span class="line"></span><br><span class="line">u64 <span class="title function_">get_hotness_threshold</span><span class="params">(<span class="type">void</span>)</span>;<span class="comment">//获取热度阈值</span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">set_hotness_threshold</span><span class="params">(u64 threshold)</span>;<span class="comment">//设置热度阈值</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="neoperf-c"><a href="#neoperf-c" class="headerlink" title="neoperf.c"></a>neoperf.c</h3><h4 id="驱动开发hello-world"><a href="#驱动开发hello-world" class="headerlink" title="驱动开发hello world"></a>驱动开发hello world</h4><p>neoperf.c 以下部分参考驱动开发知识：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/downey-blog/p/10500828.html">https://www.cnblogs.com/downey-blog/p/10500828.html</a></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">module_init(neoprof_init);</span><br><span class="line">module_exit(neoprof_exit);</span><br><span class="line"></span><br><span class="line">MODULE_LICENSE(<span class="string">&quot;GPL v2&quot;</span>);</span><br><span class="line">MODULE_AUTHOR(<span class="string">&quot;PKUZHOU&quot;</span>);</span><br><span class="line">MODULE_DESCRIPTION(<span class="string">&quot;Neoprofiler Linux driver&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="io地址映射相关知识"><a href="#io地址映射相关知识" class="headerlink" title="io地址映射相关知识"></a>io地址映射相关知识</h4><p>需要理解</p>
+<ol>
+<li><p>IO端口的编址方式：</p>
+<p>包括IO指令的端口映射方式、MMIO的统一内存映射方式</p>
+</li>
+<li><p>一些常见的IO操作函数</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> * <span class="title function_">ioremap</span><span class="params">(<span class="type">unsigned</span> <span class="type">long</span> phys_addr, <span class="type">unsigned</span> <span class="type">long</span> size, <span class="type">unsigned</span> <span class="type">long</span> flags)</span>;</span><br><span class="line"> <span class="comment">//memset_io\memcpy_fromio\readb</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/do2jiang/article/details/5450839">https://blog.csdn.net/do2jiang/article/details/5450839</a></p>
+<h2 id="neomem-migration-skeleton"><a href="#neomem-migration-skeleton" class="headerlink" title="neomem migration skeleton"></a>neomem migration skeleton</h2><p>commit ID <code>26cabad18</code></p>
+<p>新增 NeoMem模块:</p>
+<h3 id="migrate-c"><a href="#migrate-c" class="headerlink" title="migrate.c"></a>migrate.c</h3><p>主要是提供接口<code>migrate_misplaced_page_no_vma</code></p>
+<p>调用一些mm中的内存操作函数，进行页面隔离、迁移</p>
+<h3 id="neomem-h-neomem-c"><a href="#neomem-h-neomem-c" class="headerlink" title="neomem.h \neomem.c"></a>neomem.h \neomem.c</h3><p>主要就是启动 neomem模块（调用core文件中启动守护进程）</p>
+<h4 id="late-initcall"><a href="#late-initcall" class="headerlink" title="late_initcall()"></a>late_initcall()</h4><p>在内核启动后期适当时间执行，理解module_init等init宏的顺序，在<code>include/linux/init.h</code>中</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/linhaostudy/p/9112264.html">linux设备驱动加载的先后顺序</a></p>
+<h4 id="问题：不知何处的头文件包含关系"><a href="#问题：不知何处的头文件包含关系" class="headerlink" title="问题：不知何处的头文件包含关系"></a>问题：不知何处的头文件包含关系</h4><ol>
+<li>neomem.c的依赖包含树中没有包含到<code>include/linux/init.h</code>，却能使用其中的宏？</li>
+<li>neomem.h中声明了neomen_start函数，在neomem_core.c定义，在neomem.c中使用；但是却没有在neomem_core.c中包含相关头文件？这样为什么可以？遗漏了哪儿？为什么这样设计？这样设计有什么好处？</li>
+</ol>
+<h3 id="neomem-core-c"><a href="#neomem-core-c" class="headerlink" title="neomem_core.c"></a>neomem_core.c</h3><ol>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/liangzc1124/article/details/120837260">内存中的各种分配函数</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/huofeng_2008/article/details/21177459">kthread_run内核线程</a></li>
+</ol>
 
 <div class="article-footer fs14">
     <section id="license">
@@ -129,7 +163,7 @@
 
 
 
-<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">On This Page</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#NeoPerf-study"><span class="toc-text">NeoPerf study</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#a-naive-neoprof-driver"><span class="toc-text">a naive neoprof driver</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux%E5%86%85%E6%A0%B8%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6Kconfig"><span class="toc-text">Linux内核配置文件Kconfig</span></a></li></ol></li></ol></li></ol></div><div class="widget-footer">
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">On This Page</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#NeoPerf-study"><span class="toc-text">NeoPerf study</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#a-naive-neoprof-driver"><span class="toc-text">a naive neoprof driver</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux%E5%86%85%E6%A0%B8%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6Kconfig"><span class="toc-text">Linux内核配置文件Kconfig</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#neoperf-h"><span class="toc-text">neoperf.h</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#neoperf-c"><span class="toc-text">neoperf.c</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91hello-world"><span class="toc-text">驱动开发hello world</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#io%E5%9C%B0%E5%9D%80%E6%98%A0%E5%B0%84%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86"><span class="toc-text">io地址映射相关知识</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#neomem-migration-skeleton"><span class="toc-text">neomem migration skeleton</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#migrate-c"><span class="toc-text">migrate.c</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#neomem-h-neomem-c"><span class="toc-text">neomem.h \neomem.c</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#late-initcall"><span class="toc-text">late_initcall()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%EF%BC%9A%E4%B8%8D%E7%9F%A5%E4%BD%95%E5%A4%84%E7%9A%84%E5%A4%B4%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E5%85%B3%E7%B3%BB"><span class="toc-text">问题：不知何处的头文件包含关系</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#neomem-core-c"><span class="toc-text">neomem_core.c</span></a></li></ol></li></ol></li></ol></div><div class="widget-footer">
 
 <a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>Scroll to Top</span></a></div></widget>
 </div></aside><div class='float-panel blur'>
