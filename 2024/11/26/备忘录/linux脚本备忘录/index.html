@@ -17,26 +17,21 @@
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
   <meta name="theme-color" content="#f9fafb">
   
-  <title>Hexo - Zane Jiang'blog</title>
+  <title>linux脚本备忘录 - Zane Jiang'blog</title>
 
   
-    <meta name="description" content="Hexo部署过程中遇到的一些问题图片与Typora兼容网上给了很多方法，尝试没有效果，自己尝试的方案：  卸载插件hexo-asset-image:   yarn remove hexo-asset-image,GitHub有修改的对应插件，但是使用无效果  typora配置   Typora新插入图片路径显示为：   Hexo部署时正常显示 Hexo不生效问题Hexo部署到github上不生效，">
+    <meta name="description" content="Linux脚本备忘录安装系统后的环境准备添加新用户 123456adduser #封装命令，处理完添加用户的全部过程 su到新用户显示username@hostname~$:useradd #底层命令，什么都没有加,su到新用户显示$:# 生成 8 位强密码PASSWORD&#x3D;$(openssl rand -base64 6 | cut -c1-8)echo &quot;Password: $PAS">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/2024/11/28/Hexo/hexo/index.html">
+<meta property="og:title" content="linux脚本备忘录">
+<meta property="og:url" content="http://example.com/2024/11/26/%E5%A4%87%E5%BF%98%E5%BD%95/linux%E8%84%9A%E6%9C%AC%E5%A4%87%E5%BF%98%E5%BD%95/index.html">
 <meta property="og:site_name" content="Zane Jiang&#39;blog">
-<meta property="og:description" content="Hexo部署过程中遇到的一些问题图片与Typora兼容网上给了很多方法，尝试没有效果，自己尝试的方案：  卸载插件hexo-asset-image:   yarn remove hexo-asset-image,GitHub有修改的对应插件，但是使用无效果  typora配置   Typora新插入图片路径显示为：   Hexo部署时正常显示 Hexo不生效问题Hexo部署到github上不生效，">
+<meta property="og:description" content="Linux脚本备忘录安装系统后的环境准备添加新用户 123456adduser #封装命令，处理完添加用户的全部过程 su到新用户显示username@hostname~$:useradd #底层命令，什么都没有加,su到新用户显示$:# 生成 8 位强密码PASSWORD&#x3D;$(openssl rand -base64 6 | cut -c1-8)echo &quot;Password: $PAS">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/2024/11/28/Hexo/hexo/image-20241128220124547.png">
-<meta property="og:image" content="http://example.com/2024/11/28/Hexo/hexo/image-20241128220300318.png">
-<meta property="og:image" content="http://example.com/2024/11/28/Hexo/hexo/image-20241128220942161.png">
-<meta property="og:image" content="http://example.com/2024/11/28/Hexo/hexo/image-20241128221003976.png">
-<meta property="article:published_time" content="2024-11-28T13:56:34.000Z">
-<meta property="article:modified_time" content="2024-11-28T14:10:43.005Z">
+<meta property="article:published_time" content="2024-11-25T16:07:30.000Z">
+<meta property="article:modified_time" content="2024-12-05T14:19:17.334Z">
 <meta property="article:author" content="Zane Jiang">
-<meta property="article:tag" content="Hexo">
+<meta property="article:tag" content="memo">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2024/11/28/Hexo/hexo/image-20241128220124547.png">
   
   
   
@@ -82,35 +77,95 @@
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">Home</a>
 <span class="sep"></span><a class="cap breadcrumb" href="/">Blog</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">Posted on: <time datetime="2024-11-28T13:56:34.000Z">2024-11-28</time></span><span class="sep updated"></span><span class="text updated">Updated on: <time datetime="2024-11-28T14:10:43.005Z">2024-11-28</time></span></div></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">Posted on: <time datetime="2024-11-25T16:07:30.000Z">2024-11-26</time></span><span class="sep updated"></span><span class="text updated">Updated on: <time datetime="2024-12-05T14:19:17.334Z">2024-12-05</time></span></div></div></div>
     
     <div class="bottom only-title">
       
       <div class="text-area">
-        <h1 class="text title"><span>Hexo</span></h1>
+        <h1 class="text title"><span>linux脚本备忘录</span></h1>
         
       </div>
     </div>
     
   </div>
-  </div><article class="md-text content"><h1 id="Hexo部署过程中遇到的一些问题"><a href="#Hexo部署过程中遇到的一些问题" class="headerlink" title="Hexo部署过程中遇到的一些问题"></a>Hexo部署过程中遇到的一些问题</h1><h2 id="图片与Typora兼容"><a href="#图片与Typora兼容" class="headerlink" title="图片与Typora兼容"></a>图片与Typora兼容</h2><p>网上给了很多方法，尝试没有效果，自己尝试的方案：</p>
-<ol>
-<li><p>卸载插件<code>hexo-asset-image</code>:   yarn remove hexo-asset-image,GitHub有修改的对应插件，但是使用无效果</p>
-</li>
-<li><p>typora配置</p>
-<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2024/11/28/Hexo/hexo/image-20241128220124547.png" class="lazy" title="image-20241128220124547"></li>
+  </div><article class="md-text content"><h1 id="Linux脚本备忘录"><a href="#Linux脚本备忘录" class="headerlink" title="Linux脚本备忘录"></a>Linux脚本备忘录</h1><h2 id="安装系统后的环境准备"><a href="#安装系统后的环境准备" class="headerlink" title="安装系统后的环境准备"></a>安装系统后的环境准备</h2><p>添加新用户</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">adduser <span class="comment">#封装命令，处理完添加用户的全部过程 su到新用户显示username@hostname~$:</span></span><br><span class="line">useradd <span class="comment">#底层命令，什么都没有加,su到新用户显示$:</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成 8 位强密码</span></span><br><span class="line">PASSWORD=$(openssl rand -<span class="built_in">base64</span> 6 | <span class="built_in">cut</span> -c1-8)</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Password: <span class="variable">$PASSWORD</span>&quot;</span> </span><br></pre></td></tr></table></figure>
+
+<p>用户添加sudo组</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">usermod -aG <span class="built_in">sudo</span> new_user</span><br><span class="line"><span class="comment">#加完以后记得:</span></span><br><span class="line">newgrp <span class="built_in">sudo</span></span><br><span class="line"><span class="comment">#作用有3：</span></span><br><span class="line"><span class="comment">#1.切换到指定的组上下文</span></span><br><span class="line"><span class="comment">#2.即时生效组更改</span></span><br><span class="line"><span class="comment">#3.启动一个子 shell</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="配置sshd"><a href="#配置sshd" class="headerlink" title="配置sshd"></a>配置sshd</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#服务端安装</span></span><br><span class="line">apt install ssh-server</span><br><span class="line"></span><br><span class="line"><span class="comment">#配置</span></span><br><span class="line"><span class="built_in">sudo</span> vim /etc/ssh/sshd_config</span><br><span class="line"></span><br><span class="line"><span class="comment">#重启服务</span></span><br><span class="line"><span class="built_in">sudo</span> service  restart sshd</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="Vim"><a href="#Vim" class="headerlink" title="Vim"></a>Vim</h3><p><a target="_blank" rel="noopener" href="https://github.com/ma6174/vim">Vim配置推荐 - ma6174</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget 47.93.11.51:88/install_vim.sh</span><br><span class="line">bash install_vim.sh</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h3 id="zsh"><a href="#zsh" class="headerlink" title="zsh"></a>zsh</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#安装zsh</span></span><br><span class="line"><span class="built_in">sudo</span> apt install zsh</span><br><span class="line"></span><br><span class="line"><span class="comment">#修改默认shell为zsh</span></span><br><span class="line">chsh -s /bin/zsh</span><br><span class="line"></span><br><span class="line"><span class="comment">#安装oh-my-zsh</span></span><br><span class="line">sh -c <span class="string">&quot;<span class="subst">$(wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)</span>&quot;</span></span><br><span class="line"><span class="comment">##如果不成功，请执行下面两条命令，成功了就不需要做下面两条</span></span><br><span class="line">wget 47.93.11.51:88/install_zsh.sh</span><br><span class="line">bash install_zsh.sh</span><br><span class="line"></span><br><span class="line"><span class="comment">#安装zsh-syntax-highlighting</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/zsh-users/zsh-syntax-highlighting.git <span class="variable">$&#123;ZSH_CUSTOM:-~/.oh-my-zsh/custom&#125;</span>/plugins/zsh-syntax-highlighting</span><br></pre></td></tr></table></figure>
+
+<h4 id="历史记录推荐命令插件"><a href="#历史记录推荐命令插件" class="headerlink" title="历史记录推荐命令插件"></a>历史记录推荐命令插件</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">##命令自动推荐，根据历史记录</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/zsh-users/zsh-autosuggestions <span class="variable">$&#123;ZSH_CUSTOM:-~/.oh-my-zsh/custom&#125;</span>/plugins/zsh-autosuggestions</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="命令自动补全"><a href="#命令自动补全" class="headerlink" title="命令自动补全"></a>命令自动补全</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">##命令自动补全插件</span></span><br><span class="line"><span class="built_in">mkdir</span> ~/.oh-my-zsh/plugins/incr</span><br><span class="line">wget http://mimosa-pudica.net/src/incr-0.2.zsh -O ~/.oh-my-zsh/plugins/incr/incr.plugin.zsh</span><br><span class="line"><span class="comment">##目录自动跳转插件</span></span><br><span class="line"><span class="built_in">sudo</span> apt install autojump</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="zshrc配置文件配置"><a href="#zshrc配置文件配置" class="headerlink" title=".zshrc配置文件配置"></a><code>.zshrc</code>配置文件配置</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#插件添加zsh-syntax-highlighting</span></span><br><span class="line">plugins=(git zsh-syntax-highlighting)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#设置终端颜色，提示符，及上一条指令返回码提示</span></span><br><span class="line"><span class="built_in">autoload</span> -U colors &amp;&amp; colors</span><br><span class="line">PROMPT=<span class="string">&quot;%&#123;<span class="variable">$fg</span>[red]%&#125;%n%&#123;<span class="variable">$reset_color</span>%&#125;@%&#123;<span class="variable">$fg</span>[blue]%&#125;%m %&#123;<span class="variable">$fg</span>[yellow]%&#125;%1~ %&#123;<span class="variable">$reset_color</span>%&#125;%# &quot;</span></span><br><span class="line">RPROMPT=<span class="string">&quot;[%&#123;<span class="variable">$fg</span>[yellow]%&#125;%?%&#123;<span class="variable">$reset_color</span>%&#125;]&quot;</span></span><br><span class="line"><span class="comment"># Useful support for interacting with Terminal.app or other terminal programs</span></span><br><span class="line">[ -r <span class="string">&quot;/etc/zshrc_<span class="variable">$TERM_PROGRAM</span>&quot;</span> ] &amp;&amp; . <span class="string">&quot;/etc/zshrc_<span class="variable">$TERM_PROGRAM</span>&quot;</span></span><br><span class="line"><span class="built_in">source</span> ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh</span><br><span class="line"><span class="built_in">source</span> /usr/share/autojump/autojump.sh</span><br><span class="line"><span class="built_in">source</span> ~/.oh-my-zsh/plugins/incr/incr*.zsh</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="ctags"><a href="#ctags" class="headerlink" title="ctags"></a>ctags</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#安装</span></span><br><span class="line"><span class="built_in">sudo</span> apt install ctags     </span><br><span class="line"></span><br><span class="line"><span class="comment">#建立索引</span></span><br><span class="line">ctags -I __THROW -I __attribute_pure__ -I __nonnull -I __attribute__ --file-scope=<span class="built_in">yes</span> --langmap=c:+.h --languages=c,c++ --links=<span class="built_in">yes</span> --c-kinds=+p --c++-kinds=+p --fields=+iaS --extra=+q  -f ~/.vim/systags /usr/include/* /usr/include/x86_64-linux-gnu/sys/* /usr/include/x86_64-linux-gnu/bits/*  /usr/include/arpa/*</span><br></pre></td></tr></table></figure>
+
+<p><code>.vimrc</code>添加索引</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">set</span> tags+=~/systags</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="安装glibc-doc"><a href="#安装glibc-doc" class="headerlink" title="安装glibc-doc"></a>安装glibc-doc</h3><ol>
+<li>使用以下命令安装</li>
 </ol>
-<p>Typora新插入图片路径显示为：</p>
-<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2024/11/28/Hexo/hexo/image-20241128220300318.png" class="lazy" title="image-20241128220300318">
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt install glibc-doc</span><br></pre></td></tr></table></figure>
 
-<p>Hexo部署时正常显示</p>
-<h2 id="Hexo不生效问题"><a href="#Hexo不生效问题" class="headerlink" title="Hexo不生效问题"></a>Hexo不生效问题</h2><p>Hexo部署到github上不生效，网上解决方案说需要除Main或者Master分支以外额外构建一个分支，然后网站推送到这个分支上，实际使用不管用。</p>
-<p>首先，只需要维护一个主分支，不需要其他分支；</p>
-<p>其次，<code>hexo -d</code>执行以后，main分支中即使已经更新了代码，但是github page更新也需要一段时间，部署频繁会产生排队</p>
-<p>仓库主页github-pages上可以观察到生成静态页面的进度。</p>
-<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2024/11/28/Hexo/hexo/image-20241128220942161.png" class="lazy" title="image-20241128220942161">
 
-<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2024/11/28/Hexo/hexo/image-20241128221003976.png" class="lazy" title="image-20241128221003976">
+
+<h3 id="常见路径"><a href="#常见路径" class="headerlink" title="常见路径"></a>常见路径</h3><p>hostname  :<code>/etc/hostname</code></p>
+<p>host: <code>/ect/hosts</code> </p>
+<h2 id="tomcat"><a href="#tomcat" class="headerlink" title="tomcat"></a>tomcat</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">安装JDK8</span></span><br><span class="line">sudo apt install default-jre            -y</span><br><span class="line">sudo apt install openjdk-11-jre-headless -y</span><br><span class="line">sudo apt install openjdk-8-jre-headless  -y </span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="built_in">sudo</span> wget https://downloads.apache.org/tomcat/tomcat-8/v8.5.65/bin/apache-tomcat-8.5.65.tar.gz</span></span><br><span class="line">sudo wget https://mirrors.bfsu.edu.cn/apache/tomcat/tomcat-8/v8.5.73/bin/apache-tomcat-8.5.73.tar.gz</span><br><span class="line">tar zxf apache-tomcat-8.5.73.tar.gz</span><br><span class="line">sudo mv apache-tomcat-8.5.73 /usr/local/tomcat</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">建立软连接</span></span><br><span class="line">sudo ln -s /usr/local/tomcat/bin/*  /usr/local/sbin/</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">启动</span></span><br><span class="line">startup.sh start </span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">端口检查</span></span><br><span class="line">netstat -anput |  grep 8080</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">启动命令</span></span><br><span class="line">startup.sh start #//启动</span><br><span class="line">shutdown.sh #//关闭</span><br><span class="line"></span><br><span class="line">catalina.sh stop #//启动</span><br><span class="line">catalina.sh start #//关闭</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">关闭防火墙</span></span><br><span class="line">sudo ufw disable </span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">tomcat 参数配置</span></span><br><span class="line">vim /usr/local/tomcat/conf/server.xml </span><br><span class="line"><span class="meta prompt_">	#</span><span class="language-bash">.......</span></span><br><span class="line"></span><br><span class="line">&lt;Connector port=&quot;8081&quot; protocol=&quot;HTTP/1.1&quot;   #将之前8080端口改成8081端口</span><br><span class="line"></span><br><span class="line">connectionTimeout=&quot;20000&quot;</span><br><span class="line"></span><br><span class="line">     #          redirectPort=&quot;8443&quot; /&gt;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">目录修</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">  # </span><span class="language-bash"> &lt;Host name=<span class="string">&quot;localhost&quot;</span>  appBase=<span class="string">&quot;/opt/www&quot;</span>  <span class="comment">#将网站根目录改到/opt/www</span></span></span><br><span class="line"></span><br><span class="line">      #      unpackWARs=&quot;true&quot; autoDeploy=&quot;true&quot;&gt;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">更改网站家目录，这里的ROOT必须大写，更改完成后需要重启</span></span><br><span class="line">sudo mkdir /opt/www/ROOT -p</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="mysql"><a href="#mysql" class="headerlink" title="mysql"></a>mysql</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44129085/article/details/104481986">mysql 8.0下载</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://repo.mysql.com//mysql-apt-config_0.8.20-1_all.deb</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#MySQL 设置</span><br><span class="line">#密码</span><br><span class="line">sudo  mysql <span class="operator">-</span>uroot </span><br><span class="line">use mysql;</span><br><span class="line"><span class="keyword">update</span> <span class="keyword">user</span> <span class="keyword">set</span> authentication_string<span class="operator">=</span>PASSWORD(&quot;自定义密码&quot;) <span class="keyword">where</span> <span class="keyword">User</span><span class="operator">=</span>&quot;root&quot;;</span><br><span class="line"><span class="keyword">update</span> <span class="keyword">user</span> <span class="keyword">set</span> plugin<span class="operator">=</span>&quot;mysql_native_password&quot; <span class="keyword">where</span>  <span class="keyword">User</span> <span class="operator">=</span>&quot;root&quot;;</span><br><span class="line">flush privileges;</span><br><span class="line">quit;</span><br></pre></td></tr></table></figure>
+
+<p>对于Linux和windows下字符集不兼容的情况，需要替换</p>
+<blockquote>
+<p>• 把文件中的所有的<code>utf8mb4_0900_ai_ci</code>替换为<code>utf8_general_ci</code><br>• 以及<code>utf8mb4</code>替换为<code>utf8</code><br>• 如上图所示的位置，上图只是一部分，注意全部替换。</p>
+</blockquote>
+<p>数据库导出</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysqldump -uroot -p &gt;c:ShareYunAlbum。sql</span><br></pre></td></tr></table></figure>
+
+<p>数据库导入</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">use ShareYunAlbum </span><br><span class="line">source <span class="operator">~</span><span class="operator">/</span>ShqreYunAlbum.sql</span><br></pre></td></tr></table></figure>
+
+<p>卸载mysql</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt purge mysql-* -y</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">rm</span> -rf /etc/mysql/ /var/lib/mysql</span><br><span class="line"><span class="built_in">sudo</span> apt autoremove</span><br><span class="line"><span class="built_in">sudo</span> apt autoreclean</span><br><span class="line"><span class="built_in">sudo</span> apt-get remove mysql-common </span><br><span class="line">dpkg -l |grep ^rc|awk <span class="string">&#x27;&#123;print $2&#125;&#x27;</span> |<span class="built_in">sudo</span> xargs dpkg -P</span><br></pre></td></tr></table></figure>
+
+
+
 <div class="article-footer fs14">
     <section id="license">
       <div class="header"><span>License</span></div>
@@ -119,7 +174,7 @@
     </section>
     </div>
 </article>
-<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">Newer</div><a href="/2024/12/05/kernel-explore/Kernel-compile/">Kernel-compile</a></div><div class="item" id="next"><div class="note">Older</div><a href="/2024/11/28/kernel-explore/Neoperf-study/">Neoperf_study</a></div></section></div>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">Newer</div><a href="/2024/11/28/kernel-explore/Neoperf-study/">Neoperf_study</a></div><div class="item" id="next"><div class="note">Older</div><a href="/2024/10/15/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/">控台项目与iSet项目已使用Qt技能点整理</a></div></section></div>
 
 
 
@@ -133,7 +188,7 @@
 
 
 
-<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">On This Page</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Hexo%E9%83%A8%E7%BD%B2%E8%BF%87%E7%A8%8B%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98"><span class="toc-text">Hexo部署过程中遇到的一些问题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BE%E7%89%87%E4%B8%8ETypora%E5%85%BC%E5%AE%B9"><span class="toc-text">图片与Typora兼容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hexo%E4%B8%8D%E7%94%9F%E6%95%88%E9%97%AE%E9%A2%98"><span class="toc-text">Hexo不生效问题</span></a></li></ol></li></ol></div><div class="widget-footer">
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">On This Page</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Linux%E8%84%9A%E6%9C%AC%E5%A4%87%E5%BF%98%E5%BD%95"><span class="toc-text">Linux脚本备忘录</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E7%B3%BB%E7%BB%9F%E5%90%8E%E7%9A%84%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87"><span class="toc-text">安装系统后的环境准备</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AEsshd"><span class="toc-text">配置sshd</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Vim"><span class="toc-text">Vim</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#zsh"><span class="toc-text">zsh</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8E%86%E5%8F%B2%E8%AE%B0%E5%BD%95%E6%8E%A8%E8%8D%90%E5%91%BD%E4%BB%A4%E6%8F%92%E4%BB%B6"><span class="toc-text">历史记录推荐命令插件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E8%87%AA%E5%8A%A8%E8%A1%A5%E5%85%A8"><span class="toc-text">命令自动补全</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#zshrc%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E9%85%8D%E7%BD%AE"><span class="toc-text">.zshrc配置文件配置</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ctags"><span class="toc-text">ctags</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85glibc-doc"><span class="toc-text">安装glibc-doc</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E8%B7%AF%E5%BE%84"><span class="toc-text">常见路径</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#tomcat"><span class="toc-text">tomcat</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#mysql"><span class="toc-text">mysql</span></a></li></ol></li></ol></div><div class="widget-footer">
 
 <a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>Scroll to Top</span></a></div></widget>
 </div></aside><div class='float-panel blur'>
