@@ -20,16 +20,20 @@
   <title>Neoperf_study - Zane Jiang'blog</title>
 
   
-    <meta name="description" content="NeoPerf study 本文主要为学习论文《NeoMem: Hardware&#x2F;Software Co-Design for CXL-Native Memory Tiering》在主机端内核部分的工作，开源仓库地址为：  PKUZHOU&#x2F;linux  代码基于linux内核代码6.0开始修改。 由于初步探索linux内核代码，所以没有按照自顶向下的视角分析代码，而是基于git">
+    <meta name="description" content="NeoPerf study 本文主要为学习论文《NeoMem: Hardware&#x2F;Software Co-Design for CXL-Native Memory Tiering》的工作，分为三个部分，用户态、内核以及FPGA部分，内核开源仓库地址为：  PKUZHOU&#x2F;linux  代码基于linux内核代码6.0开始修改。 由于初步探索linux内核代码，所以没有按照自顶向">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Neoperf_study">
 <meta property="og:url" content="http://example.com/2024/11/28/kernel-explore/Neoperf-study/index.html">
 <meta property="og:site_name" content="Zane Jiang&#39;blog">
-<meta property="og:description" content="NeoPerf study 本文主要为学习论文《NeoMem: Hardware&#x2F;Software Co-Design for CXL-Native Memory Tiering》在主机端内核部分的工作，开源仓库地址为：  PKUZHOU&#x2F;linux  代码基于linux内核代码6.0开始修改。 由于初步探索linux内核代码，所以没有按照自顶向下的视角分析代码，而是基于git">
+<meta property="og:description" content="NeoPerf study 本文主要为学习论文《NeoMem: Hardware&#x2F;Software Co-Design for CXL-Native Memory Tiering》的工作，分为三个部分，用户态、内核以及FPGA部分，内核开源仓库地址为：  PKUZHOU&#x2F;linux  代码基于linux内核代码6.0开始修改。 由于初步探索linux内核代码，所以没有按照自顶向">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/neoperf-study/image-20241128201430600.png">
+<meta property="og:image" content="http://example.com/2024/11/28/kernel-explore/Neoperf-study/image-20241222145536477.png">
+<meta property="og:image" content="http://example.com/2024/11/28/kernel-explore/Neoperf-study/image-20241222145705256.png">
+<meta property="og:image" content="http://example.com/2024/11/28/kernel-explore/Neoperf-study/image-20241222145744791.png">
+<meta property="og:image" content="http://example.com/2024/11/28/kernel-explore/Neoperf-study/image-20241222151404359.png">
 <meta property="article:published_time" content="2024-11-28T11:55:34.000Z">
-<meta property="article:modified_time" content="2024-12-05T14:18:54.941Z">
+<meta property="article:modified_time" content="2024-12-22T07:14:12.777Z">
 <meta property="article:author" content="Zane Jiang">
 <meta property="article:tag" content="CXL - Kernel-explore">
 <meta name="twitter:card" content="summary">
@@ -66,7 +70,7 @@
 <div class="widgets">
 
 
-<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">Recent Update</span></div><div class="widget-body fs14"><a class="item title" href="/2024/11/26/%E5%A4%87%E5%BF%98%E5%BD%95/linux%E8%84%9A%E6%9C%AC%E5%A4%87%E5%BF%98%E5%BD%95/"><span class="title">linux脚本备忘录</span></a><a class="item title" href="/2024/11/28/kernel-explore/Neoperf-study/"><span class="title">Neoperf_study</span></a><a class="item title" href="/2024/12/05/kernel-explore/Kernel-compile/"><span class="title">Kernel-compile</span></a><a class="item title" href="/2024/10/15/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/"><span class="title">控台项目与iSet项目已使用Qt技能点整理</span></a><a class="item title" href="/2024/11/28/Hexo/hexo/"><span class="title">Hexo</span></a></div></widget>
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">Recent Update</span></div><div class="widget-body fs14"><a class="item title" href="/2024/11/28/kernel-explore/Neoperf-study/"><span class="title">Neoperf_study</span></a><a class="item title" href="/2024/11/26/%E5%A4%87%E5%BF%98%E5%BD%95/linux%E8%84%9A%E6%9C%AC%E5%A4%87%E5%BF%98%E5%BD%95/"><span class="title">linux脚本备忘录</span></a><a class="item title" href="/2024/12/05/kernel-explore/Kernel-compile/"><span class="title">Kernel-compile</span></a><a class="item title" href="/2024/10/15/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/"><span class="title">控台项目与iSet项目已使用Qt技能点整理</span></a><a class="item title" href="/2024/11/28/Hexo/hexo/"><span class="title">Hexo</span></a></div></widget>
 </div>
 
 </div></aside><div class="l_main" id="main">
@@ -79,7 +83,7 @@
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">Home</a>
 <span class="sep"></span><a class="cap breadcrumb" href="/">Blog</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">Posted on: <time datetime="2024-11-28T11:55:34.000Z">2024-11-28</time></span><span class="sep updated"></span><span class="text updated">Updated on: <time datetime="2024-12-05T14:18:54.941Z">2024-12-05</time></span></div></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">Posted on: <time datetime="2024-11-28T11:55:34.000Z">2024-11-28</time></span><span class="sep updated"></span><span class="text updated">Updated on: <time datetime="2024-12-22T07:14:12.777Z">2024-12-22</time></span></div></div></div>
     
     <div class="bottom only-title">
       
@@ -91,7 +95,7 @@
     
   </div>
   </div><article class="md-text content"><h1 id="NeoPerf-study"><a href="#NeoPerf-study" class="headerlink" title="NeoPerf study"></a>NeoPerf study</h1><blockquote>
-<p>本文主要为学习论文《NeoMem: Hardware&#x2F;Software Co-Design for CXL-Native Memory Tiering》在主机端内核部分的工作，开源仓库地址为：  <a target="_blank" rel="noopener" href="https://github.com/PKUZHOU/linux">PKUZHOU&#x2F;linux</a></p>
+<p>本文主要为学习论文《NeoMem: Hardware&#x2F;Software Co-Design for CXL-Native Memory Tiering》的工作，分为三个部分，用户态、内核以及FPGA部分，内核开源仓库地址为：  <a target="_blank" rel="noopener" href="https://github.com/PKUZHOU/linux">PKUZHOU&#x2F;linux</a></p>
 </blockquote>
 <p>代码基于linux内核代码6.0开始修改。</p>
 <p>由于初步探索linux内核代码，所以没有按照自顶向下的视角分析代码，而是基于git提交记录，借助AI与互联网搜索，平铺遇到的相关知识。版本不断更新……</p>
@@ -131,18 +135,27 @@
 <h3 id="neomem-h-neomem-c"><a href="#neomem-h-neomem-c" class="headerlink" title="neomem.h \neomem.c"></a>neomem.h \neomem.c</h3><p>主要就是启动 neomem模块（调用core文件中启动守护进程）</p>
 <h4 id="late-initcall"><a href="#late-initcall" class="headerlink" title="late_initcall()"></a>late_initcall()</h4><p>在内核启动后期适当时间执行，理解module_init等init宏的顺序，在<code>include/linux/init.h</code>中</p>
 <p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/linhaostudy/p/9112264.html">linux设备驱动加载的先后顺序</a></p>
-<h4 id="问题：不知何处的头文件包含关系"><a href="#问题：不知何处的头文件包含关系" class="headerlink" title="问题：不知何处的头文件包含关系"></a>问题：不知何处的头文件包含关系</h4><ol>
-<li>neomem.c的依赖包含树中没有包含到<code>include/linux/init.h</code>，却能使用其中的宏？</li>
-<li>neomem.h中声明了neomen_start函数，在neomem_core.c定义，在neomem.c中使用；但是却没有在neomem_core.c中包含相关头文件？这样为什么可以？遗漏了哪儿？为什么这样设计？这样设计有什么好处？</li>
-</ol>
 <h3 id="neomem-core-c"><a href="#neomem-core-c" class="headerlink" title="neomem_core.c"></a>neomem_core.c</h3><ol>
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/liangzc1124/article/details/120837260">内存中的各种分配函数</a></li>
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/huofeng_2008/article/details/21177459">kthread_run内核线程</a></li>
 </ol>
+<h2 id="FPGA端侧"><a href="#FPGA端侧" class="headerlink" title="FPGA端侧"></a>FPGA端侧</h2><h3 id="模块结构"><a href="#模块结构" class="headerlink" title="模块结构"></a>模块结构</h3><p>顶层模块：</p>
+<h4 id="ddr内存参数调整"><a href="#ddr内存参数调整" class="headerlink" title="ddr内存参数调整"></a>ddr内存参数调整</h4><p>cxl ip考虑了不同ddr的，包括是否支持DBI、内存通道数量等。采用宏的方式区分，设置不同的方式时，需要对ip内通过宏定义来确定相关的内存参数，同时也需要在顶层模块对相关参数进行修改。</p>
+<style>.kwfcchfxdmjc{zoom:50%;}</style><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2024/11/28/kernel-explore/Neoperf-study/image-20241222145536477.png" class="kwfcchfxdmjc lazy" alt="image-20241222145536477">
+
+<style>.xvwcbhdyqkve{zoom:50%;}</style><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2024/11/28/kernel-explore/Neoperf-study/image-20241222145705256.png" class="xvwcbhdyqkve lazy" alt="image-20241222145705256">
+
+<style>.pwsislyuxfik{zoom:50%;}</style><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2024/11/28/kernel-explore/Neoperf-study/image-20241222145744791.png" class="pwsislyuxfik lazy" alt="image-20241222145744791">
+
+<p>或者通过更改ip文件，重新生成新的IP文件夹</p>
+<style>.tqdzdutxtsjv{zoom:50%;}</style><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2024/11/28/kernel-explore/Neoperf-study/image-20241222151404359.png" class="tqdzdutxtsjv lazy" alt="image-20241222151404359">
+
+<h3 id="quartus"><a href="#quartus" class="headerlink" title="quartus"></a>quartus</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set_global_assignment -name OPTIMIZATION_MODE <span class="string">&quot;AGGRESSIVE COMPILE TIME&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="烧录模式"><a href="#烧录模式" class="headerlink" title="烧录模式"></a>烧录模式</h3><p>AS x4</p>
 <h1 id="Neomem-todo"><a href="#Neomem-todo" class="headerlink" title="Neomem todo"></a>Neomem todo</h1><p>代码存在一些可以完善的地方：</p>
 <ol>
 <li>CXL地址采用硬编码，可以引入设备树或者其他检测CXL物理地址的工具进行优化，<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_44814825/article/details/129107911">参考</a></li>
-<li></li>
 </ol>
 
 
@@ -160,7 +173,7 @@
 
 
 
-<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">On This Page</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#NeoPerf-study"><span class="toc-text">NeoPerf study</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#a-naive-neoprof-driver"><span class="toc-text">a naive neoprof driver</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux%E5%86%85%E6%A0%B8%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6Kconfig"><span class="toc-text">Linux内核配置文件Kconfig</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#neoperf-h"><span class="toc-text">neoperf.h</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#neoperf-c"><span class="toc-text">neoperf.c</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91hello-world"><span class="toc-text">驱动开发hello world</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#io%E5%9C%B0%E5%9D%80%E6%98%A0%E5%B0%84%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86"><span class="toc-text">io地址映射相关知识</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#neomem-migration-skeleton"><span class="toc-text">neomem migration skeleton</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#migrate-c"><span class="toc-text">migrate.c</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#neomem-h-neomem-c"><span class="toc-text">neomem.h \neomem.c</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#late-initcall"><span class="toc-text">late_initcall()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%EF%BC%9A%E4%B8%8D%E7%9F%A5%E4%BD%95%E5%A4%84%E7%9A%84%E5%A4%B4%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E5%85%B3%E7%B3%BB"><span class="toc-text">问题：不知何处的头文件包含关系</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#neomem-core-c"><span class="toc-text">neomem_core.c</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Neomem-todo"><span class="toc-text">Neomem todo</span></a></li></ol></div><div class="widget-footer">
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">On This Page</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#NeoPerf-study"><span class="toc-text">NeoPerf study</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#a-naive-neoprof-driver"><span class="toc-text">a naive neoprof driver</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux%E5%86%85%E6%A0%B8%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6Kconfig"><span class="toc-text">Linux内核配置文件Kconfig</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#neoperf-h"><span class="toc-text">neoperf.h</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#neoperf-c"><span class="toc-text">neoperf.c</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91hello-world"><span class="toc-text">驱动开发hello world</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#io%E5%9C%B0%E5%9D%80%E6%98%A0%E5%B0%84%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86"><span class="toc-text">io地址映射相关知识</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#neomem-migration-skeleton"><span class="toc-text">neomem migration skeleton</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#migrate-c"><span class="toc-text">migrate.c</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#neomem-h-neomem-c"><span class="toc-text">neomem.h \neomem.c</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#late-initcall"><span class="toc-text">late_initcall()</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#neomem-core-c"><span class="toc-text">neomem_core.c</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#FPGA%E7%AB%AF%E4%BE%A7"><span class="toc-text">FPGA端侧</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97%E7%BB%93%E6%9E%84"><span class="toc-text">模块结构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#ddr%E5%86%85%E5%AD%98%E5%8F%82%E6%95%B0%E8%B0%83%E6%95%B4"><span class="toc-text">ddr内存参数调整</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#quartus"><span class="toc-text">quartus</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%83%A7%E5%BD%95%E6%A8%A1%E5%BC%8F"><span class="toc-text">烧录模式</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Neomem-todo"><span class="toc-text">Neomem todo</span></a></li></ol></div><div class="widget-footer">
 
 <a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>Scroll to Top</span></a></div></widget>
 </div></aside><div class='float-panel blur'>
