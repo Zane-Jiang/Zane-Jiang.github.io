@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.29.1" theme-name="Stellar" theme-version="1.29.1">
-  <meta name="robots" content="noindex,follow">
+  
   <meta name="generator" content="Hexo 7.3.0">
   <meta http-equiv='x-dns-prefetch-control' content='on' />
   
@@ -17,19 +17,23 @@
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
   <meta name="theme-color" content="#f9fafb">
   
-  <title>Tag: CXL - Zane Jiang'blog</title>
+  <title>LLVM explore - Zane Jiang'blog</title>
 
   
-    <meta name="description" content="Hello, welcome to my blog. I&#39;m Zane Jiang. I graduated with a bachelor&#39;s degree in Computer Science from Nanjing Normal University, and I am currently pursuing a master&#39;s degree at the College of Comp">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Zane Jiang&#39;blog">
-<meta property="og:url" content="http://example.com/tags/CXL/index.html">
+    <meta name="description" content="入门llvm笔记  新旧新增pass流程CRTP（奇异递归模板模式）(以下内容基于AI生成)  通常通过继承的方式实现单例模式也是这样，只是不知道叫这个名字    CRTP（Curiously Recurring Template Pattern，奇异递归模板模式）是C++中的一种高级模板编程技术，通过让一个类继承自以自身为模板参数的基类模板，实现静态多态或代码复用。 123template &amp;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LLVM explore">
+<meta property="og:url" content="http://example.com/2025/04/23/LLVM-explore/LLVM-explore/index.html">
 <meta property="og:site_name" content="Zane Jiang&#39;blog">
-<meta property="og:description" content="Hello, welcome to my blog. I&#39;m Zane Jiang. I graduated with a bachelor&#39;s degree in Computer Science from Nanjing Normal University, and I am currently pursuing a master&#39;s degree at the College of Comp">
+<meta property="og:description" content="入门llvm笔记  新旧新增pass流程CRTP（奇异递归模板模式）(以下内容基于AI生成)  通常通过继承的方式实现单例模式也是这样，只是不知道叫这个名字    CRTP（Curiously Recurring Template Pattern，奇异递归模板模式）是C++中的一种高级模板编程技术，通过让一个类继承自以自身为模板参数的基类模板，实现静态多态或代码复用。 123template &amp;">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2025/04/23/LLVM-explore/LLVM-explore/image-20250423132436982.png">
+<meta property="article:published_time" content="2025-04-23T05:04:33.000Z">
+<meta property="article:modified_time" content="2025-05-07T11:02:37.069Z">
 <meta property="article:author" content="Zane Jiang">
-<meta property="article:tag" content="OS">
+<meta property="article:tag" content="llvm">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2025/04/23/LLVM-explore/LLVM-explore/image-20250423132436982.png">
   
   
   
@@ -48,7 +52,7 @@
 </head>
 <body>
 
-<div class="l_body s:aa index tech" id="start" layout="undefined" ><aside class="l_left"><div class="leftbar-container">
+<div class="l_body s:aa content tech" id="start" layout="post" ><aside class="l_left"><div class="leftbar-container">
 
 
 <header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="undefined" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">Zane Jiang'blog</div><div class="sub cap">Some highlights from my life and studies.</div></a></div></header>
@@ -60,93 +64,110 @@
 <nav class="menu dis-select"><a class="nav-item active" title="Blog" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="memo" href="/memo/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.25 4.48v3.057c0 .111 0 .27.02.406a.936.936 0 0 0 .445.683a.96.96 0 0 0 .783.072c.13-.04.272-.108.378-.159L17 8.005l1.124.534c.106.05.248.119.378.16a.958.958 0 0 0 .783-.073a.936.936 0 0 0 .444-.683c.021-.136.021-.295.021-.406V3.031c.113-.005.224-.01.332-.013C21.154 2.98 22 3.86 22 4.933v11.21c0 1.112-.906 2.01-2.015 2.08c-.97.06-2.108.179-2.985.41c-1.082.286-1.99 1.068-3.373 1.436c-.626.167-1.324.257-1.627.323V5.174c.32-.079 1.382-.203 1.674-.371c.184-.107.377-.216.576-.323m5.478 8.338a.75.75 0 0 1-.546.91l-4 1a.75.75 0 0 1-.364-1.456l4-1a.75.75 0 0 1 .91.546" clip-rule="evenodd"/><path fill="currentColor" d="M18.25 3.151c-.62.073-1.23.18-1.75.336a8.2 8.2 0 0 0-.75.27v3.182l.75-.356l.008-.005a1.13 1.13 0 0 1 .492-.13c.047 0 .094.004.138.01c.175.029.315.1.354.12l.009.005l.749.356V3.647z"/><path fill="currentColor" d="M12 5.214c-.334-.064-1.057-.161-1.718-.339C8.938 4.515 8.05 3.765 7 3.487c-.887-.234-2.041-.352-3.018-.412C2.886 3.007 2 3.9 2 4.998v11.146c0 1.11.906 2.01 2.015 2.079c.97.06 2.108.179 2.985.41c.486.129 1.216.431 1.873.726c1.005.451 2.052.797 3.127 1.034z" opacity=".5"/><path fill="currentColor" d="M4.273 12.818a.75.75 0 0 1 .91-.545l4 1a.75.75 0 1 1-.365 1.455l-4-1a.75.75 0 0 1-.545-.91m.909-4.545a.75.75 0 1 0-.364 1.455l4 1a.75.75 0 0 0 .364-1.455z"/></svg></a><a class="nav-item" title="Project" href="/project/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 12a8 8 0 1 1-16 0a8 8 0 0 1 16 0" opacity=".5"/><path fill="currentColor" d="M17.712 5.453c1.047-.193 2.006-.259 2.797-.152c.77.103 1.536.393 1.956 1.064c.446.714.312 1.542-.012 2.258c-.33.728-.918 1.499-1.672 2.268c-1.516 1.547-3.836 3.226-6.597 4.697c-2.763 1.472-5.495 2.484-7.694 2.92c-1.095.217-2.098.299-2.923.201c-.8-.095-1.6-.383-2.032-1.075c-.47-.752-.296-1.63.07-2.379c.375-.768 1.032-1.586 1.872-2.403L4 12.416c0 .219.083.71.168 1.146c.045.23.09.444.123.596c-.652.666-1.098 1.263-1.339 1.756c-.277.567-.208.825-.145.925c.072.116.305.305.937.38c.609.073 1.44.018 2.455-.183c2.02-.4 4.613-1.351 7.28-2.772c2.667-1.42 4.85-3.015 6.23-4.423c.694-.707 1.15-1.334 1.377-1.836c.233-.515.167-.75.107-.844c-.07-.112-.289-.294-.883-.374c-.542-.072-1.272-.041-2.163.112L16.87 5.656c.338-.101.658-.17.842-.203"/></svg></a><a class="nav-item" title="Social" href="/friends/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.629 20.472l-.542.916c-.483.816-1.69.816-2.174 0l-.542-.916c-.42-.71-.63-1.066-.968-1.262c-.338-.197-.763-.204-1.613-.219c-1.256-.021-2.043-.098-2.703-.372a5 5 0 0 1-2.706-2.706C2 14.995 2 13.83 2 11.5v-1c0-3.273 0-4.91.737-6.112a5 5 0 0 1 1.65-1.651C5.59 2 7.228 2 10.5 2h3c3.273 0 4.91 0 6.113.737a5 5 0 0 1 1.65 1.65C22 5.59 22 7.228 22 10.5v1c0 2.33 0 3.495-.38 4.413a5 5 0 0 1-2.707 2.706c-.66.274-1.447.35-2.703.372c-.85.015-1.275.022-1.613.219c-.338.196-.548.551-.968 1.262" opacity=".5"/><path fill="currentColor" d="M10.99 14.308c-1.327-.978-3.49-2.84-3.49-4.593c0-2.677 2.475-3.677 4.5-1.609c2.025-2.068 4.5-1.068 4.5 1.609c0 1.752-2.163 3.615-3.49 4.593c-.454.335-.681.502-1.01.502c-.329 0-.556-.167-1.01-.502"/></svg></a></nav>
 </div>
 <div class="widgets">
+
+
 <widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">Recent Update</span></div><div class="widget-body fs14"><a class="item title" href="/2025/04/23/LLVM-explore/LLVM-explore/"><span class="title">LLVM explore</span></a><a class="item title" href="/2024/12/05/kernel-explore/Kernel-compile/"><span class="title">Kernel-compile</span></a><a class="item title" href="/2025/04/23/%E5%A4%87%E5%BF%98%E5%BD%95/CXL-place-llvm-PGO/"><span class="title">CXL-place-llvm-PGO</span></a><a class="item title" href="/2024/10/15/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/"><span class="title">控台项目与iSet项目已使用Qt技能点整理</span></a><a class="item title" href="/2025/01/06/CXL/%E9%BE%99%E8%9C%A5CXL%E8%AE%B2%E8%A7%A3-%E9%AB%98%E6%98%BE%E6%89%AC/"><span class="title">龙蜥CXL讲解-高显扬</span></a><a class="item title" href="/2025/01/06/CXL/OCP-China-2024-CXL-%E8%AE%BA%E5%9D%9B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"><span class="title">OCP China 2024 CXL 论坛学习笔记</span></a><a class="item title" href="/2024/11/28/kernel-explore/Neoperf-study/"><span class="title">Neoperf_study</span></a><a class="item title" href="/2024/11/26/%E5%A4%87%E5%BF%98%E5%BD%95/linux%E8%84%9A%E6%9C%AC%E5%A4%87%E5%BF%98%E5%BD%95/"><span class="title">linux脚本备忘录</span></a><a class="item title" href="/2024/11/28/Hexo/hexo/"><span class="title">Hexo</span></a></div></widget>
 </div>
 
 </div></aside><div class="l_main" id="main">
 
-<header class="header mobile-only"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="undefined" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">Zane Jiang'blog</div><div class="sub cap">Some highlights from my life and studies.</div></a></div></header>
-
- 
 
 
 
 
-<div class="navbar top"><nav class="post"><a href="/">Recent</a><a class="active" href="/tags/">Tag: CXL</a><a href="/archives/">Archives</a></nav></div>
-<div class="post-list post"><a class="post-card post" href="/2025/01/06/CXL/%E9%BE%99%E8%9C%A5CXL%E8%AE%B2%E8%A7%A3-%E9%AB%98%E6%98%BE%E6%89%AC/">
-<article class="md-text"><h2 class="post-title">龙蜥CXL讲解-高显扬</h2><div class="excerpt"><p>CXL技术介绍对视频链接的PPT搬运，方便快速阅读
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">Home</a>
+<span class="sep"></span><a class="cap breadcrumb" href="/">Blog</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">Posted on: <time datetime="2025-04-23T05:04:33.000Z">2025-04-23</time></span><span class="sep updated"></span><span class="text updated">Updated on: <time datetime="2025-05-07T11:02:37.069Z">2025-05-07</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>LLVM explore</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><blockquote>
+<p>入门llvm笔记</p>
+</blockquote>
+<h1 id="新旧新增pass流程"><a href="#新旧新增pass流程" class="headerlink" title="新旧新增pass流程"></a>新旧新增pass流程</h1><h2 id="CRTP（奇异递归模板模式）-以下内容基于AI生成"><a href="#CRTP（奇异递归模板模式）-以下内容基于AI生成" class="headerlink" title="CRTP（奇异递归模板模式）(以下内容基于AI生成)"></a>CRTP（奇异递归模板模式）(以下内容基于AI生成)</h2><blockquote>
+<p> 通常通过继承的方式实现单例模式也是这样，只是不知道叫这个名字</p>
+</blockquote>
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2025/04/23/LLVM-explore/LLVM-explore/image-20250423132436982.png" class="lazy" title="image-20250423132436982">
 
-高显杨 浪潮 
+<p>CRTP（Curiously Recurring Template Pattern，奇异递归模板模式）是C++中的一种高级模板编程技术，通过<strong>让一个类继承自以自身为模板参数的基类模板</strong>，实现静态多态或代码复用。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Derived&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Base</span> &#123; <span class="comment">/* 基类使用Derived类型 */</span> &#125;;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyClass</span> : <span class="keyword">public</span> Base&lt;MyClass&gt; &#123; <span class="comment">/* 派生类将自身作为模板参数传递给基类 */</span> &#125;;</span><br></pre></td></tr></table></figure>
 
-综述
+<h3 id="核心作用"><a href="#核心作用" class="headerlink" title="核心作用"></a><strong>核心作用</strong></h3><h4 id="1-静态多态（编译时多态）"><a href="#1-静态多态（编译时多态）" class="headerlink" title="1. 静态多态（编译时多态）"></a>1. <strong>静态多态（编译时多态）</strong></h4><ul>
+<li><strong>动态多态（虚函数）的问题</strong>：运行时虚表查找导致性能开销。</li>
+<li><strong>CRTP的解决方案</strong>：基类在编译时通过模板参数直接调用派生类的方法。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">template &lt;typename Derived&gt;</span><br><span class="line">class Animal &#123;</span><br><span class="line">public:</span><br><span class="line">    void speak() &#123;</span><br><span class="line">        static_cast&lt;Derived*&gt;(this)-&gt;speakImpl(); // 编译时确定调用</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">class Cat : public Animal&lt;Cat&gt; &#123;</span><br><span class="line">public:</span><br><span class="line">    void speakImpl() &#123; std::cout &lt;&lt; &quot;Meow\n&quot;; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">class Dog : public Animal&lt;Dog&gt; &#123;</span><br><span class="line">public:</span><br><span class="line">    void speakImpl() &#123; std::cout &lt;&lt; &quot;Woof\n&quot;; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">// 使用</span><br><span class="line">Animal&lt;Cat&gt; cat;</span><br><span class="line">cat.speak(); // 输出 &quot;Meow&quot;（无虚函数开销）</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-代码复用"><a href="#2-代码复用" class="headerlink" title="2. 代码复用"></a>2. <strong>代码复用</strong></h4><ul>
+<li>基类可提供通用逻辑，派生类通过特化实现差异部分。</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Derived&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Counter</span> &#123;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="type">static</span> <span class="type">int</span> count;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Counter</span>() &#123; ++count; &#125;</span><br><span class="line">    <span class="function"><span class="type">static</span> <span class="type">int</span> <span class="title">getCount</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> count; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Derived&gt;</span><br><span class="line"><span class="type">int</span> Counter&lt;Derived&gt;::count = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 统计对象实例数的类</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> : <span class="keyword">public</span> Counter&lt;Widget&gt; &#123;&#125;;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Gadget</span> : <span class="keyword">public</span> Counter&lt;Gadget&gt; &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用</span></span><br><span class="line">Widget w1, w2;</span><br><span class="line">Gadget g1;</span><br><span class="line">std::cout &lt;&lt; Widget::<span class="built_in">getCount</span>(); <span class="comment">// 输出 2</span></span><br><span class="line">std::cout &lt;&lt; Gadget::<span class="built_in">getCount</span>(); <span class="comment">// 输出 1</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="CRTP-vs-虚函数"><a href="#CRTP-vs-虚函数" class="headerlink" title="CRTP vs 虚函数"></a><strong>CRTP vs 虚函数</strong></h3><table>
+<thead>
+<tr>
+<th align="left">特性</th>
+<th align="left">CRTP</th>
+<th align="left">虚函数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>多态时机</strong></td>
+<td align="left">编译时</td>
+<td align="left">运行时</td>
+</tr>
+<tr>
+<td align="left"><strong>性能</strong></td>
+<td align="left">无额外开销（直接调用）</td>
+<td align="left">虚表查找开销</td>
+</tr>
+<tr>
+<td align="left"><strong>灵活性</strong></td>
+<td align="left">类型固定（模板参数需明确）</td>
+<td align="left">支持运行时类型动态替换</td>
+</tr>
+<tr>
+<td align="left"><strong>适用场景</strong></td>
+<td align="left">高性能库、框架基础设施</td>
+<td align="left">需要运行时动态行为的情况</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="CRTP的典型应用场景"><a href="#CRTP的典型应用场景" class="headerlink" title="CRTP的典型应用场景"></a><strong>CRTP的典型应用场景</strong></h3><ol>
+<li><strong>编译时多态</strong>：如数学库中的向量&#x2F;矩阵运算（Eigen库）。</li>
+<li><strong>对象计数</strong>：统计不同派生类的实例数量。</li>
+<li><strong>Mixin模式</strong>：为类动态添加功能（如LLVM的<code>PassInfoMixin</code>）。</li>
+<li><strong>链式调用</strong>：返回派生类引用以实现链式语法（<code>return static_cast&lt;Derived&amp;&gt;(*this);</code>）。</li>
+</ol>
+<h2 id="llvm中的dyn-cast与C-的RTTI"><a href="#llvm中的dyn-cast与C-的RTTI" class="headerlink" title="llvm中的dyn_cast与C++的RTTI"></a>llvm中的dyn_cast与C++的RTTI</h2><h3 id="C-RTTI"><a href="#C-RTTI" class="headerlink" title="C++ RTTI"></a>C++ RTTI</h3>
+
+</article>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">Newer</div><a href="/2025/04/23/%E5%A4%87%E5%BF%98%E5%BD%95/CXL-place-llvm-PGO/">CXL-place-llvm-PGO</a></div><div class="item" id="next"><div class="note">Older</div><a href="/2025/01/06/CXL/%E9%BE%99%E8%9C%A5CXL%E8%AE%B2%E8%A7%A3-%E9%AB%98%E6%98%BE%E6%89%AC/">龙蜥CXL讲解-高显扬</a></div></section></div>
 
 
 
 
-
-
-
-
-
-协议协议演进
-
-1.1内存拓展
-
-
-2.0内存赤化
-
-
-
-
-3.0特性
-
-
-
-
-CXL子协议
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-CXL设备
-
-
-
-...</p></div><div class="meta cap"><span class="cap" id="post-meta"><svg style="margin-bottom:2px" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M6.94 2c.416 0 .753.324.753.724v1.46c.668-.012 1.417-.012 2.26-.012h4.015c.842 0 1.591 0 2.259.013v-1.46c0-.4.337-.725.753-.725s.753.324.753.724V4.25c1.445.111 2.394.384 3.09 1.055c.698.67.982 1.582 1.097 2.972L22 9H2v-.724c.116-1.39.4-2.302 1.097-2.972c.697-.67 1.645-.944 3.09-1.055V2.724c0-.4.337-.724.753-.724"/><path fill="currentColor" d="M22 14v-2c0-.839-.004-2.335-.017-3H2.01c-.013.665-.01 2.161-.01 3v2c0 3.771 0 5.657 1.172 6.828C4.343 22 6.228 22 10 22h4c3.77 0 5.656 0 6.828-1.172C22 19.658 22 17.772 22 14" opacity=".5"/><path fill="currentColor" d="M18 17a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m-5 4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m-5 4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0"/></svg><time datetime="2025-01-06T05:39:31.000Z">2025-01-06</time></span></div></article>
-</a><a class="post-card post" href="/2025/01/06/CXL/OCP-China-2024-CXL-%E8%AE%BA%E5%9D%9B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
-<article class="md-text"><h2 class="post-title">OCP China 2024 CXL 论坛学习笔记</h2><div class="excerpt"><p>OCP China 2024 CXL论坛 学习笔记会议链接
-阿里云 数据中心高性能Scale Up 互联系统趋势
-孔阳 阿里云超高速互联负责人
-胡文普 CXL部分
-
-Scale Up
-
-云的角度 关注两个计算 ： 通用计算、GPU计算
-通用计算上：
-...</p></div><div class="meta cap"><span class="cap" id="post-meta"><svg style="margin-bottom:2px" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M6.94 2c.416 0 .753.324.753.724v1.46c.668-.012 1.417-.012 2.26-.012h4.015c.842 0 1.591 0 2.259.013v-1.46c0-.4.337-.725.753-.725s.753.324.753.724V4.25c1.445.111 2.394.384 3.09 1.055c.698.67.982 1.582 1.097 2.972L22 9H2v-.724c.116-1.39.4-2.302 1.097-2.972c.697-.67 1.645-.944 3.09-1.055V2.724c0-.4.337-.724.753-.724"/><path fill="currentColor" d="M22 14v-2c0-.839-.004-2.335-.017-3H2.01c-.013.665-.01 2.161-.01 3v2c0 3.771 0 5.657 1.172 6.828C4.343 22 6.228 22 10 22h4c3.77 0 5.656 0 6.828-1.172C22 19.658 22 17.772 22 14" opacity=".5"/><path fill="currentColor" d="M18 17a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m-5 4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m-5 4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0"/></svg><time datetime="2025-01-06T05:08:00.000Z">2025-01-06</time></span></div></article>
-</a></div>
 
 
 <footer class="page-footer footnote"><hr><div class="text"></div></footer>
 <div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
-</aside><div class='float-panel blur'>
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">On This Page</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%B0%E6%97%A7%E6%96%B0%E5%A2%9Epass%E6%B5%81%E7%A8%8B"><span class="toc-text">新旧新增pass流程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#CRTP%EF%BC%88%E5%A5%87%E5%BC%82%E9%80%92%E5%BD%92%E6%A8%A1%E6%9D%BF%E6%A8%A1%E5%BC%8F%EF%BC%89-%E4%BB%A5%E4%B8%8B%E5%86%85%E5%AE%B9%E5%9F%BA%E4%BA%8EAI%E7%94%9F%E6%88%90"><span class="toc-text">CRTP（奇异递归模板模式）(以下内容基于AI生成)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E4%BD%9C%E7%94%A8"><span class="toc-text">核心作用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E9%9D%99%E6%80%81%E5%A4%9A%E6%80%81%EF%BC%88%E7%BC%96%E8%AF%91%E6%97%B6%E5%A4%9A%E6%80%81%EF%BC%89"><span class="toc-text">1. 静态多态（编译时多态）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E4%BB%A3%E7%A0%81%E5%A4%8D%E7%94%A8"><span class="toc-text">2. 代码复用</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CRTP-vs-%E8%99%9A%E5%87%BD%E6%95%B0"><span class="toc-text">CRTP vs 虚函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CRTP%E7%9A%84%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-text">CRTP的典型应用场景</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#llvm%E4%B8%AD%E7%9A%84dyn-cast%E4%B8%8EC-%E7%9A%84RTTI"><span class="toc-text">llvm中的dyn_cast与C++的RTTI</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#C-RTTI"><span class="toc-text">C++ RTTI</span></a></li></ol></li></ol></li></ol></div><div class="widget-footer">
+
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>Scroll to Top</span></a></div></widget>
+</div></aside><div class='float-panel blur'>
   <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
   </button>
