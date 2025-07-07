@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.29.1" theme-name="Stellar" theme-version="1.29.1">
-  <meta name="robots" content="noindex,follow">
+  
   <meta name="generator" content="Hexo 7.3.0">
   <meta http-equiv='x-dns-prefetch-control' content='on' />
   
@@ -17,16 +17,18 @@
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
   <meta name="theme-color" content="#f9fafb">
   
-  <title>Archives - Zane Jiang'blog</title>
+  <title>CPP杂记 - Zane Jiang'blog</title>
 
   
-    <meta name="description" content="Hello, welcome to my blog. I&#39;m Zane Jiang. I graduated with a bachelor&#39;s degree in Computer Science from Nanjing Normal University, and I am currently pursuing a master&#39;s degree at the College of Comp">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Archives">
-<meta property="og:url" content="http://example.com/archives/2025/index.html">
+    <meta name="description" content="全局静态变量、函数内静态变量、attribute((destructor))析构顺序构造析构顺序的不确定性 以及静态函数获取的单例。  C++ 标准规定：同一个编译单元（同一个 cpp 文件）内，静态&#x2F;全局对象的析构顺序与构造顺序相反。  但不同编译单元（不同 cpp 文件&#x2F;so）之间的析构顺序是未定义的。  局部 static（即函数内 static）对象的析构顺序与其定义顺">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CPP杂记">
+<meta property="og:url" content="http://example.com/2025/06/18/CPP/CPP%E6%9D%82%E8%AE%B0/index.html">
 <meta property="og:site_name" content="Zane Jiang&#39;blog">
-<meta property="og:description" content="Hello, welcome to my blog. I&#39;m Zane Jiang. I graduated with a bachelor&#39;s degree in Computer Science from Nanjing Normal University, and I am currently pursuing a master&#39;s degree at the College of Comp">
+<meta property="og:description" content="全局静态变量、函数内静态变量、attribute((destructor))析构顺序构造析构顺序的不确定性 以及静态函数获取的单例。  C++ 标准规定：同一个编译单元（同一个 cpp 文件）内，静态&#x2F;全局对象的析构顺序与构造顺序相反。  但不同编译单元（不同 cpp 文件&#x2F;so）之间的析构顺序是未定义的。  局部 static（即函数内 static）对象的析构顺序与其定义顺">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-06-18T03:02:52.000Z">
+<meta property="article:modified_time" content="2025-07-07T13:31:02.933Z">
 <meta property="article:author" content="Zane Jiang">
 <meta property="article:tag" content="OS">
 <meta name="twitter:card" content="summary">
@@ -48,7 +50,7 @@
 </head>
 <body>
 
-<div class="l_body s:aa index tech" id="start" layout="undefined" ><aside class="l_left"><div class="leftbar-container">
+<div class="l_body s:aa content tech" id="start" layout="post" ><aside class="l_left"><div class="leftbar-container">
 
 
 <header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="undefined" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">Zane Jiang'blog</div><div class="sub cap">Some highlights from my life and studies.</div></a></div></header>
@@ -60,20 +62,105 @@
 <nav class="menu dis-select"><a class="nav-item active" title="Blog" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="memo" href="/memo/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.25 4.48v3.057c0 .111 0 .27.02.406a.936.936 0 0 0 .445.683a.96.96 0 0 0 .783.072c.13-.04.272-.108.378-.159L17 8.005l1.124.534c.106.05.248.119.378.16a.958.958 0 0 0 .783-.073a.936.936 0 0 0 .444-.683c.021-.136.021-.295.021-.406V3.031c.113-.005.224-.01.332-.013C21.154 2.98 22 3.86 22 4.933v11.21c0 1.112-.906 2.01-2.015 2.08c-.97.06-2.108.179-2.985.41c-1.082.286-1.99 1.068-3.373 1.436c-.626.167-1.324.257-1.627.323V5.174c.32-.079 1.382-.203 1.674-.371c.184-.107.377-.216.576-.323m5.478 8.338a.75.75 0 0 1-.546.91l-4 1a.75.75 0 0 1-.364-1.456l4-1a.75.75 0 0 1 .91.546" clip-rule="evenodd"/><path fill="currentColor" d="M18.25 3.151c-.62.073-1.23.18-1.75.336a8.2 8.2 0 0 0-.75.27v3.182l.75-.356l.008-.005a1.13 1.13 0 0 1 .492-.13c.047 0 .094.004.138.01c.175.029.315.1.354.12l.009.005l.749.356V3.647z"/><path fill="currentColor" d="M12 5.214c-.334-.064-1.057-.161-1.718-.339C8.938 4.515 8.05 3.765 7 3.487c-.887-.234-2.041-.352-3.018-.412C2.886 3.007 2 3.9 2 4.998v11.146c0 1.11.906 2.01 2.015 2.079c.97.06 2.108.179 2.985.41c.486.129 1.216.431 1.873.726c1.005.451 2.052.797 3.127 1.034z" opacity=".5"/><path fill="currentColor" d="M4.273 12.818a.75.75 0 0 1 .91-.545l4 1a.75.75 0 1 1-.365 1.455l-4-1a.75.75 0 0 1-.545-.91m.909-4.545a.75.75 0 1 0-.364 1.455l4 1a.75.75 0 0 0 .364-1.455z"/></svg></a><a class="nav-item" title="Project" href="/project/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 12a8 8 0 1 1-16 0a8 8 0 0 1 16 0" opacity=".5"/><path fill="currentColor" d="M17.712 5.453c1.047-.193 2.006-.259 2.797-.152c.77.103 1.536.393 1.956 1.064c.446.714.312 1.542-.012 2.258c-.33.728-.918 1.499-1.672 2.268c-1.516 1.547-3.836 3.226-6.597 4.697c-2.763 1.472-5.495 2.484-7.694 2.92c-1.095.217-2.098.299-2.923.201c-.8-.095-1.6-.383-2.032-1.075c-.47-.752-.296-1.63.07-2.379c.375-.768 1.032-1.586 1.872-2.403L4 12.416c0 .219.083.71.168 1.146c.045.23.09.444.123.596c-.652.666-1.098 1.263-1.339 1.756c-.277.567-.208.825-.145.925c.072.116.305.305.937.38c.609.073 1.44.018 2.455-.183c2.02-.4 4.613-1.351 7.28-2.772c2.667-1.42 4.85-3.015 6.23-4.423c.694-.707 1.15-1.334 1.377-1.836c.233-.515.167-.75.107-.844c-.07-.112-.289-.294-.883-.374c-.542-.072-1.272-.041-2.163.112L16.87 5.656c.338-.101.658-.17.842-.203"/></svg></a><a class="nav-item" title="Social" href="/friends/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.629 20.472l-.542.916c-.483.816-1.69.816-2.174 0l-.542-.916c-.42-.71-.63-1.066-.968-1.262c-.338-.197-.763-.204-1.613-.219c-1.256-.021-2.043-.098-2.703-.372a5 5 0 0 1-2.706-2.706C2 14.995 2 13.83 2 11.5v-1c0-3.273 0-4.91.737-6.112a5 5 0 0 1 1.65-1.651C5.59 2 7.228 2 10.5 2h3c3.273 0 4.91 0 6.113.737a5 5 0 0 1 1.65 1.65C22 5.59 22 7.228 22 10.5v1c0 2.33 0 3.495-.38 4.413a5 5 0 0 1-2.707 2.706c-.66.274-1.447.35-2.703.372c-.85.015-1.275.022-1.613.219c-.338.196-.548.551-.968 1.262" opacity=".5"/><path fill="currentColor" d="M10.99 14.308c-1.327-.978-3.49-2.84-3.49-4.593c0-2.677 2.475-3.677 4.5-1.609c2.025-2.068 4.5-1.068 4.5 1.609c0 1.752-2.163 3.615-3.49 4.593c-.454.335-.681.502-1.01.502c-.329 0-.556-.167-1.01-.502"/></svg></a></nav>
 </div>
 <div class="widgets">
+
+
 <widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">Recent Update</span></div><div class="widget-body fs14"><a class="item title" href="/2025/06/18/CPP/CPP%E6%9D%82%E8%AE%B0/"><span class="title">CPP杂记</span></a><a class="item title" href="/2025/04/23/%E5%A4%87%E5%BF%98%E5%BD%95/CXL-place-llvm-PGO%E6%9D%82%E8%AE%B0/"><span class="title">CXL-place-llvm-PGO杂记</span></a><a class="item title" href="/2025/04/23/LLVM/LLVM/"><span class="title">LLVM explore</span></a><a class="item title" href="/2024/12/05/Linux%20kernel/Kernel-compile/"><span class="title">Kernel-compile</span></a><a class="item title" href="/2024/10/15/Qt/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/"><span class="title">控台项目与iSet项目已使用Qt技能点整理</span></a><a class="item title" href="/2025/01/06/CXL/%E9%BE%99%E8%9C%A5CXL%E8%AE%B2%E8%A7%A3-%E9%AB%98%E6%98%BE%E6%89%AC/"><span class="title">龙蜥CXL讲解-高显扬</span></a><a class="item title" href="/2025/01/06/CXL/OCP-China-2024-CXL-%E8%AE%BA%E5%9D%9B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"><span class="title">OCP China 2024 CXL 论坛学习笔记</span></a><a class="item title" href="/2024/11/28/Linux%20kernel/Neoperf-study/"><span class="title">Neoperf_study</span></a><a class="item title" href="/2024/11/26/%E5%A4%87%E5%BF%98%E5%BD%95/linux%E8%84%9A%E6%9C%AC%E5%A4%87%E5%BF%98%E5%BD%95/"><span class="title">linux脚本备忘录</span></a><a class="item title" href="/2024/11/28/Hexo/hexo/"><span class="title">Hexo</span></a></div></widget>
 </div>
 
 </div></aside><div class="l_main" id="main">
 
-<header class="header mobile-only"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="undefined" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">Zane Jiang'blog</div><div class="sub cap">Some highlights from my life and studies.</div></a></div></header>
-
- 
 
 
-<div class="navbar top"><nav class="post"><a href="/">Recent</a><a href="/tags/">Tags</a><a class="active" href="/archives/">Archives</a></nav></div><div class="post-list archives"><article class="" id="archive"><div class='archive-header h4'>2025</div><div class="archive-list"><a class='post fs14' href="/2025/06/29/%E5%A4%87%E5%BF%98%E5%BD%95/%E6%99%BA%E8%83%BD%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97%E7%AC%AC%E4%B8%80%E6%AC%A1%E4%BD%9C%E4%B8%9A/"><time>06-29</time><span>2025-06-29</span></a></div><div class="archive-list"><a class='post fs14' href="/2025/06/18/CPP/CPP%E6%9D%82%E8%AE%B0/"><time>06-18</time><span>CPP杂记</span></a></div><div class="archive-list"><a class='post fs14' href="/2025/04/23/%E5%A4%87%E5%BF%98%E5%BD%95/CXL-place-llvm-PGO%E6%9D%82%E8%AE%B0/"><time>04-23</time><span>CXL-place-llvm-PGO杂记</span></a></div><div class="archive-list"><a class='post fs14' href="/2025/04/23/LLVM/LLVM/"><time>04-23</time><span>LLVM explore</span></a></div><div class="archive-list"><a class='post fs14' href="/2025/01/06/CXL/%E9%BE%99%E8%9C%A5CXL%E8%AE%B2%E8%A7%A3-%E9%AB%98%E6%98%BE%E6%89%AC/"><time>01-06</time><span>龙蜥CXL讲解-高显扬</span></a></div><div class="archive-list"><a class='post fs14' href="/2025/01/06/CXL/OCP-China-2024-CXL-%E8%AE%BA%E5%9D%9B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"><time>01-06</time><span>OCP China 2024 CXL 论坛学习笔记</span></a></div></article><article class="" id="archive"><div class='archive-header h4'>2024</div><div class="archive-list"><a class='post fs14' href="/2024/12/05/Linux%20kernel/Kernel-compile/"><time>12-05</time><span>Kernel-compile</span></a></div><div class="archive-list"><a class='post fs14' href="/2024/11/28/Hexo/hexo/"><time>11-28</time><span>Hexo</span></a></div><div class="archive-list"><a class='post fs14' href="/2024/11/28/Linux%20kernel/Neoperf-study/"><time>11-28</time><span>Neoperf_study</span></a></div><div class="archive-list"><a class='post fs14' href="/2024/11/26/%E5%A4%87%E5%BF%98%E5%BD%95/linux%E8%84%9A%E6%9C%AC%E5%A4%87%E5%BF%98%E5%BD%95/"><time>11-26</time><span>linux脚本备忘录</span></a></div><div class="archive-list"><a class='post fs14' href="/2024/10/15/Qt/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/"><time>10-15</time><span>控台项目与iSet项目已使用Qt技能点整理</span></a></div></article></div>
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">Home</a>
+<span class="sep"></span><a class="cap breadcrumb" href="/">Blog</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">Posted on: <time datetime="2025-06-18T03:02:52.000Z">2025-06-18</time></span><span class="sep updated"></span><span class="text updated">Updated on: <time datetime="2025-07-07T13:31:02.933Z">2025-07-07</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>CPP杂记</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><h2 id="全局静态变量、函数内静态变量、attribute-destructor-析构顺序"><a href="#全局静态变量、函数内静态变量、attribute-destructor-析构顺序" class="headerlink" title="全局静态变量、函数内静态变量、attribute((destructor))析构顺序"></a>全局静态变量、函数内静态变量、<strong>attribute</strong>((destructor))析构顺序</h2><p>构造析构顺序的不确定性</p>
+<p>以及静态函数获取的单例。</p>
+<ul>
+<li><p>C++ 标准规定：同一个编译单元（同一个 cpp 文件）内，静态&#x2F;全局对象的析构顺序与构造顺序相反。</p>
+</li>
+<li><p>但不同编译单元（不同 cpp 文件&#x2F;so）之间的析构顺序是未定义的。</p>
+</li>
+<li><p>局部 static（即函数内 static）对象的析构顺序与其定义顺序有关，但也只在同一编译单元内有保证。</p>
+</li>
+</ul>
+<p>若一个变量仅在单个文件中可见，则建议将这个变量声明为静态全局变量，<strong>static修饰的静态全局变量仅在当前文件中可见</strong>。</p>
+<p>如果一个全局变量只被单个函数使用,将其改为该函数的静态局部变量可以进一步限制变量的作用域,提高代码的内聚性,降低耦合度。<strong>静态局部变量具有全局寿命但局部作用域</strong>的特点,</p>
+<p>静态全局变量是存储在**静态数据区的,**而不是栈区,因此静态全局变量的大小不会导致栈溢出。栈溢出通常是由于函数调用层次过深或局部变量过大导致的。</p>
+<h2 id="类的内存占用"><a href="#类的内存占用" class="headerlink" title="类的内存占用"></a>类的内存占用</h2>
+
+<p>1.32位系统中虚函数指针为4字节，64位为8字节</p>
+<p>2.只需要考虑虚函数指针，虚函数表不计入某个类的资源</p>
+<p>3.char占一字节，但是需要考虑内存调用</p>
+<p>4.如果有虚继承，则多一个虚基类指针。</p>
+<p>5.空类占一个字节（用于标识）</p>
+<h2 id="指针好题"><a href="#指针好题" class="headerlink" title="指针好题"></a>指针好题</h2>
+
+
+
+<p>int arr[5]&#x3D;{1,2,3,4,5};在这个数组的定义中，通常的理解<strong>arr</strong>是数组的地址即<strong>数组首元素</strong>的地址，进一步理解arr是一个int型的指针常量，常量+1地址偏移sizeof(int)，所以arr+1是首元素下一个元素的地址；考虑到这一层就不难理解**&amp;arr*<em>的含义，&amp;arr是对arr取地址，结果也是个地址，只是这个地址的类型是指向有5个int类型数据的数组的指针常量，这个常量+1地址偏移5</em>sizeof(int)。</p>
+<p><strong>各级指针算各级的</strong>： 主要就是理解&amp; 和 * 的“升级降级”；</p>
+<blockquote>
+<p>链接：<a target="_blank" rel="noopener" href="https://www.nowcoder.com/exam/test/89156461/submission?examPageSource=Intelligent&pid=62380309&testCallback=https://www.nowcoder.com/exam/intelligent?questionJobId=10&subTabName=intelligent_page&tagId=21000&testclass=%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91">https://www.nowcoder.com/exam/test/89156461/submission?examPageSource=Intelligent&pid=62380309&testCallback=https%3A%2F%2Fwww.nowcoder.com%2Fexam%2Fintelligent%3FquestionJobId%3D10%26subTabName%3Dintelligent_page%26tagId%3D21000&amp;testclass&#x3D;%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91</a></p>
+</blockquote>
+<h2 id="Copy-and-Swap"><a href="#Copy-and-Swap" class="headerlink" title="Copy and Swap"></a>Copy and Swap</h2><p>传统做法<code>operator=</code></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MyString</span> &#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">char</span>* data; <span class="comment">// 动态分配的字符串</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 赋值运算符重载</span></span><br><span class="line">    MyString&amp; <span class="keyword">operator</span>=(<span class="type">const</span> MyString&amp; other) &#123;</span><br><span class="line">        <span class="comment">// 检查自赋值</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span> == &amp;other) &#123;</span><br><span class="line">            <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 释放当前对象的资源</span></span><br><span class="line">        <span class="keyword">delete</span>[] data;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 复制数据</span></span><br><span class="line">        data = <span class="keyword">new</span> <span class="type">char</span>[std::<span class="built_in">strlen</span>(other.data) + <span class="number">1</span>];</span><br><span class="line">        std::<span class="built_in">strcpy</span>(data, other.data);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 返回当前对象的引用</span></span><br><span class="line">        <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><code>Copy and Swap</code></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">MyString&amp; <span class="keyword">operator</span>=(<span class="type">const</span> MyString&amp; other) &#123;</span><br><span class="line">    <span class="comment">// 检查自赋值</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span> == &amp;other) &#123;</span><br><span class="line">        <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    MyString tmp&#123;other&#125;;</span><br><span class="line">    std::<span class="built_in">swap</span>(data,other.data);</span><br><span class="line">    <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>优势：</p>
+<p>异常安全：传统方法new抛出异常时，对象出于无效状态。data已经被删除，但是分配失败</p>
+<blockquote>
+<p><strong>强异常安全性:</strong>  <strong>如果一个操作因为异常而失败，程序的状态会回滚到操作之前的样子，就像这个操作从来没执行过一样</strong></p>
+</blockquote>
+<p>代码复用：复用拷贝构造函数</p>
+<p>自动资源管理：自动释放tmp资源</p>
+<p>C++11 写法</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">MyString&amp; <span class="keyword">operator</span>=(MyString other) &#123;<span class="comment">//值传递</span></span><br><span class="line">    	<span class="comment">//传入左值：拷贝构造</span></span><br><span class="line">    	<span class="comment">//传入右值：移动构造</span></span><br><span class="line">        std::<span class="built_in">swap</span>(data,other.data);</span><br><span class="line">        <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>移动构造还是拷贝构造？</p>
+<p>左值：叫得出名字   右值：叫不出名字（临时变量，std::move）</p>
+<p>左值用拷贝构造，右值用移动构造（偷）</p>
+</blockquote>
+
+
+</article>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">Newer</div><a href="/2025/06/29/%E5%A4%87%E5%BF%98%E5%BD%95/%E6%99%BA%E8%83%BD%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97%E7%AC%AC%E4%B8%80%E6%AC%A1%E4%BD%9C%E4%B8%9A/">2025-06-29</a></div><div class="item" id="next"><div class="note">Older</div><a href="/2025/04/23/%E5%A4%87%E5%BF%98%E5%BD%95/CXL-place-llvm-PGO%E6%9D%82%E8%AE%B0/">CXL-place-llvm-PGO杂记</a></div></section></div>
+
+
+
+
+
+
 <footer class="page-footer footnote"><hr><div class="text"></div></footer>
 <div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
-</aside><div class='float-panel blur'>
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">On This Page</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%A8%E5%B1%80%E9%9D%99%E6%80%81%E5%8F%98%E9%87%8F%E3%80%81%E5%87%BD%E6%95%B0%E5%86%85%E9%9D%99%E6%80%81%E5%8F%98%E9%87%8F%E3%80%81attribute-destructor-%E6%9E%90%E6%9E%84%E9%A1%BA%E5%BA%8F"><span class="toc-text">全局静态变量、函数内静态变量、attribute((destructor))析构顺序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B1%BB%E7%9A%84%E5%86%85%E5%AD%98%E5%8D%A0%E7%94%A8"><span class="toc-text">类的内存占用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%87%E9%92%88%E5%A5%BD%E9%A2%98"><span class="toc-text">指针好题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Copy-and-Swap"><span class="toc-text">Copy and Swap</span></a></li></ol></div><div class="widget-footer">
+
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>Scroll to Top</span></a></div></widget>
+</div></aside><div class='float-panel blur'>
   <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
   </button>

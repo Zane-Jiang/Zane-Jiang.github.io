@@ -17,27 +17,21 @@
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
   <meta name="theme-color" content="#f9fafb">
   
-  <title>Neoperf_study - Zane Jiang'blog</title>
+  <title>Zane Jiang'blog</title>
 
   
-    <meta name="description" content="NeoPerf study 本文主要为学习论文《NeoMem: Hardware&#x2F;Software Co-Design for CXL-Native Memory Tiering》的工作，分为三个部分，用户态、内核以及FPGA部分，内核开源仓库地址为：  PKUZHOU&#x2F;linux  代码基于linux内核代码6.0开始修改。 由于初步探索linux内核代码，所以没有按照自顶向">
+    <meta name="description" content="智能边缘计算作业  202414131169蒋泽  1.简要阐述边缘计算的赋能技术答：为了给新一代网络提供资源开放、管理开发和网络开放等能力，针对边缘计算的具体实现和实际部署中的问题，需要使用到一些增强边缘计算能力、优化性能以及拓展应用场景的关键技术。以下是基类常见的边缘计算赋能技术：  软件定义网络（SDN）SDN 通过分离控制平面与数据平面，实现网络资源的灵活调度，优化边缘计算中的数据传输路径">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Neoperf_study">
-<meta property="og:url" content="http://example.com/2024/11/28/kernel-explore/Neoperf-study/index.html">
+<meta property="og:title" content="Zane Jiang&#39;blog">
+<meta property="og:url" content="http://example.com/2025/06/29/%E5%A4%87%E5%BF%98%E5%BD%95/%E6%99%BA%E8%83%BD%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97%E7%AC%AC%E4%B8%80%E6%AC%A1%E4%BD%9C%E4%B8%9A/index.html">
 <meta property="og:site_name" content="Zane Jiang&#39;blog">
-<meta property="og:description" content="NeoPerf study 本文主要为学习论文《NeoMem: Hardware&#x2F;Software Co-Design for CXL-Native Memory Tiering》的工作，分为三个部分，用户态、内核以及FPGA部分，内核开源仓库地址为：  PKUZHOU&#x2F;linux  代码基于linux内核代码6.0开始修改。 由于初步探索linux内核代码，所以没有按照自顶向">
+<meta property="og:description" content="智能边缘计算作业  202414131169蒋泽  1.简要阐述边缘计算的赋能技术答：为了给新一代网络提供资源开放、管理开发和网络开放等能力，针对边缘计算的具体实现和实际部署中的问题，需要使用到一些增强边缘计算能力、优化性能以及拓展应用场景的关键技术。以下是基类常见的边缘计算赋能技术：  软件定义网络（SDN）SDN 通过分离控制平面与数据平面，实现网络资源的灵活调度，优化边缘计算中的数据传输路径">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/neoperf-study/image-20241128201430600.png">
-<meta property="og:image" content="http://example.com/2024/11/28/kernel-explore/Neoperf-study/image-20241222145536477.png">
-<meta property="og:image" content="http://example.com/2024/11/28/kernel-explore/Neoperf-study/image-20241222145705256.png">
-<meta property="og:image" content="http://example.com/2024/11/28/kernel-explore/Neoperf-study/image-20241222145744791.png">
-<meta property="og:image" content="http://example.com/2024/11/28/kernel-explore/Neoperf-study/image-20241222151404359.png">
-<meta property="article:published_time" content="2024-11-28T11:55:34.000Z">
-<meta property="article:modified_time" content="2024-12-22T08:49:46.460Z">
+<meta property="article:published_time" content="2025-06-29T12:33:54.662Z">
+<meta property="article:modified_time" content="2025-06-29T13:00:24.241Z">
 <meta property="article:author" content="Zane Jiang">
-<meta property="article:tag" content="CXL - Kernel-explore">
+<meta property="article:tag" content="OS">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/neoperf-study/image-20241128201430600.png">
   
   
   
@@ -70,7 +64,7 @@
 <div class="widgets">
 
 
-<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">Recent Update</span></div><div class="widget-body fs14"><a class="item title" href="/2025/04/23/LLVM-explore/LLVM-explore/"><span class="title">LLVM explore</span></a><a class="item title" href="/2024/12/05/kernel-explore/Kernel-compile/"><span class="title">Kernel-compile</span></a><a class="item title" href="/2025/04/23/%E5%A4%87%E5%BF%98%E5%BD%95/CXL-place-llvm-PGO/"><span class="title">CXL-place-llvm-PGO</span></a><a class="item title" href="/2024/10/15/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/"><span class="title">控台项目与iSet项目已使用Qt技能点整理</span></a><a class="item title" href="/2025/01/06/CXL/%E9%BE%99%E8%9C%A5CXL%E8%AE%B2%E8%A7%A3-%E9%AB%98%E6%98%BE%E6%89%AC/"><span class="title">龙蜥CXL讲解-高显扬</span></a><a class="item title" href="/2025/01/06/CXL/OCP-China-2024-CXL-%E8%AE%BA%E5%9D%9B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"><span class="title">OCP China 2024 CXL 论坛学习笔记</span></a><a class="item title" href="/2024/11/28/kernel-explore/Neoperf-study/"><span class="title">Neoperf_study</span></a><a class="item title" href="/2024/11/26/%E5%A4%87%E5%BF%98%E5%BD%95/linux%E8%84%9A%E6%9C%AC%E5%A4%87%E5%BF%98%E5%BD%95/"><span class="title">linux脚本备忘录</span></a><a class="item title" href="/2024/11/28/Hexo/hexo/"><span class="title">Hexo</span></a></div></widget>
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">Recent Update</span></div><div class="widget-body fs14"><a class="item title" href="/2025/06/18/CPP/CPP%E6%9D%82%E8%AE%B0/"><span class="title">CPP杂记</span></a><a class="item title" href="/2025/04/23/%E5%A4%87%E5%BF%98%E5%BD%95/CXL-place-llvm-PGO%E6%9D%82%E8%AE%B0/"><span class="title">CXL-place-llvm-PGO杂记</span></a><a class="item title" href="/2025/04/23/LLVM/LLVM/"><span class="title">LLVM explore</span></a><a class="item title" href="/2024/12/05/Linux%20kernel/Kernel-compile/"><span class="title">Kernel-compile</span></a><a class="item title" href="/2024/10/15/Qt/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/"><span class="title">控台项目与iSet项目已使用Qt技能点整理</span></a><a class="item title" href="/2025/01/06/CXL/%E9%BE%99%E8%9C%A5CXL%E8%AE%B2%E8%A7%A3-%E9%AB%98%E6%98%BE%E6%89%AC/"><span class="title">龙蜥CXL讲解-高显扬</span></a><a class="item title" href="/2025/01/06/CXL/OCP-China-2024-CXL-%E8%AE%BA%E5%9D%9B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"><span class="title">OCP China 2024 CXL 论坛学习笔记</span></a><a class="item title" href="/2024/11/28/Linux%20kernel/Neoperf-study/"><span class="title">Neoperf_study</span></a><a class="item title" href="/2024/11/26/%E5%A4%87%E5%BF%98%E5%BD%95/linux%E8%84%9A%E6%9C%AC%E5%A4%87%E5%BF%98%E5%BD%95/"><span class="title">linux脚本备忘录</span></a><a class="item title" href="/2024/11/28/Hexo/hexo/"><span class="title">Hexo</span></a></div></widget>
 </div>
 
 </div></aside><div class="l_main" id="main">
@@ -83,85 +77,58 @@
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">Home</a>
 <span class="sep"></span><a class="cap breadcrumb" href="/">Blog</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">Posted on: <time datetime="2024-11-28T11:55:34.000Z">2024-11-28</time></span><span class="sep updated"></span><span class="text updated">Updated on: <time datetime="2024-12-22T08:49:46.460Z">2024-12-22</time></span></div></div></div>
-    
-    <div class="bottom only-title">
-      
-      <div class="text-area">
-        <h1 class="text title"><span>Neoperf_study</span></h1>
-        
-      </div>
-    </div>
+<div class="flex-row" id="post-meta"><span class="text created">Posted on: <time datetime="2025-06-29T12:33:54.662Z">2025-06-29</time></span><span class="sep updated"></span><span class="text updated">Updated on: <time datetime="2025-06-29T13:00:24.241Z">2025-06-29</time></span></div></div></div>
     
   </div>
-  </div><article class="md-text content"><h1 id="NeoPerf-study"><a href="#NeoPerf-study" class="headerlink" title="NeoPerf study"></a>NeoPerf study</h1><blockquote>
-<p>本文主要为学习论文《NeoMem: Hardware&#x2F;Software Co-Design for CXL-Native Memory Tiering》的工作，分为三个部分，用户态、内核以及FPGA部分，内核开源仓库地址为：  <a target="_blank" rel="noopener" href="https://github.com/PKUZHOU/linux">PKUZHOU&#x2F;linux</a></p>
+  </div><article class="md-text content"><h1 id="智能边缘计算作业"><a href="#智能边缘计算作业" class="headerlink" title="智能边缘计算作业"></a>智能边缘计算作业</h1><blockquote>
+<p> 202414131169蒋泽</p>
 </blockquote>
-<p>代码基于linux内核代码6.0开始修改。</p>
-<p>由于初步探索linux内核代码，所以没有按照自顶向下的视角分析代码，而是基于git提交记录，借助AI与互联网搜索，平铺遇到的相关知识。版本不断更新……</p>
-<h2 id="a-naive-neoprof-driver"><a href="#a-naive-neoprof-driver" class="headerlink" title="a naive neoprof driver"></a>a naive neoprof driver</h2><p>commit ID <code>9bd35383</code></p>
-<p>本次主要在driver目录下提交了一个驱动neoperf:</p>
-<p>主要是实现了一些对外设的IO操作</p>
-<h3 id="Linux内核配置文件Kconfig"><a href="#Linux内核配置文件Kconfig" class="headerlink" title="Linux内核配置文件Kconfig"></a>Linux内核配置文件<code>Kconfig</code></h3><p><code>Kconfig</code>文件用于定义内核配置菜单，这些菜单可以在编译内核时启用或禁用特定的功能。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#Kconfig文件</span></span><br><span class="line">config NEOPROF#定义了一个名为`NEOPROF`的内核配置选项，将在内核配置菜单中创建选项</span><br><span class="line">	bool <span class="string">&quot;Enable Neoprofiler&quot;</span> <span class="comment">#bool类型，是否启用</span></span><br><span class="line">    default n <span class="comment">#默认不启用</span></span><br></pre></td></tr></table></figure>
-
-<p>在内核编译过程中可以在Drivers下查找到</p>
-<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/neoperf-study/image-20241128201430600.png" alt="aba"></p>
-<p>Kconfig有其独特的语法，也是可以一层一层包裹下去：<code>menu</code>、<code>source</code>、<code>endmenu</code>等组成了编译选项配置过程中的树状菜单</p>
-<p>Kconfig设置对应的编译变量后，makefile指导构建编译的过程中会利用这些变量，从而实现选择性的编译</p>
-<h3 id="neoperf-h"><a href="#neoperf-h" class="headerlink" title="neoperf.h"></a>neoperf.h</h3><p>主要新增了四个接口，对neoprof设备（此处指Type2-CXL设备）进行访问：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    * The following functions are used to access the neoprof device</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">u64 <span class="title function_">get_nr_hotpages</span><span class="params">(<span class="type">void</span>)</span>;<span class="comment">//获取当前系统中的热页数量</span></span><br><span class="line"></span><br><span class="line">u64*  <span class="title function_">get_hotpages</span><span class="params">(<span class="type">void</span>)</span>;<span class="comment">//获取热页</span></span><br><span class="line"></span><br><span class="line">u64 <span class="title function_">get_hotness_threshold</span><span class="params">(<span class="type">void</span>)</span>;<span class="comment">//获取热度阈值</span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">set_hotness_threshold</span><span class="params">(u64 threshold)</span>;<span class="comment">//设置热度阈值</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="neoperf-c"><a href="#neoperf-c" class="headerlink" title="neoperf.c"></a>neoperf.c</h3><h4 id="驱动开发hello-world"><a href="#驱动开发hello-world" class="headerlink" title="驱动开发hello world"></a>驱动开发hello world</h4><p>neoperf.c 以下部分参考驱动开发知识：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/downey-blog/p/10500828.html">https://www.cnblogs.com/downey-blog/p/10500828.html</a></p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">module_init(neoprof_init);</span><br><span class="line">module_exit(neoprof_exit);</span><br><span class="line"></span><br><span class="line">MODULE_LICENSE(<span class="string">&quot;GPL v2&quot;</span>);</span><br><span class="line">MODULE_AUTHOR(<span class="string">&quot;PKUZHOU&quot;</span>);</span><br><span class="line">MODULE_DESCRIPTION(<span class="string">&quot;Neoprofiler Linux driver&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="io地址映射相关知识"><a href="#io地址映射相关知识" class="headerlink" title="io地址映射相关知识"></a>io地址映射相关知识</h4><p>需要理解</p>
+<h2 id="1-简要阐述边缘计算的赋能技术"><a href="#1-简要阐述边缘计算的赋能技术" class="headerlink" title="1.简要阐述边缘计算的赋能技术"></a>1.简要阐述边缘计算的赋能技术</h2><p>答：为了给新一代网络提供资源开放、管理开发和网络开放等能力，针对边缘计算的具体实现和实际部署中的问题，需要使用到一些增强边缘计算能力、优化性能以及拓展应用场景的关键技术。以下是基类常见的边缘计算赋能技术：</p>
 <ol>
-<li><p>IO端口的编址方式：</p>
-<p>包括IO指令的端口映射方式、MMIO的统一内存映射方式</p>
+<li><strong>软件定义网络（SDN）</strong>SDN 通过分离控制平面与数据平面，实现网络资源的灵活调度，优化边缘计算中的数据传输路径，降低延迟并提高带宽利用率</li>
+<li><strong>网络功能虚拟化（NFV）</strong>NFV 将传统网络设备（如防火墙、负载均衡器）虚拟化，使其能在边缘节点上动态部署，提高资源利用率和灵活性，支持边缘计算的弹性扩展</li>
+<li><strong>信息中心网络（ICN）</strong>ICN 采用内容为中心的数据分发方式，减少冗余传输，提高边缘缓存效率，适用于视频流、AR&#x2F;VR 等低延迟应用 </li>
+<li><strong>网络人工智能（AI）</strong>AI 技术（如深度学习、强化学习）被用于边缘计算的智能调度、负载预测和异常检测，例如像衍科技的智能负载预测模型提升了算力调度效率300%</li>
+<li><strong>云计算与数据中心网络</strong>边缘计算与云计算协同（云边协同），形成“端-边-云”架构，如国网山东电力公司的微服务全局调用链优化方案，提升了电力系统的实时响应能力</li>
+<li><strong>大数据技术</strong>边缘计算结合大数据分析，可在本地进行数据预处理，减少云端传输压力，如伏锂码云平台在风电场的故障诊断中减少70%数据传输量</li>
+<li><strong>区块链</strong>区块链用于边缘计算的安全认证和数据可信交换，如车载边缘计算中的安全通信和电力交易中的智能合约，防止数据篡改</li>
+</ol>
+<h2 id="2-简要阐述边缘计算未来的基于与挑战"><a href="#2-简要阐述边缘计算未来的基于与挑战" class="headerlink" title="2.简要阐述边缘计算未来的基于与挑战"></a>2.简要阐述边缘计算未来的基于与挑战</h2><p>答：2017年美国计算机社区联盟网络发布《边缘计算重大挑战研讨会报告》，阐述了边缘计算的主要挑战。主要从服务管理，隐私安全，优化指标，理论基础和商业模式几方面阐述：</p>
+<ol>
+<li><strong>服务管理复杂性</strong>边缘计算需应对服务差异性、可扩展性、隔离性和可靠性等挑战。不同优先级服务的需求差异大，系统需灵活扩展以适应新设备；多应用共享数据时易引发资源冲突；同时，异构设备故障原因复杂，服务失败的定位和恢复困难，这对边缘计算的服务管理能力提出了更高要求。</li>
+<li><strong>数据隐私与安全风险</strong>边缘设备广泛收集用户数据，但隐私保护面临多重难题：用户安全意识不足（如随意连接公共Wi-Fi），敏感数据需本地化存储以避免泄露，而边缘环境资源有限，传统安全工具难以直接应用。此外，动态网络环境使边缘节点更易受攻击，亟需轻量化安全方案。</li>
+<li><strong>多目标优化困境</strong>边缘计算需同时优化时延、带宽、能耗和成本等指标，但设备异构性使问题复杂化。例如，降低时延需就近处理数据，但可能增加能耗；节省带宽需压缩数据，却可能影响精度。如何动态权衡这些指标并制定高效资源分配策略，仍是未解难题。</li>
+<li><strong>基础理论尚未成熟</strong>边缘计算涉及计算、通信、存储等多学科交叉，但现有理论碎片化，缺乏统一框架。例如，分布式能耗模型、多设备协同调度理论、边缘可靠性评估等关键基础研究仍不完善，制约了技术的大规模部署与应用创新。</li>
+<li><strong>商业模式不清晰</strong>当前边缘计算商业模型以单边（服务或数据驱动）为主，难以协调云服务商、设备厂商、用户等多方利益。如何结合云边协同，构建可持续的多边商业模式（如算力交易、数据共享分成），是推动产业落地的关键挑战。</li>
+</ol>
+<h2 id="3-画出一个基于移动通信网络的边缘计算详细结构图"><a href="#3-画出一个基于移动通信网络的边缘计算详细结构图" class="headerlink" title="3.画出一个基于移动通信网络的边缘计算详细结构图"></a>3.画出一个基于移动通信网络的边缘计算详细结构图</h2>
+
+<h2 id="4-详细描述边缘计算系统中的计算迁移过程"><a href="#4-详细描述边缘计算系统中的计算迁移过程" class="headerlink" title="4.详细描述边缘计算系统中的计算迁移过程"></a>4.详细描述边缘计算系统中的计算迁移过程</h2><p>边缘计算系统中的计算迁移是指将终端设备的计算任务动态分配到边缘节点或云端处理的过程，主要包括以下步骤：</p>
+<ol>
+<li><strong>决策阶段</strong>：终端根据任务需求（计算量、时延要求）和当前状态（电量、网络条件），通过算法（如强化学习）决定是否迁移任务。</li>
+<li><strong>任务分发</strong>：将任务代码和数据封装（如Docker容器），通过优化路径（如SDN调度）传输至边缘节点。</li>
+<li><strong>边缘处理</strong>：边缘节点快速部署任务，实时监控执行情况，必要时进行二次迁移。</li>
+<li><strong>结果返回</strong>：处理结果经压缩后回传终端，完成同步更新。</li>
+</ol>
+<h2 id="5-讨论ETSI和中国边缘计算产业联盟的边缘计算参考架构之间的主要区别"><a href="#5-讨论ETSI和中国边缘计算产业联盟的边缘计算参考架构之间的主要区别" class="headerlink" title="5.讨论ETSI和中国边缘计算产业联盟的边缘计算参考架构之间的主要区别"></a>5.讨论ETSI和中国边缘计算产业联盟的边缘计算参考架构之间的主要区别</h2><p>ETSI与中国边缘计算产业联盟（ECC）的边缘计算架构主要区别如下：</p>
+<ol>
+<li><p><strong>技术定位</strong>：</p>
+<p>ETSI以电信网络为核心，聚焦5G场景，强调基站侧计算（MEC）；ECC面向工业互联网等泛行业场景，注重”云-边-端”协同。</p>
 </li>
-<li><p>一些常见的IO操作函数</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> * <span class="title function_">ioremap</span><span class="params">(<span class="type">unsigned</span> <span class="type">long</span> phys_addr, <span class="type">unsigned</span> <span class="type">long</span> size, <span class="type">unsigned</span> <span class="type">long</span> flags)</span>;</span><br><span class="line"> <span class="comment">//memset_io\memcpy_fromio\readb</span></span><br></pre></td></tr></table></figure></li>
-</ol>
-<p>参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/do2jiang/article/details/5450839">https://blog.csdn.net/do2jiang/article/details/5450839</a></p>
-<h2 id="neomem-migration-skeleton"><a href="#neomem-migration-skeleton" class="headerlink" title="neomem migration skeleton"></a>neomem migration skeleton</h2><p>commit ID <code>26cabad18</code></p>
-<p>新增 NeoMem模块:</p>
-<h3 id="migrate-c"><a href="#migrate-c" class="headerlink" title="migrate.c"></a>migrate.c</h3><p>主要是提供接口<code>migrate_misplaced_page_no_vma</code></p>
-<p>调用一些mm中的内存操作函数，进行页面隔离、迁移</p>
-<h3 id="neomem-h-neomem-c"><a href="#neomem-h-neomem-c" class="headerlink" title="neomem.h \neomem.c"></a>neomem.h \neomem.c</h3><p>主要就是启动 neomem模块（调用core文件中启动守护进程）</p>
-<h4 id="late-initcall"><a href="#late-initcall" class="headerlink" title="late_initcall()"></a>late_initcall()</h4><p>在内核启动后期适当时间执行，理解module_init等init宏的顺序，在<code>include/linux/init.h</code>中</p>
-<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/linhaostudy/p/9112264.html">linux设备驱动加载的先后顺序</a></p>
-<h3 id="neomem-core-c"><a href="#neomem-core-c" class="headerlink" title="neomem_core.c"></a>neomem_core.c</h3><ol>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/liangzc1124/article/details/120837260">内存中的各种分配函数</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/huofeng_2008/article/details/21177459">kthread_run内核线程</a></li>
-</ol>
-<h2 id="FPGA端侧"><a href="#FPGA端侧" class="headerlink" title="FPGA端侧"></a>FPGA端侧</h2><h3 id="模块结构"><a href="#模块结构" class="headerlink" title="模块结构"></a>模块结构</h3><p>顶层模块：</p>
-<p><code>cxltyp3_memexp_ddr4_top</code>-&gt;<code>ed_top_wrapper_typ3</code></p>
-<h4 id="ddr内存参数调整"><a href="#ddr内存参数调整" class="headerlink" title="ddr内存参数调整"></a>ddr内存参数调整</h4><p>cxl ip考虑了不同ddr的，包括是否支持DBI、内存通道数量等。采用宏的方式区分，设置不同的方式时，需要对ip内通过宏定义来确定相关的内存参数，同时也需要在顶层模块对相关参数进行修改。</p>
-<style>.jqplclsjphym{zoom:50%;}</style><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2024/11/28/kernel-explore/Neoperf-study/image-20241222145536477.png" class="jqplclsjphym lazy" alt="image-20241222145536477">
-
-<style>.wdnlnmhpkjgs{zoom:50%;}</style><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2024/11/28/kernel-explore/Neoperf-study/image-20241222145705256.png" class="wdnlnmhpkjgs lazy" alt="image-20241222145705256">
-
-<style>.pjzjvhqdjckr{zoom:50%;}</style><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2024/11/28/kernel-explore/Neoperf-study/image-20241222145744791.png" class="pjzjvhqdjckr lazy" alt="image-20241222145744791">
-
-<p>或者通过更改ip文件，重新生成新的IP文件夹</p>
-<style>.xlltumiehokv{zoom:50%;}</style><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2024/11/28/kernel-explore/Neoperf-study/image-20241222151404359.png" class="xlltumiehokv lazy" alt="image-20241222151404359">
-
-<h3 id="quartus"><a href="#quartus" class="headerlink" title="quartus"></a>quartus</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set_global_assignment -name OPTIMIZATION_MODE <span class="string">&quot;AGGRESSIVE COMPILE TIME&quot;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="烧录模式"><a href="#烧录模式" class="headerlink" title="烧录模式"></a>烧录模式</h3><p>AS Jtag ps <a target="_blank" rel="noopener" href="https://blog.csdn.net/dongdongnihao_/article/details/80258573">三种烧录模式</a></p>
-<h1 id="Neomem-todo"><a href="#Neomem-todo" class="headerlink" title="Neomem todo"></a>Neomem todo</h1><p>代码存在一些可以完善的地方：</p>
-<ol>
-<li>CXL地址采用硬编码，可以引入设备树或者其他检测CXL物理地址的工具进行优化，<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_44814825/article/details/129107911">参考</a></li>
+<li><p><strong>架构设计</strong>：</p>
+<p>ETSI采用”MEC Host+管理平台”分层架构，标准化接口明确；ECC采用三层架构（边缘层&#x2F;平台层&#x2F;应用层），更强调OT与ICT融合。</p>
+</li>
+<li><p><strong>应用场景</strong>：</p>
+<p>ETSI主要服务运营商（如VR直播、车联网）；ECC侧重工业应用（如预测性维护、智能工厂）。</p>
+</li>
+<li><p><strong>产业生态</strong>：</p>
+<p>ETSI由国际电信企业主导；ECC由中国产业界推动，更贴合本土需求。</p>
+</li>
 </ol>
 
 
 </article>
-<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">Newer</div><a href="/2024/11/28/Hexo/hexo/">Hexo</a></div><div class="item" id="next"><div class="note">Older</div><a href="/2024/11/26/%E5%A4%87%E5%BF%98%E5%BD%95/linux%E8%84%9A%E6%9C%AC%E5%A4%87%E5%BF%98%E5%BD%95/">linux脚本备忘录</a></div></section></div>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"></div><div class="item" id="next"><div class="note">Older</div><a href="/2025/06/18/CPP/CPP%E6%9D%82%E8%AE%B0/">CPP杂记</a></div></section></div>
 
 
 
@@ -174,7 +141,7 @@
 
 
 
-<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">On This Page</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#NeoPerf-study"><span class="toc-text">NeoPerf study</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#a-naive-neoprof-driver"><span class="toc-text">a naive neoprof driver</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux%E5%86%85%E6%A0%B8%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6Kconfig"><span class="toc-text">Linux内核配置文件Kconfig</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#neoperf-h"><span class="toc-text">neoperf.h</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#neoperf-c"><span class="toc-text">neoperf.c</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91hello-world"><span class="toc-text">驱动开发hello world</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#io%E5%9C%B0%E5%9D%80%E6%98%A0%E5%B0%84%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86"><span class="toc-text">io地址映射相关知识</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#neomem-migration-skeleton"><span class="toc-text">neomem migration skeleton</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#migrate-c"><span class="toc-text">migrate.c</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#neomem-h-neomem-c"><span class="toc-text">neomem.h \neomem.c</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#late-initcall"><span class="toc-text">late_initcall()</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#neomem-core-c"><span class="toc-text">neomem_core.c</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#FPGA%E7%AB%AF%E4%BE%A7"><span class="toc-text">FPGA端侧</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97%E7%BB%93%E6%9E%84"><span class="toc-text">模块结构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#ddr%E5%86%85%E5%AD%98%E5%8F%82%E6%95%B0%E8%B0%83%E6%95%B4"><span class="toc-text">ddr内存参数调整</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#quartus"><span class="toc-text">quartus</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%83%A7%E5%BD%95%E6%A8%A1%E5%BC%8F"><span class="toc-text">烧录模式</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Neomem-todo"><span class="toc-text">Neomem todo</span></a></li></ol></div><div class="widget-footer">
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">On This Page</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%99%BA%E8%83%BD%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97%E4%BD%9C%E4%B8%9A"><span class="toc-text">智能边缘计算作业</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E7%AE%80%E8%A6%81%E9%98%90%E8%BF%B0%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97%E7%9A%84%E8%B5%8B%E8%83%BD%E6%8A%80%E6%9C%AF"><span class="toc-text">1.简要阐述边缘计算的赋能技术</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E7%AE%80%E8%A6%81%E9%98%90%E8%BF%B0%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97%E6%9C%AA%E6%9D%A5%E7%9A%84%E5%9F%BA%E4%BA%8E%E4%B8%8E%E6%8C%91%E6%88%98"><span class="toc-text">2.简要阐述边缘计算未来的基于与挑战</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E7%94%BB%E5%87%BA%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8E%E7%A7%BB%E5%8A%A8%E9%80%9A%E4%BF%A1%E7%BD%91%E7%BB%9C%E7%9A%84%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97%E8%AF%A6%E7%BB%86%E7%BB%93%E6%9E%84%E5%9B%BE"><span class="toc-text">3.画出一个基于移动通信网络的边缘计算详细结构图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E8%AF%A6%E7%BB%86%E6%8F%8F%E8%BF%B0%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97%E7%B3%BB%E7%BB%9F%E4%B8%AD%E7%9A%84%E8%AE%A1%E7%AE%97%E8%BF%81%E7%A7%BB%E8%BF%87%E7%A8%8B"><span class="toc-text">4.详细描述边缘计算系统中的计算迁移过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E8%AE%A8%E8%AE%BAETSI%E5%92%8C%E4%B8%AD%E5%9B%BD%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97%E4%BA%A7%E4%B8%9A%E8%81%94%E7%9B%9F%E7%9A%84%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97%E5%8F%82%E8%80%83%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%97%B4%E7%9A%84%E4%B8%BB%E8%A6%81%E5%8C%BA%E5%88%AB"><span class="toc-text">5.讨论ETSI和中国边缘计算产业联盟的边缘计算参考架构之间的主要区别</span></a></li></ol></li></ol></div><div class="widget-footer">
 
 <a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>Scroll to Top</span></a></div></widget>
 </div></aside><div class='float-panel blur'>

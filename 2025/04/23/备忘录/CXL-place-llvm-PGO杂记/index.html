@@ -17,23 +17,21 @@
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
   <meta name="theme-color" content="#f9fafb">
   
-  <title>LLVM explore - Zane Jiang'blog</title>
+  <title>CXL-place-llvm-PGO杂记 - Zane Jiang'blog</title>
 
   
-    <meta name="description" content="入门llvm笔记  新旧新增pass流程CRTP（奇异递归模板模式）(以下内容基于AI生成)  通常通过继承的方式实现单例模式也是这样，只是不知道叫这个名字    CRTP（Curiously Recurring Template Pattern，奇异递归模板模式）是C++中的一种高级模板编程技术，通过让一个类继承自以自身为模板参数的基类模板，实现静态多态或代码复用。 123template &amp;">
+    <meta name="description" content="CXL-place-llvm-PGO杂记 记录完成llvmPGO 中的一些知识杂记  1.llvm中的malloc重定向拦截案例：2.复制构造、移动构造、原地构造3.内存分配器的实现https:&#x2F;&#x2F;blog.lfalive.top&#x2F;2022&#x2F;02&#x2F;15&#x2F;JeMalloc&#x2F; http:&#x2F;&#x2F;hydra.azilian.net&#x2F;Papers&#x2F;jemalloc.pdf">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LLVM explore">
-<meta property="og:url" content="http://example.com/2025/04/23/LLVM-explore/LLVM-explore/index.html">
+<meta property="og:title" content="CXL-place-llvm-PGO杂记">
+<meta property="og:url" content="http://example.com/2025/04/23/%E5%A4%87%E5%BF%98%E5%BD%95/CXL-place-llvm-PGO%E6%9D%82%E8%AE%B0/index.html">
 <meta property="og:site_name" content="Zane Jiang&#39;blog">
-<meta property="og:description" content="入门llvm笔记  新旧新增pass流程CRTP（奇异递归模板模式）(以下内容基于AI生成)  通常通过继承的方式实现单例模式也是这样，只是不知道叫这个名字    CRTP（Curiously Recurring Template Pattern，奇异递归模板模式）是C++中的一种高级模板编程技术，通过让一个类继承自以自身为模板参数的基类模板，实现静态多态或代码复用。 123template &amp;">
+<meta property="og:description" content="CXL-place-llvm-PGO杂记 记录完成llvmPGO 中的一些知识杂记  1.llvm中的malloc重定向拦截案例：2.复制构造、移动构造、原地构造3.内存分配器的实现https:&#x2F;&#x2F;blog.lfalive.top&#x2F;2022&#x2F;02&#x2F;15&#x2F;JeMalloc&#x2F; http:&#x2F;&#x2F;hydra.azilian.net&#x2F;Papers&#x2F;jemalloc.pdf">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/2025/04/23/LLVM-explore/LLVM-explore/image-20250423132436982.png">
-<meta property="article:published_time" content="2025-04-23T05:04:33.000Z">
-<meta property="article:modified_time" content="2025-05-07T11:02:37.069Z">
+<meta property="article:published_time" content="2025-04-23T05:40:50.000Z">
+<meta property="article:modified_time" content="2025-06-25T02:29:20.646Z">
 <meta property="article:author" content="Zane Jiang">
-<meta property="article:tag" content="llvm">
+<meta property="article:tag" content="OS">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2025/04/23/LLVM-explore/LLVM-explore/image-20250423132436982.png">
   
   
   
@@ -66,7 +64,7 @@
 <div class="widgets">
 
 
-<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">Recent Update</span></div><div class="widget-body fs14"><a class="item title" href="/2025/04/23/LLVM-explore/LLVM-explore/"><span class="title">LLVM explore</span></a><a class="item title" href="/2024/12/05/kernel-explore/Kernel-compile/"><span class="title">Kernel-compile</span></a><a class="item title" href="/2025/04/23/%E5%A4%87%E5%BF%98%E5%BD%95/CXL-place-llvm-PGO/"><span class="title">CXL-place-llvm-PGO</span></a><a class="item title" href="/2024/10/15/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/"><span class="title">控台项目与iSet项目已使用Qt技能点整理</span></a><a class="item title" href="/2025/01/06/CXL/%E9%BE%99%E8%9C%A5CXL%E8%AE%B2%E8%A7%A3-%E9%AB%98%E6%98%BE%E6%89%AC/"><span class="title">龙蜥CXL讲解-高显扬</span></a><a class="item title" href="/2025/01/06/CXL/OCP-China-2024-CXL-%E8%AE%BA%E5%9D%9B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"><span class="title">OCP China 2024 CXL 论坛学习笔记</span></a><a class="item title" href="/2024/11/28/kernel-explore/Neoperf-study/"><span class="title">Neoperf_study</span></a><a class="item title" href="/2024/11/26/%E5%A4%87%E5%BF%98%E5%BD%95/linux%E8%84%9A%E6%9C%AC%E5%A4%87%E5%BF%98%E5%BD%95/"><span class="title">linux脚本备忘录</span></a><a class="item title" href="/2024/11/28/Hexo/hexo/"><span class="title">Hexo</span></a></div></widget>
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">Recent Update</span></div><div class="widget-body fs14"><a class="item title" href="/2025/06/18/CPP/CPP%E6%9D%82%E8%AE%B0/"><span class="title">CPP杂记</span></a><a class="item title" href="/2025/04/23/%E5%A4%87%E5%BF%98%E5%BD%95/CXL-place-llvm-PGO%E6%9D%82%E8%AE%B0/"><span class="title">CXL-place-llvm-PGO杂记</span></a><a class="item title" href="/2025/04/23/LLVM/LLVM/"><span class="title">LLVM explore</span></a><a class="item title" href="/2024/12/05/Linux%20kernel/Kernel-compile/"><span class="title">Kernel-compile</span></a><a class="item title" href="/2024/10/15/Qt/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/"><span class="title">控台项目与iSet项目已使用Qt技能点整理</span></a><a class="item title" href="/2025/01/06/CXL/%E9%BE%99%E8%9C%A5CXL%E8%AE%B2%E8%A7%A3-%E9%AB%98%E6%98%BE%E6%89%AC/"><span class="title">龙蜥CXL讲解-高显扬</span></a><a class="item title" href="/2025/01/06/CXL/OCP-China-2024-CXL-%E8%AE%BA%E5%9D%9B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"><span class="title">OCP China 2024 CXL 论坛学习笔记</span></a><a class="item title" href="/2024/11/28/Linux%20kernel/Neoperf-study/"><span class="title">Neoperf_study</span></a><a class="item title" href="/2024/11/26/%E5%A4%87%E5%BF%98%E5%BD%95/linux%E8%84%9A%E6%9C%AC%E5%A4%87%E5%BF%98%E5%BD%95/"><span class="title">linux脚本备忘录</span></a><a class="item title" href="/2024/11/28/Hexo/hexo/"><span class="title">Hexo</span></a></div></widget>
 </div>
 
 </div></aside><div class="l_main" id="main">
@@ -79,79 +77,26 @@
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">Home</a>
 <span class="sep"></span><a class="cap breadcrumb" href="/">Blog</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">Posted on: <time datetime="2025-04-23T05:04:33.000Z">2025-04-23</time></span><span class="sep updated"></span><span class="text updated">Updated on: <time datetime="2025-05-07T11:02:37.069Z">2025-05-07</time></span></div></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">Posted on: <time datetime="2025-04-23T05:40:50.000Z">2025-04-23</time></span><span class="sep updated"></span><span class="text updated">Updated on: <time datetime="2025-06-25T02:29:20.646Z">2025-06-25</time></span></div></div></div>
     
     <div class="bottom only-title">
       
       <div class="text-area">
-        <h1 class="text title"><span>LLVM explore</span></h1>
+        <h1 class="text title"><span>CXL-place-llvm-PGO杂记</span></h1>
         
       </div>
     </div>
     
   </div>
-  </div><article class="md-text content"><blockquote>
-<p>入门llvm笔记</p>
+  </div><article class="md-text content"><h1 id="CXL-place-llvm-PGO杂记"><a href="#CXL-place-llvm-PGO杂记" class="headerlink" title="CXL-place-llvm-PGO杂记"></a>CXL-place-llvm-PGO杂记</h1><blockquote>
+<p>记录完成llvmPGO 中的一些知识杂记</p>
 </blockquote>
-<h1 id="新旧新增pass流程"><a href="#新旧新增pass流程" class="headerlink" title="新旧新增pass流程"></a>新旧新增pass流程</h1><h2 id="CRTP（奇异递归模板模式）-以下内容基于AI生成"><a href="#CRTP（奇异递归模板模式）-以下内容基于AI生成" class="headerlink" title="CRTP（奇异递归模板模式）(以下内容基于AI生成)"></a>CRTP（奇异递归模板模式）(以下内容基于AI生成)</h2><blockquote>
-<p> 通常通过继承的方式实现单例模式也是这样，只是不知道叫这个名字</p>
-</blockquote>
-<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2025/04/23/LLVM-explore/LLVM-explore/image-20250423132436982.png" class="lazy" title="image-20250423132436982">
+<h2 id="1-llvm中的malloc重定向拦截案例："><a href="#1-llvm中的malloc重定向拦截案例：" class="headerlink" title="1.llvm中的malloc重定向拦截案例："></a>1.llvm中的malloc重定向拦截案例：</h2><h2 id="2-复制构造、移动构造、原地构造"><a href="#2-复制构造、移动构造、原地构造" class="headerlink" title="2.复制构造、移动构造、原地构造"></a>2.复制构造、移动构造、原地构造</h2><h2 id="3-内存分配器的实现"><a href="#3-内存分配器的实现" class="headerlink" title="3.内存分配器的实现"></a>3.内存分配器的实现</h2><p><a target="_blank" rel="noopener" href="https://blog.lfalive.top/2022/02/15/JeMalloc/">https://blog.lfalive.top/2022/02/15/JeMalloc/</a></p>
+<p><a target="_blank" rel="noopener" href="http://hydra.azilian.net/Papers/jemalloc.pdf">http://hydra.azilian.net/Papers/jemalloc.pdf</a></p>
 
-<p>CRTP（Curiously Recurring Template Pattern，奇异递归模板模式）是C++中的一种高级模板编程技术，通过<strong>让一个类继承自以自身为模板参数的基类模板</strong>，实现静态多态或代码复用。</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Derived&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Base</span> &#123; <span class="comment">/* 基类使用Derived类型 */</span> &#125;;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyClass</span> : <span class="keyword">public</span> Base&lt;MyClass&gt; &#123; <span class="comment">/* 派生类将自身作为模板参数传递给基类 */</span> &#125;;</span><br></pre></td></tr></table></figure>
-
-<h3 id="核心作用"><a href="#核心作用" class="headerlink" title="核心作用"></a><strong>核心作用</strong></h3><h4 id="1-静态多态（编译时多态）"><a href="#1-静态多态（编译时多态）" class="headerlink" title="1. 静态多态（编译时多态）"></a>1. <strong>静态多态（编译时多态）</strong></h4><ul>
-<li><strong>动态多态（虚函数）的问题</strong>：运行时虚表查找导致性能开销。</li>
-<li><strong>CRTP的解决方案</strong>：基类在编译时通过模板参数直接调用派生类的方法。</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">template &lt;typename Derived&gt;</span><br><span class="line">class Animal &#123;</span><br><span class="line">public:</span><br><span class="line">    void speak() &#123;</span><br><span class="line">        static_cast&lt;Derived*&gt;(this)-&gt;speakImpl(); // 编译时确定调用</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">class Cat : public Animal&lt;Cat&gt; &#123;</span><br><span class="line">public:</span><br><span class="line">    void speakImpl() &#123; std::cout &lt;&lt; &quot;Meow\n&quot;; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">class Dog : public Animal&lt;Dog&gt; &#123;</span><br><span class="line">public:</span><br><span class="line">    void speakImpl() &#123; std::cout &lt;&lt; &quot;Woof\n&quot;; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">// 使用</span><br><span class="line">Animal&lt;Cat&gt; cat;</span><br><span class="line">cat.speak(); // 输出 &quot;Meow&quot;（无虚函数开销）</span><br></pre></td></tr></table></figure>
-
-<h4 id="2-代码复用"><a href="#2-代码复用" class="headerlink" title="2. 代码复用"></a>2. <strong>代码复用</strong></h4><ul>
-<li>基类可提供通用逻辑，派生类通过特化实现差异部分。</li>
-</ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Derived&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Counter</span> &#123;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="type">static</span> <span class="type">int</span> count;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Counter</span>() &#123; ++count; &#125;</span><br><span class="line">    <span class="function"><span class="type">static</span> <span class="type">int</span> <span class="title">getCount</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> count; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Derived&gt;</span><br><span class="line"><span class="type">int</span> Counter&lt;Derived&gt;::count = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 统计对象实例数的类</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> : <span class="keyword">public</span> Counter&lt;Widget&gt; &#123;&#125;;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Gadget</span> : <span class="keyword">public</span> Counter&lt;Gadget&gt; &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用</span></span><br><span class="line">Widget w1, w2;</span><br><span class="line">Gadget g1;</span><br><span class="line">std::cout &lt;&lt; Widget::<span class="built_in">getCount</span>(); <span class="comment">// 输出 2</span></span><br><span class="line">std::cout &lt;&lt; Gadget::<span class="built_in">getCount</span>(); <span class="comment">// 输出 1</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="CRTP-vs-虚函数"><a href="#CRTP-vs-虚函数" class="headerlink" title="CRTP vs 虚函数"></a><strong>CRTP vs 虚函数</strong></h3><table>
-<thead>
-<tr>
-<th align="left">特性</th>
-<th align="left">CRTP</th>
-<th align="left">虚函数</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left"><strong>多态时机</strong></td>
-<td align="left">编译时</td>
-<td align="left">运行时</td>
-</tr>
-<tr>
-<td align="left"><strong>性能</strong></td>
-<td align="left">无额外开销（直接调用）</td>
-<td align="left">虚表查找开销</td>
-</tr>
-<tr>
-<td align="left"><strong>灵活性</strong></td>
-<td align="left">类型固定（模板参数需明确）</td>
-<td align="left">支持运行时类型动态替换</td>
-</tr>
-<tr>
-<td align="left"><strong>适用场景</strong></td>
-<td align="left">高性能库、框架基础设施</td>
-<td align="left">需要运行时动态行为的情况</td>
-</tr>
-</tbody></table>
-<hr>
-<h3 id="CRTP的典型应用场景"><a href="#CRTP的典型应用场景" class="headerlink" title="CRTP的典型应用场景"></a><strong>CRTP的典型应用场景</strong></h3><ol>
-<li><strong>编译时多态</strong>：如数学库中的向量&#x2F;矩阵运算（Eigen库）。</li>
-<li><strong>对象计数</strong>：统计不同派生类的实例数量。</li>
-<li><strong>Mixin模式</strong>：为类动态添加功能（如LLVM的<code>PassInfoMixin</code>）。</li>
-<li><strong>链式调用</strong>：返回派生类引用以实现链式语法（<code>return static_cast&lt;Derived&amp;&gt;(*this);</code>）。</li>
-</ol>
-<h2 id="llvm中的dyn-cast与C-的RTTI"><a href="#llvm中的dyn-cast与C-的RTTI" class="headerlink" title="llvm中的dyn_cast与C++的RTTI"></a>llvm中的dyn_cast与C++的RTTI</h2><h3 id="C-RTTI"><a href="#C-RTTI" class="headerlink" title="C++ RTTI"></a>C++ RTTI</h3>
 
 </article>
-<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">Newer</div><a href="/2025/04/23/%E5%A4%87%E5%BF%98%E5%BD%95/CXL-place-llvm-PGO/">CXL-place-llvm-PGO</a></div><div class="item" id="next"><div class="note">Older</div><a href="/2025/01/06/CXL/%E9%BE%99%E8%9C%A5CXL%E8%AE%B2%E8%A7%A3-%E9%AB%98%E6%98%BE%E6%89%AC/">龙蜥CXL讲解-高显扬</a></div></section></div>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">Newer</div><a href="/2025/06/18/CPP/CPP%E6%9D%82%E8%AE%B0/">CPP杂记</a></div><div class="item" id="next"><div class="note">Older</div><a href="/2025/04/23/LLVM/LLVM/">LLVM explore</a></div></section></div>
 
 
 
@@ -164,7 +109,7 @@
 
 
 
-<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">On This Page</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%B0%E6%97%A7%E6%96%B0%E5%A2%9Epass%E6%B5%81%E7%A8%8B"><span class="toc-text">新旧新增pass流程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#CRTP%EF%BC%88%E5%A5%87%E5%BC%82%E9%80%92%E5%BD%92%E6%A8%A1%E6%9D%BF%E6%A8%A1%E5%BC%8F%EF%BC%89-%E4%BB%A5%E4%B8%8B%E5%86%85%E5%AE%B9%E5%9F%BA%E4%BA%8EAI%E7%94%9F%E6%88%90"><span class="toc-text">CRTP（奇异递归模板模式）(以下内容基于AI生成)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E4%BD%9C%E7%94%A8"><span class="toc-text">核心作用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E9%9D%99%E6%80%81%E5%A4%9A%E6%80%81%EF%BC%88%E7%BC%96%E8%AF%91%E6%97%B6%E5%A4%9A%E6%80%81%EF%BC%89"><span class="toc-text">1. 静态多态（编译时多态）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E4%BB%A3%E7%A0%81%E5%A4%8D%E7%94%A8"><span class="toc-text">2. 代码复用</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CRTP-vs-%E8%99%9A%E5%87%BD%E6%95%B0"><span class="toc-text">CRTP vs 虚函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CRTP%E7%9A%84%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-text">CRTP的典型应用场景</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#llvm%E4%B8%AD%E7%9A%84dyn-cast%E4%B8%8EC-%E7%9A%84RTTI"><span class="toc-text">llvm中的dyn_cast与C++的RTTI</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#C-RTTI"><span class="toc-text">C++ RTTI</span></a></li></ol></li></ol></li></ol></div><div class="widget-footer">
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">On This Page</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#CXL-place-llvm-PGO%E6%9D%82%E8%AE%B0"><span class="toc-text">CXL-place-llvm-PGO杂记</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-llvm%E4%B8%AD%E7%9A%84malloc%E9%87%8D%E5%AE%9A%E5%90%91%E6%8B%A6%E6%88%AA%E6%A1%88%E4%BE%8B%EF%BC%9A"><span class="toc-text">1.llvm中的malloc重定向拦截案例：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%A4%8D%E5%88%B6%E6%9E%84%E9%80%A0%E3%80%81%E7%A7%BB%E5%8A%A8%E6%9E%84%E9%80%A0%E3%80%81%E5%8E%9F%E5%9C%B0%E6%9E%84%E9%80%A0"><span class="toc-text">2.复制构造、移动构造、原地构造</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E5%99%A8%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="toc-text">3.内存分配器的实现</span></a></li></ol></li></ol></div><div class="widget-footer">
 
 <a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>Scroll to Top</span></a></div></widget>
 </div></aside><div class='float-panel blur'>
