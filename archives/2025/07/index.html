@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.29.1" theme-name="Stellar" theme-version="1.29.1">
-  
+  <meta name="robots" content="noindex,follow">
   <meta name="generator" content="Hexo 7.3.0">
   <meta http-equiv='x-dns-prefetch-control' content='on' />
   
@@ -17,20 +17,18 @@
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
   <meta name="theme-color" content="#f9fafb">
   
-  <title>Kernel-compile - Zane Jiang'blog</title>
+  <title>Archives - Zane Jiang'blog</title>
 
   
-    <meta name="description" content="内核编译123456789101112131415161718192021222324252627282930#查看当前内核版本uname -a#源码获取sudo apt-get install linux-sourcecd &#x2F;usr&#x2F;srctar xvf linux-source-*.tar.bz2cd linux-source-*#补丁应用patch -p1 &lt; &#x2F;path&#x2F;to&#x2F;pat">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Kernel-compile">
-<meta property="og:url" content="http://example.com/2024/12/05/Linux%20kernel/Kernel-compile/index.html">
+    <meta name="description" content="Hello, welcome to my blog. I&#39;m Zane Jiang. I graduated with a bachelor&#39;s degree in Computer Science from Nanjing Normal University, and I am currently pursuing a master&#39;s degree at the College of Comp">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Archives">
+<meta property="og:url" content="http://example.com/archives/2025/07/index.html">
 <meta property="og:site_name" content="Zane Jiang&#39;blog">
-<meta property="og:description" content="内核编译123456789101112131415161718192021222324252627282930#查看当前内核版本uname -a#源码获取sudo apt-get install linux-sourcecd &#x2F;usr&#x2F;srctar xvf linux-source-*.tar.bz2cd linux-source-*#补丁应用patch -p1 &lt; &#x2F;path&#x2F;to&#x2F;pat">
+<meta property="og:description" content="Hello, welcome to my blog. I&#39;m Zane Jiang. I graduated with a bachelor&#39;s degree in Computer Science from Nanjing Normal University, and I am currently pursuing a master&#39;s degree at the College of Comp">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2024-12-05T12:29:03.000Z">
-<meta property="article:modified_time" content="2025-05-07T06:38:26.620Z">
 <meta property="article:author" content="Zane Jiang">
-<meta property="article:tag" content="proxmox-boot-tool  - kernel-explorer - memo">
+<meta property="article:tag" content="OS">
 <meta name="twitter:card" content="summary">
   
   
@@ -50,7 +48,7 @@
 </head>
 <body>
 
-<div class="l_body s:aa content tech" id="start" layout="post" ><aside class="l_left"><div class="leftbar-container">
+<div class="l_body s:aa index tech" id="start" layout="undefined" ><aside class="l_left"><div class="leftbar-container">
 
 
 <header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="undefined" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">Zane Jiang'blog</div><div class="sub cap">Some highlights from my life and studies.</div></a></div></header>
@@ -62,83 +60,20 @@
 <nav class="menu dis-select"><a class="nav-item active" title="Blog" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="memo" href="/memo/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.25 4.48v3.057c0 .111 0 .27.02.406a.936.936 0 0 0 .445.683a.96.96 0 0 0 .783.072c.13-.04.272-.108.378-.159L17 8.005l1.124.534c.106.05.248.119.378.16a.958.958 0 0 0 .783-.073a.936.936 0 0 0 .444-.683c.021-.136.021-.295.021-.406V3.031c.113-.005.224-.01.332-.013C21.154 2.98 22 3.86 22 4.933v11.21c0 1.112-.906 2.01-2.015 2.08c-.97.06-2.108.179-2.985.41c-1.082.286-1.99 1.068-3.373 1.436c-.626.167-1.324.257-1.627.323V5.174c.32-.079 1.382-.203 1.674-.371c.184-.107.377-.216.576-.323m5.478 8.338a.75.75 0 0 1-.546.91l-4 1a.75.75 0 0 1-.364-1.456l4-1a.75.75 0 0 1 .91.546" clip-rule="evenodd"/><path fill="currentColor" d="M18.25 3.151c-.62.073-1.23.18-1.75.336a8.2 8.2 0 0 0-.75.27v3.182l.75-.356l.008-.005a1.13 1.13 0 0 1 .492-.13c.047 0 .094.004.138.01c.175.029.315.1.354.12l.009.005l.749.356V3.647z"/><path fill="currentColor" d="M12 5.214c-.334-.064-1.057-.161-1.718-.339C8.938 4.515 8.05 3.765 7 3.487c-.887-.234-2.041-.352-3.018-.412C2.886 3.007 2 3.9 2 4.998v11.146c0 1.11.906 2.01 2.015 2.079c.97.06 2.108.179 2.985.41c.486.129 1.216.431 1.873.726c1.005.451 2.052.797 3.127 1.034z" opacity=".5"/><path fill="currentColor" d="M4.273 12.818a.75.75 0 0 1 .91-.545l4 1a.75.75 0 1 1-.365 1.455l-4-1a.75.75 0 0 1-.545-.91m.909-4.545a.75.75 0 1 0-.364 1.455l4 1a.75.75 0 0 0 .364-1.455z"/></svg></a><a class="nav-item" title="Project" href="/project/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 12a8 8 0 1 1-16 0a8 8 0 0 1 16 0" opacity=".5"/><path fill="currentColor" d="M17.712 5.453c1.047-.193 2.006-.259 2.797-.152c.77.103 1.536.393 1.956 1.064c.446.714.312 1.542-.012 2.258c-.33.728-.918 1.499-1.672 2.268c-1.516 1.547-3.836 3.226-6.597 4.697c-2.763 1.472-5.495 2.484-7.694 2.92c-1.095.217-2.098.299-2.923.201c-.8-.095-1.6-.383-2.032-1.075c-.47-.752-.296-1.63.07-2.379c.375-.768 1.032-1.586 1.872-2.403L4 12.416c0 .219.083.71.168 1.146c.045.23.09.444.123.596c-.652.666-1.098 1.263-1.339 1.756c-.277.567-.208.825-.145.925c.072.116.305.305.937.38c.609.073 1.44.018 2.455-.183c2.02-.4 4.613-1.351 7.28-2.772c2.667-1.42 4.85-3.015 6.23-4.423c.694-.707 1.15-1.334 1.377-1.836c.233-.515.167-.75.107-.844c-.07-.112-.289-.294-.883-.374c-.542-.072-1.272-.041-2.163.112L16.87 5.656c.338-.101.658-.17.842-.203"/></svg></a><a class="nav-item" title="Social" href="/friends/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.629 20.472l-.542.916c-.483.816-1.69.816-2.174 0l-.542-.916c-.42-.71-.63-1.066-.968-1.262c-.338-.197-.763-.204-1.613-.219c-1.256-.021-2.043-.098-2.703-.372a5 5 0 0 1-2.706-2.706C2 14.995 2 13.83 2 11.5v-1c0-3.273 0-4.91.737-6.112a5 5 0 0 1 1.65-1.651C5.59 2 7.228 2 10.5 2h3c3.273 0 4.91 0 6.113.737a5 5 0 0 1 1.65 1.65C22 5.59 22 7.228 22 10.5v1c0 2.33 0 3.495-.38 4.413a5 5 0 0 1-2.707 2.706c-.66.274-1.447.35-2.703.372c-.85.015-1.275.022-1.613.219c-.338.196-.548.551-.968 1.262" opacity=".5"/><path fill="currentColor" d="M10.99 14.308c-1.327-.978-3.49-2.84-3.49-4.593c0-2.677 2.475-3.677 4.5-1.609c2.025-2.068 4.5-1.068 4.5 1.609c0 1.752-2.163 3.615-3.49 4.593c-.454.335-.681.502-1.01.502c-.329 0-.556-.167-1.01-.502"/></svg></a></nav>
 </div>
 <div class="widgets">
-
-
 <widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">Recent Update</span></div><div class="widget-body fs14"><a class="item title" href="/2025/07/07/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/CYY-RV64.zip/"><span class="title">CYY-RV64.zip</span></a><a class="item title" href="/2025/06/18/CPP/CPP%E6%9D%82%E8%AE%B0/"><span class="title">CPP杂记</span></a><a class="item title" href="/2025/04/23/%E5%A4%87%E5%BF%98%E5%BD%95/CXL-place-llvm-PGO%E6%9D%82%E8%AE%B0/"><span class="title">CXL-place-llvm-PGO杂记</span></a><a class="item title" href="/2025/04/23/LLVM/LLVM/"><span class="title">LLVM explore</span></a><a class="item title" href="/2024/12/05/Linux%20kernel/Kernel-compile/"><span class="title">Kernel-compile</span></a><a class="item title" href="/2024/10/15/Qt/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/"><span class="title">控台项目与iSet项目已使用Qt技能点整理</span></a><a class="item title" href="/2025/01/06/CXL/%E9%BE%99%E8%9C%A5CXL%E8%AE%B2%E8%A7%A3-%E9%AB%98%E6%98%BE%E6%89%AC/"><span class="title">龙蜥CXL讲解-高显扬</span></a><a class="item title" href="/2025/01/06/CXL/OCP-China-2024-CXL-%E8%AE%BA%E5%9D%9B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"><span class="title">OCP China 2024 CXL 论坛学习笔记</span></a><a class="item title" href="/2024/11/28/Linux%20kernel/Neoperf-study/"><span class="title">Neoperf_study</span></a><a class="item title" href="/2024/11/26/%E5%A4%87%E5%BF%98%E5%BD%95/linux%E8%84%9A%E6%9C%AC%E5%A4%87%E5%BF%98%E5%BD%95/"><span class="title">linux脚本备忘录</span></a></div></widget>
 </div>
 
 </div></aside><div class="l_main" id="main">
 
+<header class="header mobile-only"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="undefined" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">Zane Jiang'blog</div><div class="sub cap">Some highlights from my life and studies.</div></a></div></header>
+
+ 
 
 
-
-
-<div class="article banner top">
-  <div class="content">
-    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">Home</a>
-<span class="sep"></span><a class="cap breadcrumb" href="/">Blog</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">Posted on: <time datetime="2024-12-05T12:29:03.000Z">2024-12-05</time></span><span class="sep updated"></span><span class="text updated">Updated on: <time datetime="2025-05-07T06:38:26.620Z">2025-05-07</time></span></div></div></div>
-    
-    <div class="bottom only-title">
-      
-      <div class="text-area">
-        <h1 class="text title"><span>Kernel-compile</span></h1>
-        
-      </div>
-    </div>
-    
-  </div>
-  </div><article class="md-text content"><h2 id="内核编译"><a href="#内核编译" class="headerlink" title="内核编译"></a>内核编译</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#查看当前内核版本</span></span><br><span class="line"><span class="built_in">uname</span> -a</span><br><span class="line"></span><br><span class="line"><span class="comment">#源码获取</span></span><br><span class="line"><span class="built_in">sudo</span> apt-get install linux-source</span><br><span class="line"><span class="built_in">cd</span> /usr/src</span><br><span class="line">tar xvf linux-source-*.tar.bz2</span><br><span class="line"><span class="built_in">cd</span> linux-source-*</span><br><span class="line"></span><br><span class="line"><span class="comment">#补丁应用</span></span><br><span class="line">patch -p1 &lt; /path/to/patch.diff</span><br><span class="line"><span class="comment">#`-p1`选项可能需要根据补丁文件的格式进行调整。</span></span><br><span class="line"></span><br><span class="line">make menuconfig  <span class="comment">#或者oldconfig,本质是配置/usr/src/config</span></span><br><span class="line">make -j$(<span class="built_in">nproc</span>)</span><br><span class="line"><span class="comment">#根据 .config 配置文件编译内核、内核模块和其他必要的文件，生成内核镜像（vmlinuz）和其他相关的文件</span></span><br><span class="line"><span class="comment">#编译过程中可能出现每包头文件或者其他错误，可能是版本原因，针对报错解决即可</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#内核安装</span></span><br><span class="line"><span class="comment">#安装过程可能会出现头文件报错或者缺库、或安装完成后缺库，只需要apt安装对应的库就好，make过程中会自动hook</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#安装内核模块(在运行时可以加载或卸载的模块)</span></span><br><span class="line"><span class="comment">#从编译输出的目录（如 lib/modules/&lt;kernel_version&gt;/）,并执行 depmod 来生成模块依赖关系</span></span><br><span class="line"><span class="built_in">sudo</span> make modules_install</span><br><span class="line"></span><br><span class="line"><span class="comment">#内核镜像（如 vmlinuz）、配置文件（如 config）、符号表文件（如 System.map）和 initrd 镜像安装到 /boot 目录</span></span><br><span class="line"><span class="built_in">sudo</span> make install</span><br><span class="line"></span><br><span class="line"><span class="comment">#更新启动引导程序</span></span><br><span class="line"><span class="built_in">sudo</span> update-grup</span><br></pre></td></tr></table></figure>
-
-<p>关于配置选项相关操作，参考：:star::star:<a target="_blank" rel="noopener" href="https://linux.cn/article-16252-1.html">Linux 内核动手编译实用指南</a></p>
-<h3 id="KGDB配置"><a href="#KGDB配置" class="headerlink" title="KGDB配置"></a>KGDB配置</h3><p><strong>编译选项</strong></p>
-
-
-<p>参考资料<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_38384263/article/details/132290737">KGDB原理分析及远程挂载调试ARM64内核</a></p>
-<p><strong>内核启动参数</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kgdboc=ttyS0,115200 kgdbwait kgdbtcp=192.168.1.2:1234</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><code>kgdboc=ttyS0,115200</code>：设置串口调试（可选）</li>
-<li><code>kgdbwait</code>：启动时等待调试器连接</li>
-<li><code>kgdbtcp=192.168.1.2:1234</code>：被调试主机的IP和端口</li>
-</ul>
-<p>永久修改：<code>/etc/default/grub</code>下<code>GRUB_CMDLINE_LINUX</code>变量</p>
-<h2 id="proxmox-boot-tool"><a href="#proxmox-boot-tool" class="headerlink" title="proxmox-boot-tool"></a>proxmox-boot-tool</h2><p><code>proxmox-boot-tool</code>，一个脚本，设置启动内核、增删内核等</p>
-<p>Proxmox VE（<strong>Proxmox Virtual Environment</strong>）是一个开源的虚拟化管理平台，专为企业级环境设计，能够管理虚拟机（VM）、容器、存储和集群。</p>
-<p>其中 <code>proxmox-boot-tool</code>脚本在内核管理切换过程中比较有用，这里做备份，便于不整体下载Proxmox VE而单独使用此工具，仅供个人学习使用</p>
-<blockquote>
-<p>使用前提是需要先下载<strong>Promox VE</strong></p>
-<p>先换源<code>/etc/apt/sources.list.d/pve-no-subscription.list</code></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">deb http://mirrors.ustc.edu.cn/proxmox/debian/pve bookworm pve-no-subscription</span><br><span class="line">deb http://mirrors.tuna.tsinghua.edu.cn/proxmox/debian/pve bookworm pve-no-subscription</span><br></pre></td></tr></table></figure>
-
-<p>记得把&#x2F;etc&#x2F;apt&#x2F;sources.list.d下原有的源注释掉</p>
-<p>kernel add等 在 &#x2F;boot下边找到对应版本号</p>
-<p>之后可通过apt search \install 搜索下载对应的pve版本内核</p>
-</blockquote>
-<p><a target="_blank" rel="noopener" href="https://git.proxmox.com/?p=proxmox-kernel-helper.git;a=tree;f=src/bin;h=2348a30bcb28a928cbbe8fdb52f9d3a8170df235;hb=HEAD">proxmox-boot-tool</a>下载链接,先下载<code>proxmox-kernel-helper</code></p>
-<p>参考链接：</p>
-<p><a target="_blank" rel="noopener" href="https://kernelnewbies.org/KernelBuild">https://kernelnewbies.org/KernelBuild</a></p>
-
-
-</article>
-<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">Newer</div><a href="/2025/01/06/CXL/OCP-China-2024-CXL-%E8%AE%BA%E5%9D%9B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">OCP China 2024 CXL 论坛学习笔记</a></div><div class="item" id="next"><div class="note">Older</div><a href="/2024/11/28/Hexo/hexo/">Hexo</a></div></section></div>
-
-
-
-
-
-
+<div class="navbar top"><nav class="post"><a href="/">Recent</a><a href="/tags/">Tags</a><a class="active" href="/archives/">Archives</a></nav></div><div class="post-list archives"><article class="" id="archive"><div class='archive-header h4'>2025</div><div class="archive-list"><a class='post fs14' href="/2025/07/07/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/CYY-RV64.zip/"><time>07-07</time><span>CYY-RV64.zip</span></a></div><div class="archive-list"><a class='post fs14' href="/2025/06/18/CPP/CPP%E6%9D%82%E8%AE%B0/"><time>06-18</time><span>CPP杂记</span></a></div><div class="archive-list"><a class='post fs14' href="/2025/04/23/%E5%A4%87%E5%BF%98%E5%BD%95/CXL-place-llvm-PGO%E6%9D%82%E8%AE%B0/"><time>04-23</time><span>CXL-place-llvm-PGO杂记</span></a></div><div class="archive-list"><a class='post fs14' href="/2025/04/23/LLVM/LLVM/"><time>04-23</time><span>LLVM explore</span></a></div><div class="archive-list"><a class='post fs14' href="/2025/01/06/CXL/%E9%BE%99%E8%9C%A5CXL%E8%AE%B2%E8%A7%A3-%E9%AB%98%E6%98%BE%E6%89%AC/"><time>01-06</time><span>龙蜥CXL讲解-高显扬</span></a></div><div class="archive-list"><a class='post fs14' href="/2025/01/06/CXL/OCP-China-2024-CXL-%E8%AE%BA%E5%9D%9B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"><time>01-06</time><span>OCP China 2024 CXL 论坛学习笔记</span></a></div></article><article class="" id="archive"><div class='archive-header h4'>2024</div><div class="archive-list"><a class='post fs14' href="/2024/12/05/Linux%20kernel/Kernel-compile/"><time>12-05</time><span>Kernel-compile</span></a></div><div class="archive-list"><a class='post fs14' href="/2024/11/28/Hexo/hexo/"><time>11-28</time><span>Hexo</span></a></div><div class="archive-list"><a class='post fs14' href="/2024/11/28/Linux%20kernel/Neoperf-study/"><time>11-28</time><span>Neoperf_study</span></a></div><div class="archive-list"><a class='post fs14' href="/2024/11/26/%E5%A4%87%E5%BF%98%E5%BD%95/linux%E8%84%9A%E6%9C%AC%E5%A4%87%E5%BF%98%E5%BD%95/"><time>11-26</time><span>linux脚本备忘录</span></a></div><div class="archive-list"><a class='post fs14' href="/2024/10/15/Qt/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/"><time>10-15</time><span>控台项目与iSet项目已使用Qt技能点整理</span></a></div></article></div>
 <footer class="page-footer footnote"><hr><div class="text"></div></footer>
 <div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
-<div class="widgets">
-
-
-
-<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">On This Page</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E6%A0%B8%E7%BC%96%E8%AF%91"><span class="toc-text">内核编译</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#KGDB%E9%85%8D%E7%BD%AE"><span class="toc-text">KGDB配置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#proxmox-boot-tool"><span class="toc-text">proxmox-boot-tool</span></a></li></ol></div><div class="widget-footer">
-
-<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>Scroll to Top</span></a></div></widget>
-</div></aside><div class='float-panel blur'>
+</aside><div class='float-panel blur'>
   <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
   </button>
