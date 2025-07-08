@@ -17,18 +17,18 @@
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
   <meta name="theme-color" content="#f9fafb">
   
-  <title>CPP杂记 - Zane Jiang'blog</title>
+  <title>OSDI'25 Tiered Memory Management Beyond Hotness - Zane Jiang'blog</title>
 
   
-    <meta name="description" content="全局静态变量、函数内静态变量、attribute((destructor))析构顺序构造析构顺序的不确定性 以及静态函数获取的单例。  C++ 标准规定：同一个编译单元（同一个 cpp 文件）内，静态&#x2F;全局对象的析构顺序与构造顺序相反。  但不同编译单元（不同 cpp 文件&#x2F;so）之间的析构顺序是未定义的。  局部 static（即函数内 static）对象的析构顺序与其定义顺">
+    <meta name="description" content="Tiered Memory Management Beyond Hotness Jinshu Liu Hamid Hadian Hanchen Xu Huaicheng Li Virginia Tech https:&#x2F;&#x2F;github.com&#x2F;MoatLab&#x2F;SoarAlto&#x2F;   Virginia 这个MoatLab对CXL内存的研究很深入，之前的Pond(ASPLOS &#96;23)、Melody（A">
 <meta property="og:type" content="article">
-<meta property="og:title" content="CPP杂记">
-<meta property="og:url" content="http://example.com/2025/06/18/CPP/CPP%E6%9D%82%E8%AE%B0/index.html">
+<meta property="og:title" content="OSDI&#39;25 Tiered Memory Management Beyond Hotness">
+<meta property="og:url" content="http://example.com/2025/07/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/OSDI-25-Tiered-Memory-Management-Beyond-Hotness/index.html">
 <meta property="og:site_name" content="Zane Jiang&#39;blog">
-<meta property="og:description" content="全局静态变量、函数内静态变量、attribute((destructor))析构顺序构造析构顺序的不确定性 以及静态函数获取的单例。  C++ 标准规定：同一个编译单元（同一个 cpp 文件）内，静态&#x2F;全局对象的析构顺序与构造顺序相反。  但不同编译单元（不同 cpp 文件&#x2F;so）之间的析构顺序是未定义的。  局部 static（即函数内 static）对象的析构顺序与其定义顺">
+<meta property="og:description" content="Tiered Memory Management Beyond Hotness Jinshu Liu Hamid Hadian Hanchen Xu Huaicheng Li Virginia Tech https:&#x2F;&#x2F;github.com&#x2F;MoatLab&#x2F;SoarAlto&#x2F;   Virginia 这个MoatLab对CXL内存的研究很深入，之前的Pond(ASPLOS &#96;23)、Melody（A">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2025-06-18T03:02:52.000Z">
-<meta property="article:modified_time" content="2025-07-07T13:31:02.933Z">
+<meta property="article:published_time" content="2025-07-08T07:56:58.000Z">
+<meta property="article:modified_time" content="2025-07-08T14:53:05.755Z">
 <meta property="article:author" content="Zane Jiang">
 <meta property="article:tag" content="OS">
 <meta name="twitter:card" content="summary">
@@ -77,74 +77,170 @@
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">Home</a>
 <span class="sep"></span><a class="cap breadcrumb" href="/">Blog</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">Posted on: <time datetime="2025-06-18T03:02:52.000Z">2025-06-18</time></span><span class="sep updated"></span><span class="text updated">Updated on: <time datetime="2025-07-07T13:31:02.933Z">2025-07-07</time></span></div></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">Posted on: <time datetime="2025-07-08T07:56:58.000Z">2025-07-08</time></span><span class="sep updated"></span><span class="text updated">Updated on: <time datetime="2025-07-08T14:53:05.755Z">2025-07-08</time></span></div></div></div>
     
     <div class="bottom only-title">
       
       <div class="text-area">
-        <h1 class="text title"><span>CPP杂记</span></h1>
+        <h1 class="text title"><span>OSDI'25 Tiered Memory Management Beyond Hotness</span></h1>
         
       </div>
     </div>
     
   </div>
-  </div><article class="md-text content"><h2 id="全局静态变量、函数内静态变量、attribute-destructor-析构顺序"><a href="#全局静态变量、函数内静态变量、attribute-destructor-析构顺序" class="headerlink" title="全局静态变量、函数内静态变量、attribute((destructor))析构顺序"></a>全局静态变量、函数内静态变量、<strong>attribute</strong>((destructor))析构顺序</h2><p>构造析构顺序的不确定性</p>
-<p>以及静态函数获取的单例。</p>
+  </div><article class="md-text content"><h1 id="Tiered-Memory-Management-Beyond-Hotness"><a href="#Tiered-Memory-Management-Beyond-Hotness" class="headerlink" title="Tiered Memory Management Beyond Hotness"></a>Tiered Memory Management Beyond Hotness</h1><blockquote>
+<p>Jinshu Liu Hamid Hadian Hanchen Xu Huaicheng Li Virginia Tech</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/MoatLab/SoarAlto/">https://github.com/MoatLab/SoarAlto/</a></p>
+</blockquote>
+<blockquote>
+<p>Virginia 这个MoatLab对CXL内存的研究很深入，之前的Pond(ASPLOS `23)、Melody（ASPLOS`25）都出自这个实验室</p>
+</blockquote>
+<h2 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1.Introduction"></a>1.Introduction</h2><p>Hot data is not always performance-critical and can reside in the slow-tier without degrading performance .</p>
+<p>Latency mitigation techniques, such as memory-level parallelism (MLP), obscure the true cost of memory accesses</p>
+<p>1.先前的工作通过启发式或者内存访问成本间接的反应MLP的影响，但是仍然缺少准确的MLP建模和指标。</p>
+<p>2.现有的内存分层方法具有难以轻量化和不准确的特点。尤其是一开始先<strong>放置</strong>本地内存的方法本身就是次优的，并且激进的<strong>迁移策略</strong>会导致过分的迁移。</p>
+<p><strong>所以作者就定义了一个MLP影响的指标，AOL，并且用来辅助放置决策和迁移决策。</strong></p>
+<p>Propose <strong>Amortized Offcore Latency (AOL)</strong>, a novel performance metric that accurately quantifies the performance impact of memory accesses by integrating memory latency and MLP.</p>
+<p>放置决策策略SOAR基于AOL进行排序，然后以此决定放置。ALTO依靠AOL来进行页面提升的过滤，可以与TPP等策略进行结合。</p>
+<h2 id="2-Background-and-Motivation"><a href="#2-Background-and-Motivation" class="headerlink" title="2.Background and Motivation"></a>2.Background and Motivation</h2><p>MLP反映等待内存控制器实现的内存请求数量。</p>
+<p>high-MLP access patterns： array traversals。</p>
+<p>low MLP：pointer-chasing with depedent requests</p>
+
+
+<p>把两个类型的访存一起跑，然后不同的分层策略依照不同的策略跑了测性能，发现把数组访问的放到快速层，反而会使性能降低。</p>
+<h2 id="3-Memory-Performance-Prediction"><a href="#3-Memory-Performance-Prediction" class="headerlink" title="3.Memory Performance Prediction"></a>3.Memory Performance Prediction</h2><h3 id="Relating-Slow-tier-Performance-to-CPU-Stalls"><a href="#Relating-Slow-tier-Performance-to-CPU-Stalls" class="headerlink" title="Relating Slow-tier Performance to CPU Stalls"></a>Relating Slow-tier Performance to CPU Stalls</h3><p>离线分析</p>
+<p>Performance degradation on the slow-tier is predominantly caused by increased CPU stalls due to LLC misses, which we refer to as LLC-Stalls</p>
+
+
+<p>强调区分<code>LLC-miss</code>和<code>LLC-Stall</code> 慢速层单次miss造成的延迟更长，假设相同的miss,慢速层也会有更长的LLS-Stall.</p>
+
+
+<p>论文中讲到基于LLC-Stall来预测减速的误差低于4%，开源以后可以预测一下基于LLC-Miss的（考虑预取器的影响）。</p>
+<h3 id="LLC-Stalls-for-Performance-Prediction"><a href="#LLC-Stalls-for-Performance-Prediction" class="headerlink" title="LLC-Stalls for Performance Prediction"></a>LLC-Stalls for Performance Prediction</h3><p>在线预测</p>
+
+
+
+
+<p>发现快速层发生CPUStall的在慢速层也会发生。</p>
+<p>所以用P&#x3D; SLLC&#x2F;c来预测慢速层的减速。</p>
+
+
+<h3 id="AOL-for-Accurate-Prediction"><a href="#AOL-for-Accurate-Prediction" class="headerlink" title="AOL for Accurate Prediction"></a>AOL for Accurate Prediction</h3><p>进一步研究发现，P在低MLP的场景下准确，但是在高MLP的场景下并不准确、主要是忽略了MLP的影响，高MLP会减少长延迟的影响。</p>
+<p>随着延迟的增加，MLP的延迟掩盖受益会降低。</p>
+<p>因此定义了AOL：</p>
+
+
+
+
+
+
+
+
+
+
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>事件</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>𝑠𝐿𝐿𝐶</td>
+<td><a target="_blank" rel="noopener" href="https://perfmon-events.intel.com/index.html?pltfrm=skylake_server.html&evnt=CYCLE_ACTIVITY.STALLS_L3_MISS">CYCLE ACTIVITY.STALLS L3 MISS</a></td>
+<td>L3 Miss时导致的Stall</td>
+</tr>
+<tr>
+<td>c</td>
+<td><a target="_blank" rel="noopener" href="https://perfmon-events.intel.com/index.html?pltfrm=skylake_server.html&evnt=CPU_CLK_UNHALTED.THREAD">CPU_CLK_UNHALTED.THREAD</a></td>
+<td>非Halt下的时钟周期数</td>
+</tr>
+<tr>
+<td>A1</td>
+<td><a target="_blank" rel="noopener" href="https://perfmon-events.intel.com/index.html?pltfrm=skylake_server.html&evnt=OFFCORE_REQUESTS_OUTSTANDING.CYCLES_WITH_DATA_RD">OFFCORE_REQUESTS_OUTSTANDING.CYCLES_WITH_DATA_RD</a></td>
+<td>L2 Miss 后、请求完成前，这些内存读取请求在 SQ 中等待的周期数<br />换言之，每个时钟周期检查是否存在至少一个load请求，有就加1</td>
+</tr>
+<tr>
+<td>A2</td>
+<td><a target="_blank" rel="noopener" href="https://perfmon-events.intel.com/index.html?pltfrm=skylake_server.html&evnt=OFFCORE_REQUESTS_OUTSTANDING.DEMAND_DATA_RD">OFFCORE_REQUESTS_OUTSTANDING.DEMAND_DATA_RD</a></td>
+<td>L2 miss 后，每个周期有多少个未完成的 Demand Load 请求在SQ中等待，即：请求堆积的深度&#x2F;压力。</td>
+</tr>
+<tr>
+<td>A3</td>
+<td><a target="_blank" rel="noopener" href="https://perfmon-events.intel.com/index.html?pltfrm=skylake_server.html&evnt=OFFCORE_REQUESTS.DEMAND_DATA_RD">OFFCORE REQUESTS.DEMAND DATA RD</a></td>
+<td>L2 miss 后，被发往 uncore 的 load 请求的次数。</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>延迟计算运用到了排队论中的Little`s法则:<br><code>平均在系统中的项数 L = 到达率 λ × 平均响应时间 W</code></p>
+<p>结合事件：</p>
 <ul>
-<li><p>C++ 标准规定：同一个编译单元（同一个 cpp 文件）内，静态&#x2F;全局对象的析构顺序与构造顺序相反。</p>
-</li>
-<li><p>但不同编译单元（不同 cpp 文件&#x2F;so）之间的析构顺序是未定义的。</p>
-</li>
-<li><p>局部 static（即函数内 static）对象的析构顺序与其定义顺序有关，但也只在同一编译单元内有保证。</p>
-</li>
+<li><strong>L</strong> &#x3D; 某个时间段内，在 uncore 正在等待完成的请求数（单位：个），即 “每周期 outstanding 的请求数”</li>
+<li><strong>λ</strong> &#x3D; 请求到达速率（单位：请求&#x2F;周期）≈ 总请求数 &#x2F; 总周期数</li>
+<li><strong>W</strong> &#x3D; 每个请求在系统中停留的时间（单位：周期）→ 平均延迟</li>
 </ul>
-<p>若一个变量仅在单个文件中可见，则建议将这个变量声明为静态全局变量，<strong>static修饰的静态全局变量仅在当前文件中可见</strong>。</p>
-<p>如果一个全局变量只被单个函数使用,将其改为该函数的静态局部变量可以进一步限制变量的作用域,提高代码的内聚性,降低耦合度。<strong>静态局部变量具有全局寿命但局部作用域</strong>的特点,</p>
-<p>静态全局变量是存储在**静态数据区的,**而不是栈区,因此静态全局变量的大小不会导致栈溢出。栈溢出通常是由于函数调用层次过深或局部变量过大导致的。</p>
-<h2 id="类的内存占用"><a href="#类的内存占用" class="headerlink" title="类的内存占用"></a>类的内存占用</h2>
-
-<p>1.32位系统中虚函数指针为4字节，64位为8字节</p>
-<p>2.只需要考虑虚函数指针，虚函数表不计入某个类的资源</p>
-<p>3.char占一字节，但是需要考虑内存调用</p>
-<p>4.如果有虚继承，则多一个虚基类指针。</p>
-<p>5.空类占一个字节（用于标识）</p>
-<h2 id="指针好题"><a href="#指针好题" class="headerlink" title="指针好题"></a>指针好题</h2>
-
-
-
-<p>int arr[5]&#x3D;{1,2,3,4,5};在这个数组的定义中，通常的理解<strong>arr</strong>是数组的地址即<strong>数组首元素</strong>的地址，进一步理解arr是一个int型的指针常量，常量+1地址偏移sizeof(int)，所以arr+1是首元素下一个元素的地址；考虑到这一层就不难理解**&amp;arr*<em>的含义，&amp;arr是对arr取地址，结果也是个地址，只是这个地址的类型是指向有5个int类型数据的数组的指针常量，这个常量+1地址偏移5</em>sizeof(int)。</p>
-<p><strong>各级指针算各级的</strong>： 主要就是理解&amp; 和 * 的“升级降级”；</p>
-<blockquote>
-<p>链接：<a target="_blank" rel="noopener" href="https://www.nowcoder.com/exam/test/89156461/submission?examPageSource=Intelligent&pid=62380309&testCallback=https://www.nowcoder.com/exam/intelligent?questionJobId=10&subTabName=intelligent_page&tagId=21000&testclass=%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91">https://www.nowcoder.com/exam/test/89156461/submission?examPageSource=Intelligent&pid=62380309&testCallback=https%3A%2F%2Fwww.nowcoder.com%2Fexam%2Fintelligent%3FquestionJobId%3D10%26subTabName%3Dintelligent_page%26tagId%3D21000&amp;testclass&#x3D;%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91</a></p>
+<p><code>W = L / λ = 平均 outstanding 请求数 / 到达速率</code></p>
 </blockquote>
-<h2 id="Copy-and-Swap"><a href="#Copy-and-Swap" class="headerlink" title="Copy and Swap"></a>Copy and Swap</h2><p>传统做法<code>operator=</code></p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MyString</span> &#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">char</span>* data; <span class="comment">// 动态分配的字符串</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 赋值运算符重载</span></span><br><span class="line">    MyString&amp; <span class="keyword">operator</span>=(<span class="type">const</span> MyString&amp; other) &#123;</span><br><span class="line">        <span class="comment">// 检查自赋值</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span> == &amp;other) &#123;</span><br><span class="line">            <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 释放当前对象的资源</span></span><br><span class="line">        <span class="keyword">delete</span>[] data;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 复制数据</span></span><br><span class="line">        data = <span class="keyword">new</span> <span class="type">char</span>[std::<span class="built_in">strlen</span>(other.data) + <span class="number">1</span>];</span><br><span class="line">        std::<span class="built_in">strcpy</span>(data, other.data);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 返回当前对象的引用</span></span><br><span class="line">        <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-
-
-<p><code>Copy and Swap</code></p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">MyString&amp; <span class="keyword">operator</span>=(<span class="type">const</span> MyString&amp; other) &#123;</span><br><span class="line">    <span class="comment">// 检查自赋值</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span> == &amp;other) &#123;</span><br><span class="line">        <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    MyString tmp&#123;other&#125;;</span><br><span class="line">    std::<span class="built_in">swap</span>(data,other.data);</span><br><span class="line">    <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<p>优势：</p>
-<p>异常安全：传统方法new抛出异常时，对象出于无效状态。data已经被删除，但是分配失败</p>
+<p>根据排队理论，计算得1。</p>
+<p>MLP是平均每个周期内多少个inflight内存请求，衡量内存访问的并行度。</p>
 <blockquote>
-<p><strong>强异常安全性:</strong>  <strong>如果一个操作因为异常而失败，程序的状态会回滚到操作之前的样子，就像这个操作从来没执行过一样</strong></p>
+<p>A2代表总的堆积请求数，总的堆积请求数（A2）除以总的堆积周期数（A1),得到每个周期的平均inflight请求数。</p>
 </blockquote>
-<p>代码复用：复用拷贝构造函数</p>
-<p>自动资源管理：自动释放tmp资源</p>
-<p>C++11 写法</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">MyString&amp; <span class="keyword">operator</span>=(MyString other) &#123;<span class="comment">//值传递</span></span><br><span class="line">    	<span class="comment">//传入左值：拷贝构造</span></span><br><span class="line">    	<span class="comment">//传入右值：移动构造</span></span><br><span class="line">        std::<span class="built_in">swap</span>(data,other.data);</span><br><span class="line">        <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>1、2代入的AOL。 延迟除以并行请求，得到了一个并行请求下单个请求的延迟影响。</p>
+
+
+<p>然后作者定义了减速模型：S&#x3D; P x K.</p>
+<blockquote>
+<p>k &#x3D; f(AOL)的函数是用S&#x2F;P与AOL进行分析，反向呈现出特定的渐进双曲线，反推出了其数学模型。</p>
+<p>关于a和b，与硬件相关而与工作负载无关的常数，两个特定的场景（指针追踪、数组访问）能够推出（估计待定系数法）</p>
+</blockquote>
+<p><strong>分析： AOL增加时（MLP减小或者Latency增大），K趋近到上界1，S接近P,预测由LLC.stall&#x2F;c决定。相反（MLP增大或者Latency减少），K趋近下界0，S减小</strong></p>
+<p>有了预测模型以后，基于时间序列预测了</p>
+
+
+
+
+
+
+<h2 id="4-Soar-Rank-based-Static-Object-Allocation"><a href="#4-Soar-Rank-based-Static-Object-Allocation" class="headerlink" title="4.Soar: Rank-based Static Object Allocation"></a>4.Soar: Rank-based Static Object Allocation</h2><p>现有的初次放置的分层方案目的是最大化利用快速层内存。</p>
+<p><strong>作者希望寻找一种方法最初就能精准放置内存，降低内存迁移开销。</strong></p>
+
 
 <blockquote>
-<p>移动构造还是拷贝构造？</p>
-<p>左值：叫得出名字   右值：叫不出名字（临时变量，std::move）</p>
-<p>左值用拷贝构造，右值用移动构造（偷）</p>
+<p>读到这句话的时候这难受。。</p>
 </blockquote>
+<p><strong>挑战：</strong></p>
+<p>While AOL-based prediction  is effective at the workload level, it falls short for individual objects due to the semantic gap between architectural events and object-level memory accesses.</p>
+<p>尽管AOL预测在workload级别能够表现得很好，但是却无法在单个变量上表现很好。</p>
+<p><strong>key insight：</strong></p>
+<p>​	distribute CPU stalls across objects proportionally to their relative access frequencies based on the observed MLP and latencies, thereby approximating each object’s performance impact to application performance accurately.</p>
+
+
+<h3 id="Object-Level-Performance-Profiling"><a href="#Object-Level-Performance-Profiling" class="headerlink" title="Object-Level Performance Profiling"></a>Object-Level Performance Profiling</h3><p>​	Periodically collects and processes three types of metrics:</p>
+<ul>
+<li>object metadata via object tracking</li>
+<li>memory accesses via PEBS-based LLC-miss sampling</li>
+<li>temporal performance via AOL-based prediction</li>
+</ul>
+<ol>
+<li>①-②Object Tracking&#x2F;Flow 通过<code>LD_PRELOAD</code>的方式拦截修改，记录五元组对象流</li>
+<li>③-④用PEBS记录LLC misses、访问时间戳和vaddr</li>
+<li>⑤-⑥基于AOL预测性能</li>
+</ol>
+<p>⑦ 合并三个对象流，基于时间戳来判断地址，有了访问时间戳，可以计算访问次数以及访问比例。</p>
+<p>⑧将访存比例与AOL减速预测结合，计算减速得分</p>
+
+
+<p>不足与机会：</p>
+<p>1.从MLP的角度分析，和预取有关系吗？对于预取的影响（如果这个东西能量化，也能分析出很多东西）</p>
+<p>2.并没有考虑区分读写比例的影响？</p>
+<p>3.本文中第4节提到的通过访存比例来分配内存slowdown的做法是否合理？ 是因为其指标是基于perf stat的，如果全部用perf record的方法是否会更加精确？这一点作者没有详细描述。 hard</p>
+<p>4.机器的拓展性，针对SPX，其他的SPR、EMR的对应事件的拓展性替代如何？</p>
 
 
 </article>
-<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">Newer</div><a href="/2025/07/07/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/CYY-RV64.zip/">CYY-RV64.zip</a></div><div class="item" id="next"><div class="note">Older</div><a href="/2025/04/23/%E5%A4%87%E5%BF%98%E5%BD%95/CXL-place-llvm-PGO%E6%9D%82%E8%AE%B0/">CXL-place-llvm-PGO杂记</a></div></section></div>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"></div><div class="item" id="next"><div class="note">Older</div><a href="/2025/07/07/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/CYY-RV64.zip/">CYY-RV64.zip</a></div></section></div>
 
 
 
@@ -157,7 +253,7 @@
 
 
 
-<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">On This Page</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%A8%E5%B1%80%E9%9D%99%E6%80%81%E5%8F%98%E9%87%8F%E3%80%81%E5%87%BD%E6%95%B0%E5%86%85%E9%9D%99%E6%80%81%E5%8F%98%E9%87%8F%E3%80%81attribute-destructor-%E6%9E%90%E6%9E%84%E9%A1%BA%E5%BA%8F"><span class="toc-text">全局静态变量、函数内静态变量、attribute((destructor))析构顺序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B1%BB%E7%9A%84%E5%86%85%E5%AD%98%E5%8D%A0%E7%94%A8"><span class="toc-text">类的内存占用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%87%E9%92%88%E5%A5%BD%E9%A2%98"><span class="toc-text">指针好题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Copy-and-Swap"><span class="toc-text">Copy and Swap</span></a></li></ol></div><div class="widget-footer">
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">On This Page</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Tiered-Memory-Management-Beyond-Hotness"><span class="toc-text">Tiered Memory Management Beyond Hotness</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Introduction"><span class="toc-text">1.Introduction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Background-and-Motivation"><span class="toc-text">2.Background and Motivation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Memory-Performance-Prediction"><span class="toc-text">3.Memory Performance Prediction</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Relating-Slow-tier-Performance-to-CPU-Stalls"><span class="toc-text">Relating Slow-tier Performance to CPU Stalls</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LLC-Stalls-for-Performance-Prediction"><span class="toc-text">LLC-Stalls for Performance Prediction</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AOL-for-Accurate-Prediction"><span class="toc-text">AOL for Accurate Prediction</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Soar-Rank-based-Static-Object-Allocation"><span class="toc-text">4.Soar: Rank-based Static Object Allocation</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Object-Level-Performance-Profiling"><span class="toc-text">Object-Level Performance Profiling</span></a></li></ol></li></ol></li></ol></div><div class="widget-footer">
 
 <a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>Scroll to Top</span></a></div></widget>
 </div></aside><div class='float-panel blur'>
