@@ -27,11 +27,30 @@
 <meta property="og:site_name" content="Zane Jiang&#39;blog">
 <meta property="og:description" content="Tiered Memory Management Beyond Hotness Jinshu Liu Hamid Hadian Hanchen Xu Huaicheng Li Virginia Tech https:&#x2F;&#x2F;github.com&#x2F;MoatLab&#x2F;SoarAlto&#x2F;   Virginia 这个MoatLab对CXL内存的研究很深入，之前的Pond(ASPLOS &#96;23)、Melody（A">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2025/07/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/OSDI-25-Tiered-Memory-Management-Beyond-Hotness/image-20250708165613385.png">
+<meta property="og:image" content="http://example.com/2025/07/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/OSDI-25-Tiered-Memory-Management-Beyond-Hotness/image-20250708173833417.png">
+<meta property="og:image" content="http://example.com/2025/07/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/OSDI-25-Tiered-Memory-Management-Beyond-Hotness/image-20250708174338745.png">
+<meta property="og:image" content="http://example.com/2025/07/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/OSDI-25-Tiered-Memory-Management-Beyond-Hotness/image-20250708194429810.png">
+<meta property="og:image" content="http://example.com/2025/07/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/OSDI-25-Tiered-Memory-Management-Beyond-Hotness/image-20250708194524956.png">
+<meta property="og:image" content="http://example.com/2025/07/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/OSDI-25-Tiered-Memory-Management-Beyond-Hotness/image-20250708194835667.png">
+<meta property="og:image" content="http://example.com/2025/07/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/OSDI-25-Tiered-Memory-Management-Beyond-Hotness/image-20250708200124483.png">
+<meta property="og:image" content="http://example.com/2025/07/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/OSDI-25-Tiered-Memory-Management-Beyond-Hotness/image-20250708173802230.png">
+<meta property="og:image" content="http://example.com/2025/07/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/OSDI-25-Tiered-Memory-Management-Beyond-Hotness/image-20250708210125232.png">
+<meta property="og:image" content="http://example.com/2025/07/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/OSDI-25-Tiered-Memory-Management-Beyond-Hotness/image-20250708214140142.png">
+<meta property="og:image" content="http://example.com/2025/07/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/OSDI-25-Tiered-Memory-Management-Beyond-Hotness/image-20250708215354919.png">
+<meta property="og:image" content="http://example.com/2025/07/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/OSDI-25-Tiered-Memory-Management-Beyond-Hotness/image-20250708220331845.png">
+<meta property="og:image" content="http://example.com/2025/07/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/OSDI-25-Tiered-Memory-Management-Beyond-Hotness/image-20250708223617852.png">
+<meta property="og:image" content="http://example.com/2025/07/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/OSDI-25-Tiered-Memory-Management-Beyond-Hotness/image-20250709204938324.png">
+<meta property="og:image" content="http://example.com/2025/07/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/OSDI-25-Tiered-Memory-Management-Beyond-Hotness/image-20250709210525410.png">
+<meta property="og:image" content="http://example.com/2025/07/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/OSDI-25-Tiered-Memory-Management-Beyond-Hotness/image-20250709210650002.png">
+<meta property="og:image" content="http://example.com/2025/07/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/OSDI-25-Tiered-Memory-Management-Beyond-Hotness/image-20250709211141170.png">
+<meta property="og:image" content="http://example.com/2025/07/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/OSDI-25-Tiered-Memory-Management-Beyond-Hotness/image-20250709211029214.png">
 <meta property="article:published_time" content="2025-07-08T07:56:58.000Z">
-<meta property="article:modified_time" content="2025-07-08T14:53:05.755Z">
+<meta property="article:modified_time" content="2025-07-09T13:11:45.909Z">
 <meta property="article:author" content="Zane Jiang">
 <meta property="article:tag" content="OS">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2025/07/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/OSDI-25-Tiered-Memory-Management-Beyond-Hotness/image-20250708165613385.png">
   
   
   
@@ -53,7 +72,7 @@
 <div class="l_body s:aa content tech" id="start" layout="post" ><aside class="l_left"><div class="leftbar-container">
 
 
-<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="undefined" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">Zane Jiang'blog</div><div class="sub cap">Some highlights from my life and studies.</div></a></div></header>
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/images/avatar.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">Zane Jiang'blog</div><div class="sub cap">Some highlights from my life and studies.</div></a></div></header>
 
 <div class="nav-area">
 <div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="Search"></form><div id="search-result"></div><div class="search-no-result">No Results!</div></div>
@@ -64,7 +83,7 @@
 <div class="widgets">
 
 
-<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">Recent Update</span></div><div class="widget-body fs14"><a class="item title" href="/2025/07/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/OSDI-25-Tiered-Memory-Management-Beyond-Hotness/"><span class="title">OSDI'25 Tiered Memory Management Beyond Hotness</span></a><a class="item title" href="/2025/07/07/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/CYY-RV64.zip/"><span class="title">CYY-RV64.zip</span></a><a class="item title" href="/2025/06/18/CPP/CPP%E6%9D%82%E8%AE%B0/"><span class="title">CPP杂记</span></a><a class="item title" href="/2025/04/23/%E5%A4%87%E5%BF%98%E5%BD%95/CXL-place-llvm-PGO%E6%9D%82%E8%AE%B0/"><span class="title">CXL-place-llvm-PGO杂记</span></a><a class="item title" href="/2025/04/23/LLVM/LLVM/"><span class="title">LLVM explore</span></a><a class="item title" href="/2024/12/05/Linux%20kernel/Kernel-compile/"><span class="title">Kernel-compile</span></a><a class="item title" href="/2024/10/15/Qt/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/"><span class="title">控台项目与iSet项目已使用Qt技能点整理</span></a><a class="item title" href="/2025/01/06/CXL/%E9%BE%99%E8%9C%A5CXL%E8%AE%B2%E8%A7%A3-%E9%AB%98%E6%98%BE%E6%89%AC/"><span class="title">龙蜥CXL讲解-高显扬</span></a><a class="item title" href="/2025/01/06/CXL/OCP-China-2024-CXL-%E8%AE%BA%E5%9D%9B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"><span class="title">OCP China 2024 CXL 论坛学习笔记</span></a><a class="item title" href="/2024/11/28/Linux%20kernel/Neoperf-study/"><span class="title">Neoperf_study</span></a></div></widget>
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">Recent Update</span></div><div class="widget-body fs14"><a class="item title" href="/2025/07/07/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/CYY-RV64.zip/"><span class="title">CYY-RV64.zip</span></a><a class="item title" href="/2025/07/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/OSDI-25-Tiered-Memory-Management-Beyond-Hotness/"><span class="title">OSDI'25 Tiered Memory Management Beyond Hotness</span></a><a class="item title" href="/2025/06/18/CPP/CPP%E6%9D%82%E8%AE%B0/"><span class="title">CPP杂记</span></a><a class="item title" href="/2025/04/23/%E5%A4%87%E5%BF%98%E5%BD%95/CXL-place-llvm-PGO%E6%9D%82%E8%AE%B0/"><span class="title">CXL-place-llvm-PGO杂记</span></a><a class="item title" href="/2025/04/23/LLVM/LLVM/"><span class="title">LLVM explore</span></a><a class="item title" href="/2024/12/05/Linux%20kernel/Kernel-compile/"><span class="title">Kernel-compile</span></a><a class="item title" href="/2024/10/15/Qt/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/"><span class="title">控台项目与iSet项目已使用Qt技能点整理</span></a><a class="item title" href="/2025/01/06/CXL/%E9%BE%99%E8%9C%A5CXL%E8%AE%B2%E8%A7%A3-%E9%AB%98%E6%98%BE%E6%89%AC/"><span class="title">龙蜥CXL讲解-高显扬</span></a><a class="item title" href="/2025/01/06/CXL/OCP-China-2024-CXL-%E8%AE%BA%E5%9D%9B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"><span class="title">OCP China 2024 CXL 论坛学习笔记</span></a><a class="item title" href="/2024/11/28/Linux%20kernel/Neoperf-study/"><span class="title">Neoperf_study</span></a></div></widget>
 </div>
 
 </div></aside><div class="l_main" id="main">
@@ -77,7 +96,7 @@
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">Home</a>
 <span class="sep"></span><a class="cap breadcrumb" href="/">Blog</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">Posted on: <time datetime="2025-07-08T07:56:58.000Z">2025-07-08</time></span><span class="sep updated"></span><span class="text updated">Updated on: <time datetime="2025-07-08T14:53:05.755Z">2025-07-08</time></span></div></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">Posted on: <time datetime="2025-07-08T07:56:58.000Z">2025-07-08</time></span><span class="sep updated"></span><span class="text updated">Updated on: <time datetime="2025-07-09T13:11:45.909Z">2025-07-09</time></span></div></div></div>
     
     <div class="bottom only-title">
       
@@ -105,29 +124,30 @@
 <h2 id="2-Background-and-Motivation"><a href="#2-Background-and-Motivation" class="headerlink" title="2.Background and Motivation"></a>2.Background and Motivation</h2><p>MLP反映等待内存控制器实现的内存请求数量。</p>
 <p>high-MLP access patterns： array traversals。</p>
 <p>low MLP：pointer-chasing with depedent requests</p>
-
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2025/07/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/OSDI-25-Tiered-Memory-Management-Beyond-Hotness/image-20250708165613385.png" class="lazy" title="image-20250708165613385">
 
 <p>把两个类型的访存一起跑，然后不同的分层策略依照不同的策略跑了测性能，发现把数组访问的放到快速层，反而会使性能降低。</p>
 <h2 id="3-Memory-Performance-Prediction"><a href="#3-Memory-Performance-Prediction" class="headerlink" title="3.Memory Performance Prediction"></a>3.Memory Performance Prediction</h2><h3 id="Relating-Slow-tier-Performance-to-CPU-Stalls"><a href="#Relating-Slow-tier-Performance-to-CPU-Stalls" class="headerlink" title="Relating Slow-tier Performance to CPU Stalls"></a>Relating Slow-tier Performance to CPU Stalls</h3><p>离线分析</p>
 <p>Performance degradation on the slow-tier is predominantly caused by increased CPU stalls due to LLC misses, which we refer to as LLC-Stalls</p>
-
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2025/07/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/OSDI-25-Tiered-Memory-Management-Beyond-Hotness/image-20250708173833417.png" class="lazy" title="image-20250708173833417">
 
 <p>强调区分<code>LLC-miss</code>和<code>LLC-Stall</code> 慢速层单次miss造成的延迟更长，假设相同的miss,慢速层也会有更长的LLS-Stall.</p>
-
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2025/07/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/OSDI-25-Tiered-Memory-Management-Beyond-Hotness/image-20250708174338745.png" class="lazy" title="image-20250708174338745">
 
 <p>论文中讲到基于LLC-Stall来预测减速的误差低于4%，开源以后可以预测一下基于LLC-Miss的（考虑预取器的影响）。</p>
 <h3 id="LLC-Stalls-for-Performance-Prediction"><a href="#LLC-Stalls-for-Performance-Prediction" class="headerlink" title="LLC-Stalls for Performance Prediction"></a>LLC-Stalls for Performance Prediction</h3><p>在线预测</p>
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2025/07/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/OSDI-25-Tiered-Memory-Management-Beyond-Hotness/image-20250708194429810.png" class="lazy" title="image-20250708194429810">
 
-
-
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2025/07/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/OSDI-25-Tiered-Memory-Management-Beyond-Hotness/image-20250708194524956.png" class="lazy" title="image-20250708194524956">
 
 <p>发现快速层发生CPUStall的在慢速层也会发生。</p>
 <p>所以用P&#x3D; SLLC&#x2F;c来预测慢速层的减速。</p>
-
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2025/07/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/OSDI-25-Tiered-Memory-Management-Beyond-Hotness/image-20250708194835667.png" class="lazy" title="image-20250708194835667">
 
 <h3 id="AOL-for-Accurate-Prediction"><a href="#AOL-for-Accurate-Prediction" class="headerlink" title="AOL for Accurate Prediction"></a>AOL for Accurate Prediction</h3><p>进一步研究发现，P在低MLP的场景下准确，但是在高MLP的场景下并不准确、主要是忽略了MLP的影响，高MLP会减少长延迟的影响。</p>
 <p>随着延迟的增加，MLP的延迟掩盖受益会降低。</p>
 <p>因此定义了AOL：</p>
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2025/07/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/OSDI-25-Tiered-Memory-Management-Beyond-Hotness/image-20250708200124483.png" class="lazy" title="image-20250708200124483">
 
 
 
@@ -135,8 +155,7 @@
 
 
 
-
-
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2025/07/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/OSDI-25-Tiered-Memory-Management-Beyond-Hotness/image-20250708173802230.png" class="lazy" title="image-20250708173802230">
 
 <table>
 <thead>
@@ -188,7 +207,7 @@
 <p>A2代表总的堆积请求数，总的堆积请求数（A2）除以总的堆积周期数（A1),得到每个周期的平均inflight请求数。</p>
 </blockquote>
 <p>1、2代入的AOL。 延迟除以并行请求，得到了一个并行请求下单个请求的延迟影响。</p>
-
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2025/07/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/OSDI-25-Tiered-Memory-Management-Beyond-Hotness/image-20250708210125232.png" class="lazy" title="image-20250708210125232">
 
 <p>然后作者定义了减速模型：S&#x3D; P x K.</p>
 <blockquote>
@@ -197,7 +216,7 @@
 </blockquote>
 <p><strong>分析： AOL增加时（MLP减小或者Latency增大），K趋近到上界1，S接近P,预测由LLC.stall&#x2F;c决定。相反（MLP增大或者Latency减少），K趋近下界0，S减小</strong></p>
 <p>有了预测模型以后，基于时间序列预测了</p>
-
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2025/07/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/OSDI-25-Tiered-Memory-Management-Beyond-Hotness/image-20250708214140142.png" class="lazy" title="image-20250708214140142">
 
 
 
@@ -205,7 +224,7 @@
 
 <h2 id="4-Soar-Rank-based-Static-Object-Allocation"><a href="#4-Soar-Rank-based-Static-Object-Allocation" class="headerlink" title="4.Soar: Rank-based Static Object Allocation"></a>4.Soar: Rank-based Static Object Allocation</h2><p>现有的初次放置的分层方案目的是最大化利用快速层内存。</p>
 <p><strong>作者希望寻找一种方法最初就能精准放置内存，降低内存迁移开销。</strong></p>
-
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2025/07/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/OSDI-25-Tiered-Memory-Management-Beyond-Hotness/image-20250708215354919.png" class="lazy" title="image-20250708215354919">
 
 <blockquote>
 <p>读到这句话的时候这难受。。</p>
@@ -215,7 +234,7 @@
 <p>尽管AOL预测在workload级别能够表现得很好，但是却无法在单个变量上表现很好。</p>
 <p><strong>key insight：</strong></p>
 <p>​	distribute CPU stalls across objects proportionally to their relative access frequencies based on the observed MLP and latencies, thereby approximating each object’s performance impact to application performance accurately.</p>
-
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2025/07/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/OSDI-25-Tiered-Memory-Management-Beyond-Hotness/image-20250708220331845.png" class="lazy" title="image-20250708220331845">
 
 <h3 id="Object-Level-Performance-Profiling"><a href="#Object-Level-Performance-Profiling" class="headerlink" title="Object-Level Performance Profiling"></a>Object-Level Performance Profiling</h3><p>​	Periodically collects and processes three types of metrics:</p>
 <ul>
@@ -230,13 +249,62 @@
 </ol>
 <p>⑦ 合并三个对象流，基于时间戳来判断地址，有了访问时间戳，可以计算访问次数以及访问比例。</p>
 <p>⑧将访存比例与AOL减速预测结合，计算减速得分</p>
+<p>具体计算算法：</p>
+<ul>
+<li><p>极端场景下并行少，MLP&#x3D;1，减速打分等于时间段减速P*访存比例R</p>
+</li>
+<li><p>高MLP时，缩小评分</p>
+</li>
+<li><p>低MLP时，放大评分</p>
+<p>作者随后解释了怎样设计的factor，以及计算单位字节得分等。</p>
+</li>
+</ul>
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2025/07/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/OSDI-25-Tiered-Memory-Management-Beyond-Hotness/image-20250708223617852.png" class="lazy" title="image-20250708223617852">
 
 
-<p>不足与机会：</p>
-<p>1.从MLP的角度分析，和预取有关系吗？对于预取的影响（如果这个东西能量化，也能分析出很多东西）</p>
+
+<h3 id="Object-Allocation"><a href="#Object-Allocation" class="headerlink" title="Object Allocation"></a>Object Allocation</h3><p>依然是打分之后进行排序，topk 放置到快速层</p>
+<p>影响排名不一定与请求顺序相同，如果打分低的先到了，后续打分高的请求到了会使得打分低的请求降级。</p>
+<blockquote>
+<p>问题：是依据调用栈来进行分组对变量进行标识的，这样在一个函数内部进行内存分配时，大家调用栈都相同，这样并无法区分。</p>
+<p>具体要看代码实现是否区分时空调用？</p>
+</blockquote>
+<p>特别指出可以与一些异构内存感知的内存分配器同时使用（<a target="_blank" rel="noopener" href="https://github.com/memkind/memkind">memkind</a>、<a target="_blank" rel="noopener" href="https://github.com/oneapi-src/unified-memory-framework">Unified Memory Framework</a>)</p>
+<h3 id="Use-Cases-and-Limitations"><a href="#Use-Cases-and-Limitations" class="headerlink" title="Use Cases and Limitations"></a>Use Cases and Limitations</h3><p>1.HPC、在线服务这种长时间访问的应用，静态分配不再最优</p>
+<p>2.假设对象是均匀的，对象内部的访问每一页频率都差不多。</p>
+<h2 id="5-Alto-AOL-based-Adaptive-Page-Migrations"><a href="#5-Alto-AOL-based-Adaptive-Page-Migrations" class="headerlink" title="5.Alto: AOL-based Adaptive Page Migrations"></a>5.Alto: AOL-based Adaptive Page Migrations</h2><p><strong>现在方案的不足：</strong></p>
+<p>1.某些迁移没有。只是表面热</p>
+<p>2.迁移开销很大，策略到单次迁移需要12us,访问到迁移中的页导致CPU stall </p>
+<p>3.CXL与local的延迟和带宽都在缩小，迁移开销的影响就显得很大</p>
+<p>4.冷页不是真的冷。</p>
+<p>虽然用 AOL（Amortized Offcore Latency）来设计基于性能感知的页迁移（page-level migration）策略是很有前景的，但目前仍面临一些独特的挑战，特别是在如何用现有粗粒度硬件性能计数器（performance counters）准确估算单个内存页的性能影响方面。</p>
+<p>方法很简单，就是用AOL辅助平时的方法决策一下：</p>
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2025/07/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/OSDI-25-Tiered-Memory-Management-Beyond-Hotness/image-20250709204938324.png" class="lazy" title="image-20250709204938324">
+
+<p>而后讲了与TPP、Nomad、NBT等方法的集成。</p>
+<h2 id="6-Evaluation"><a href="#6-Evaluation" class="headerlink" title="6.Evaluation"></a>6.Evaluation</h2><blockquote>
+<p>关注1：CXL模拟方式：SKX <strong>lowering</strong> the <strong>uncore frequency</strong> and <strong>disabling cores</strong> on one NUMA node</p>
+<p>关注2：workloads : GAPBS、ML、caching、SPEC2017</p>
+</blockquote>
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2025/07/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/OSDI-25-Tiered-Memory-Management-Beyond-Hotness/image-20250709210525410.png" class="lazy" title="image-20250709210525410">
+
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2025/07/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/OSDI-25-Tiered-Memory-Management-Beyond-Hotness/image-20250709210650002.png" class="lazy" title="image-20250709210650002">
+
+<p>执行过程中的排序</p>
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2025/07/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/OSDI-25-Tiered-Memory-Management-Beyond-Hotness/image-20250709211141170.png" class="lazy" title="image-20250709211141170">
+
+<p>ALTO效果。</p>
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2025/07/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/OSDI-25-Tiered-Memory-Management-Beyond-Hotness/image-20250709211029214.png" class="lazy" title="image-20250709211029214">
+
+<h2 id="不足与机会："><a href="#不足与机会：" class="headerlink" title="不足与机会："></a>不足与机会：</h2><p>1.从MLP的角度分析，和预取有关系吗？对于预取的影响（如果这个东西能量化，也能分析出很多东西）</p>
 <p>2.并没有考虑区分读写比例的影响？</p>
 <p>3.本文中第4节提到的通过访存比例来分配内存slowdown的做法是否合理？ 是因为其指标是基于perf stat的，如果全部用perf record的方法是否会更加精确？这一点作者没有详细描述。 hard</p>
-<p>4.机器的拓展性，针对SPX，其他的SPR、EMR的对应事件的拓展性替代如何？</p>
+<p>4.全部放在运行时进行变量分析会不会发生采样不准确的问题，在NeoMem中也有？但是如何解决？可不可以结合NeoMem完全捕获数据流？</p>
+<p>基于采样，长生命周期的可能采集到，短生命周期取样。</p>
+<p>机器的拓展性，针对SPX，其他的SPR、EMR的对应事件的拓展性替代如何，是否都只是PEBS？</p>
+<p>乱序校正的影响大不大？</p>
+<p>例如三段式的，第一次进行热点代码识别，第二次将热点代码全部卸载到CXL，然后利用Neomem捕获trace，从而准确感知，最后根据决策实现数据放置？ hard</p>
+<p>5.结合内存分配器进行小变量页内集中优化，大变量的访问是否集中？不集中的话可以用perf采集地址，然后绘制访存直方图。</p>
 
 
 </article>
@@ -253,7 +321,7 @@
 
 
 
-<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">On This Page</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Tiered-Memory-Management-Beyond-Hotness"><span class="toc-text">Tiered Memory Management Beyond Hotness</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Introduction"><span class="toc-text">1.Introduction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Background-and-Motivation"><span class="toc-text">2.Background and Motivation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Memory-Performance-Prediction"><span class="toc-text">3.Memory Performance Prediction</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Relating-Slow-tier-Performance-to-CPU-Stalls"><span class="toc-text">Relating Slow-tier Performance to CPU Stalls</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LLC-Stalls-for-Performance-Prediction"><span class="toc-text">LLC-Stalls for Performance Prediction</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AOL-for-Accurate-Prediction"><span class="toc-text">AOL for Accurate Prediction</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Soar-Rank-based-Static-Object-Allocation"><span class="toc-text">4.Soar: Rank-based Static Object Allocation</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Object-Level-Performance-Profiling"><span class="toc-text">Object-Level Performance Profiling</span></a></li></ol></li></ol></li></ol></div><div class="widget-footer">
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">On This Page</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Tiered-Memory-Management-Beyond-Hotness"><span class="toc-text">Tiered Memory Management Beyond Hotness</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Introduction"><span class="toc-text">1.Introduction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Background-and-Motivation"><span class="toc-text">2.Background and Motivation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Memory-Performance-Prediction"><span class="toc-text">3.Memory Performance Prediction</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Relating-Slow-tier-Performance-to-CPU-Stalls"><span class="toc-text">Relating Slow-tier Performance to CPU Stalls</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LLC-Stalls-for-Performance-Prediction"><span class="toc-text">LLC-Stalls for Performance Prediction</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AOL-for-Accurate-Prediction"><span class="toc-text">AOL for Accurate Prediction</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Soar-Rank-based-Static-Object-Allocation"><span class="toc-text">4.Soar: Rank-based Static Object Allocation</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Object-Level-Performance-Profiling"><span class="toc-text">Object-Level Performance Profiling</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Object-Allocation"><span class="toc-text">Object Allocation</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Use-Cases-and-Limitations"><span class="toc-text">Use Cases and Limitations</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-Alto-AOL-based-Adaptive-Page-Migrations"><span class="toc-text">5.Alto: AOL-based Adaptive Page Migrations</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-Evaluation"><span class="toc-text">6.Evaluation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8D%E8%B6%B3%E4%B8%8E%E6%9C%BA%E4%BC%9A%EF%BC%9A"><span class="toc-text">不足与机会：</span></a></li></ol></li></ol></div><div class="widget-footer">
 
 <a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>Scroll to Top</span></a></div></widget>
 </div></aside><div class='float-panel blur'>
