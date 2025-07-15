@@ -17,23 +17,21 @@
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
   <meta name="theme-color" content="#f9fafb">
   
-  <title>LLVM explore - Zane Jiang'blog</title>
+  <title>ASPLOS25 Systematic CXL Memory Characterization and Performance Analysis at Scale - Zane Jiang'blog</title>
 
   
-    <meta name="description" content="入门llvm笔记  新旧新增pass流程CRTP（奇异递归模板模式）(以下内容基于AI生成后修改)  通常通过继承的方式实现单例模式也是这样，只是不知道叫这个名字    CRTP（Curiously Recurring Template Pattern，奇异递归模板模式）是C++中的一种高级模板编程技术，通过让一个类继承自以自身为模板参数的基类模板，实现静态多态或代码复用。 123templat">
+    <meta name="description" content="Systematic CXL Memory Characterization and Performance Analysis at Scale Jinshu Liu  Virginia Tech https:&#x2F;&#x2F;github.com&#x2F;MoatLab&#x2F;Melody  1.IntroductionCurrently, there is a significant gap in research th">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LLVM explore">
-<meta property="og:url" content="https://zane-jiang.github.io/2025/04/23/LLVM/LLVM/index.html">
+<meta property="og:title" content="ASPLOS25 Systematic CXL Memory Characterization and Performance Analysis at Scale">
+<meta property="og:url" content="https://zane-jiang.github.io/2025/07/14/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/ASPLOS25-Systematic-CXL-Memory-Characterization-and-Performance-Analysis-at-Scale/index.html">
 <meta property="og:site_name" content="Zane Jiang&#39;blog">
-<meta property="og:description" content="入门llvm笔记  新旧新增pass流程CRTP（奇异递归模板模式）(以下内容基于AI生成后修改)  通常通过继承的方式实现单例模式也是这样，只是不知道叫这个名字    CRTP（Curiously Recurring Template Pattern，奇异递归模板模式）是C++中的一种高级模板编程技术，通过让一个类继承自以自身为模板参数的基类模板，实现静态多态或代码复用。 123templat">
+<meta property="og:description" content="Systematic CXL Memory Characterization and Performance Analysis at Scale Jinshu Liu  Virginia Tech https:&#x2F;&#x2F;github.com&#x2F;MoatLab&#x2F;Melody  1.IntroductionCurrently, there is a significant gap in research th">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://zane-jiang.github.io/2025/04/23/LLVM/LLVM/image-20250423132436982.png">
-<meta property="article:published_time" content="2025-04-23T05:04:33.000Z">
-<meta property="article:modified_time" content="2025-06-18T14:01:04.493Z">
+<meta property="article:published_time" content="2025-07-14T13:28:44.000Z">
+<meta property="article:modified_time" content="2025-07-15T15:01:00.041Z">
 <meta property="article:author" content="Zane Jiang">
-<meta property="article:tag" content="llvm">
+<meta property="article:tag" content="OS">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://zane-jiang.github.io/2025/04/23/LLVM/LLVM/image-20250423132436982.png">
   
   
   
@@ -79,80 +77,124 @@
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">Home</a>
 <span class="sep"></span><a class="cap breadcrumb" href="/">Blog</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">Posted on: <time datetime="2025-04-23T05:04:33.000Z">2025-04-23</time></span><span class="sep updated"></span><span class="text updated">Updated on: <time datetime="2025-06-18T14:01:04.493Z">2025-06-18</time></span></div></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">Posted on: <time datetime="2025-07-14T13:28:44.000Z">2025-07-14</time></span><span class="sep updated"></span><span class="text updated">Updated on: <time datetime="2025-07-15T15:01:00.041Z">2025-07-15</time></span></div></div></div>
     
     <div class="bottom only-title">
       
       <div class="text-area">
-        <h1 class="text title"><span>LLVM explore</span></h1>
+        <h1 class="text title"><span>ASPLOS25 Systematic CXL Memory Characterization and Performance Analysis at Scale</span></h1>
         
       </div>
     </div>
     
   </div>
-  </div><article class="md-text content"><blockquote>
-<p>入门llvm笔记</p>
+  </div><article class="md-text content"><h1 id="Systematic-CXL-Memory-Characterization-and-Performance-Analysis-at-Scale"><a href="#Systematic-CXL-Memory-Characterization-and-Performance-Analysis-at-Scale" class="headerlink" title="Systematic CXL Memory Characterization and Performance Analysis at Scale"></a>Systematic CXL Memory Characterization and Performance Analysis at Scale</h1><blockquote>
+<p>Jinshu Liu  Virginia Tech</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/MoatLab/Melody">https://github.com/MoatLab/Melody</a></p>
 </blockquote>
-<h1 id="新旧新增pass流程"><a href="#新旧新增pass流程" class="headerlink" title="新旧新增pass流程"></a>新旧新增pass流程</h1><h2 id="CRTP（奇异递归模板模式）-以下内容基于AI生成后修改"><a href="#CRTP（奇异递归模板模式）-以下内容基于AI生成后修改" class="headerlink" title="CRTP（奇异递归模板模式）(以下内容基于AI生成后修改)"></a>CRTP（奇异递归模板模式）(以下内容基于AI生成后修改)</h2><blockquote>
-<p> 通常通过继承的方式实现单例模式也是这样，只是不知道叫这个名字</p>
-</blockquote>
-<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2025/04/23/LLVM/LLVM/image-20250423132436982.png" class="lazy" title="image-20250423132436982">
-
-<p>CRTP（Curiously Recurring Template Pattern，奇异递归模板模式）是C++中的一种高级模板编程技术，通过<strong>让一个类继承自以自身为模板参数的基类模板</strong>，实现静态多态或代码复用。</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Derived&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Base</span> &#123; <span class="comment">/* 基类使用Derived类型 */</span> &#125;;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyClass</span> : <span class="keyword">public</span> Base&lt;MyClass&gt; &#123; <span class="comment">/* 派生类将自身作为模板参数传递给基类 */</span> &#125;;</span><br></pre></td></tr></table></figure>
-
-<h3 id="核心作用"><a href="#核心作用" class="headerlink" title="核心作用"></a><strong>核心作用</strong></h3><h4 id="1-静态多态（编译时多态）"><a href="#1-静态多态（编译时多态）" class="headerlink" title="1. 静态多态（编译时多态）"></a>1. <strong>静态多态（编译时多态）</strong></h4><ul>
-<li><strong>动态多态（虚函数）的问题</strong>：运行时虚表查找导致性能开销。</li>
-<li><strong>CRTP的解决方案</strong>：基类在编译时通过模板参数直接调用派生类的方法。</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">template &lt;typename Derived&gt;</span><br><span class="line">class Animal &#123;</span><br><span class="line">public:</span><br><span class="line">    void speak() &#123;</span><br><span class="line">        static_cast&lt;Derived*&gt;(this)-&gt;speakImpl(); // 编译时确定调用</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">class Cat : public Animal&lt;Cat&gt; &#123;</span><br><span class="line">public:</span><br><span class="line">    void speakImpl() &#123; std::cout &lt;&lt; &quot;Meow\n&quot;; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">class Dog : public Animal&lt;Dog&gt; &#123;</span><br><span class="line">public:</span><br><span class="line">    void speakImpl() &#123; std::cout &lt;&lt; &quot;Woof\n&quot;; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">// 使用</span><br><span class="line">Animal&lt;Cat&gt; cat;</span><br><span class="line">cat.speak(); // 输出 &quot;Meow&quot;（无虚函数开销）</span><br></pre></td></tr></table></figure>
-
-<h4 id="2-代码复用"><a href="#2-代码复用" class="headerlink" title="2. 代码复用"></a>2. <strong>代码复用</strong></h4><ul>
-<li>基类可提供通用逻辑，派生类通过特化实现差异部分。</li>
-</ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Derived&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Counter</span> &#123;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="type">static</span> <span class="type">int</span> count;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Counter</span>() &#123; ++count; &#125;</span><br><span class="line">    <span class="function"><span class="type">static</span> <span class="type">int</span> <span class="title">getCount</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> count; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Derived&gt;</span><br><span class="line"><span class="type">int</span> Counter&lt;Derived&gt;::count = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 统计对象实例数的类</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> : <span class="keyword">public</span> Counter&lt;Widget&gt; &#123;&#125;;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Gadget</span> : <span class="keyword">public</span> Counter&lt;Gadget&gt; &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用</span></span><br><span class="line">Widget w1, w2;</span><br><span class="line">Gadget g1;</span><br><span class="line">std::cout &lt;&lt; Widget::<span class="built_in">getCount</span>(); <span class="comment">// 输出 2</span></span><br><span class="line">std::cout &lt;&lt; Gadget::<span class="built_in">getCount</span>(); <span class="comment">// 输出 1</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="CRTP-vs-虚函数"><a href="#CRTP-vs-虚函数" class="headerlink" title="CRTP vs 虚函数"></a><strong>CRTP vs 虚函数</strong></h3><table>
-<thead>
-<tr>
-<th align="left">特性</th>
-<th align="left">CRTP</th>
-<th align="left">虚函数</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left"><strong>多态时机</strong></td>
-<td align="left">编译时</td>
-<td align="left">运行时</td>
-</tr>
-<tr>
-<td align="left"><strong>性能</strong></td>
-<td align="left">无额外开销（直接调用）</td>
-<td align="left">虚表查找开销</td>
-</tr>
-<tr>
-<td align="left"><strong>灵活性</strong></td>
-<td align="left">类型固定（模板参数需明确）</td>
-<td align="left">支持运行时类型动态替换</td>
-</tr>
-<tr>
-<td align="left"><strong>适用场景</strong></td>
-<td align="left">高性能库、框架基础设施</td>
-<td align="left">需要运行时动态行为的情况</td>
-</tr>
-</tbody></table>
-<hr>
-<h3 id="CRTP的典型应用场景"><a href="#CRTP的典型应用场景" class="headerlink" title="CRTP的典型应用场景"></a><strong>CRTP的典型应用场景</strong></h3><ol>
-<li><strong>编译时多态</strong>：如数学库中的向量&#x2F;矩阵运算（Eigen库）。</li>
-<li><strong>对象计数</strong>：统计不同派生类的实例数量。</li>
-<li><strong>Mixin模式</strong>：为类动态添加功能（如LLVM的<code>PassInfoMixin</code>）。</li>
-<li><strong>链式调用</strong>：返回派生类引用以实现链式语法（<code>return static_cast&lt;Derived&amp;&gt;(*this);</code>）。</li>
+<h2 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1.Introduction"></a>1.Introduction</h2><p>Currently, there is a significant gap in research that explores detailed CXL characteristics and their impact on memory-intensive workloads at scale, in depth, and across the full spectrum of sub-μs latencies.</p>
+<p>In particular, how do CXL devices differ in detailed performance characteristics beyond average latency and bandwidth metrics? How (much) does CXL’s long (and longer) latency affect CPU efficiency and workload performance? What are the underlying causes and how do we analyze it?</p>
+<p>Exsiting works focus on coarse-grained analysis and overlook several critical aspects: (i) CXL performance stability (i.e., tail latencies); (ii) CPU tolerance to prolonged CXL latencies across various workloads, and the architectural implications of CXL; and (iii) the lack of systematic approach to dissect workload performance and CPU inefficiency under CXL.</p>
+<p>So:</p>
+<p>introduce <strong>Melody</strong>, a comprehensive framework for detailed CXL performance characterization.</p>
+<ol>
+<li>The first analysis of CXL characteristics beyond average latency and bandwidth across 4 real CXL devices.</li>
+<li>An extensive evaluation of CXL’s performance implications across diverse workloads.</li>
+<li>A systematic approach for workload performance analysis under CXL.</li>
 </ol>
-<h2 id="4-LLVM与CPP实现"><a href="#4-LLVM与CPP实现" class="headerlink" title="4 LLVM与CPP实现"></a>4 LLVM与CPP实现</h2><h3 id="DenseMap与stdMap"><a href="#DenseMap与stdMap" class="headerlink" title="DenseMap与stdMap"></a>DenseMap与stdMap</h3><h3 id="dyn-cast与RTTI-isa"><a href="#dyn-cast与RTTI-isa" class="headerlink" title="dyn_cast与RTTI isa"></a>dyn_cast与RTTI isa</h3><h2 id="def-use-user-value"><a href="#def-use-user-value" class="headerlink" title="def-use user-value"></a>def-use user-value</h2><p>为什么llvm中User会继承value</p>
-<h1 id="处理器硬件计数"><a href="#处理器硬件计数" class="headerlink" title="处理器硬件计数"></a>处理器硬件计数</h1><h2 id="pt-LBR-PEBS"><a href="#pt-LBR-PEBS" class="headerlink" title="pt LBR PEBS"></a>pt LBR PEBS</h2>
+<p><strong>contributions</strong>(in my view):</p>
+<p>​	1.MELODY,a framwork to measure CXL perfomence.</p>
+<p>​	2.An in-depth study of CXL tail latencies (like caption).</p>
+<p>​	3.Root-cause analysis approach</p>
+<h2 id="2-Background"><a href="#2-Background" class="headerlink" title="2.Background"></a>2.Background</h2><p>How CPU backend and CXL MC process Load and Store request?</p>
+<style>.fymycehsdtgb{zoom:200%;}</style>
+
+<blockquote>
+<p>Request types:</p>
+<p>The CPU issues two types of load requests: Demand and Prefetch. Demand loads are memory reads that CPU requests from (CXL) MC only when it is needed for computation. Prefetch reads are predictive reads directed by prefetchers, e.g., “L1PF” and “L2PF” in Figure 2a.</p>
+<p>Stores are first queued in the “store buffer.” Each store request triggers a Read-for-ownership (RFO) for cache coherence from CXL&#x2F;DRAM, followed by a Write upon cache eviction.</p>
+
+</blockquote>
+<blockquote>
+<p>MC  ： Memory requests to the CXL MC are encapsulated(compress) in a specific packet format, known as Flits , for transmission over CXL&#x2F;PCIe. Upon arrival, the CXL controller (“CXL Ctrl”) parses the request and places it in the request queue. The request scheduler then selects the next request to process based on the scheduling policy and other factors such as thermal management for low latency, high bandwidth, and reliability. Requests are then passed to the command scheduler, which issues appropriate low-level DDR commands to the DRAM chips.</p>
+</blockquote>
+<h2 id="3-CXL-Device-Characterization"><a href="#3-CXL-Device-Characterization" class="headerlink" title="3.CXL Device Characterization"></a>3.CXL Device Characterization</h2><h3 id="3-1-Testbed"><a href="#3-1-Testbed" class="headerlink" title="3.1 Testbed"></a>3.1 Testbed</h3><blockquote>
+<p><strong>Concern</strong>:</p>
+<p><strong>work load</strong>:</p>
+<p>cloud workloads (in-memory caching and databases such as Redis [13] and VoltDB [21], CloudSuite [1], and Phoronix [12]), graph processing (GAPBS [22], PBBS [19]), data analytics (Spark [30]), ML&#x2F;AI (GPT-2 [5], MLPerf [14], Llama [9]), SPEC CPU 2017 [18], and PARSEC [24].</p>
+</blockquote>
+<h3 id="3-2-CXL-latency-stability-and-its-relationship-with-bandwidth"><a href="#3-2-CXL-latency-stability-and-its-relationship-with-bandwidth" class="headerlink" title="3.2 CXL latency stability and its relationship with bandwidth"></a>3.2 CXL latency stability and its relationship with bandwidth</h3><blockquote>
+<p>Terms distinction:</p>
+<p>Loaded latencies: memory access latency under high utilization</p>
+<p>Idle latency: occurs when the system experiences minimal load</p>
+</blockquote>
+<p>这一部分实现了一个MIO，通过多次指针追踪记录一次rdtsc时间戳来计算average latency，并采用MLC来验证MIO。测试了一些tail latency 与bandwidth之间的关系，结果均可以想到。</p>
+
+
+
+
+
+
+
+
+<blockquote>
+<p>一个测量内存压力的方法：将指针追踪访问线程和32个AVX访存线程一起bind到一个numa nod(co-locate)</p>
+</blockquote>
+<h4 id="CXL-latency-vs-bandwidth-under-various-read-write-ratios"><a href="#CXL-latency-vs-bandwidth-under-various-read-write-ratios" class="headerlink" title="CXL latency vs. bandwidth under various read&#x2F;write ratios."></a>CXL latency vs. bandwidth under various read&#x2F;write ratios.</h4><ol>
+<li>Local DRAM achieves the highest bandwidth under a read-only workload, whereas NUMA and all CXL devices (except CXL-C) achieve minimal bandwidth in read-only scenarios. This is because NUMA and CXL links are <strong>bidirectional</strong>, allowing them to sustain higher bandwidth under mixed read&#x2F;write workloads</li>
+<li>CXL devices demonstrate significant variability</li>
+</ol>
+<h4 id="Impact-of-CPU-prefetchers-on-tail-latency"><a href="#Impact-of-CPU-prefetchers-on-tail-latency" class="headerlink" title="Impact of CPU prefetchers on (tail) latency."></a>Impact of CPU prefetchers on (tail) latency.</h4><ol>
+<li>Prefetching does not fully mitigate CXL-induced tail latencies.</li>
+</ol>
+<h4 id="Reasoning"><a href="#Reasoning" class="headerlink" title="Reasoning."></a>Reasoning.</h4><blockquote>
+<p>本节中测出的结果发现尾延迟等性能差距很大，这样的结论其实作用不大。但是性能差异大可以作为其他性能研究的挑战和动机</p>
+</blockquote>
+<p>1.CXL协议传输层与连接层的实现本身引入了性能开销</p>
+<p>2.MC 控制器实现本身</p>
+<h2 id="4-Workload-Characterization"><a href="#4-Workload-Characterization" class="headerlink" title="4 Workload Characterization"></a>4 Workload Characterization</h2><blockquote>
+<p>讨论了一些工作负载的延迟敏感性等，此前论文已经有过</p>
+</blockquote>
+<h2 id="5-Spa-for-CXL-Slowdown-Analysis"><a href="#5-Spa-for-CXL-Slowdown-Analysis" class="headerlink" title="5 Spa for CXL Slowdown Analysis"></a>5 Spa for CXL Slowdown Analysis</h2><h3 id="5-2-Challenges-and-Limitations-of-State-of-the-Art"><a href="#5-2-Challenges-and-Limitations-of-State-of-the-Art" class="headerlink" title="5.2 Challenges and Limitations of State-of-the-Art"></a>5.2 Challenges and Limitations of State-of-the-Art</h3><h4 id="Challenge"><a href="#Challenge" class="headerlink" title="Challenge:"></a>Challenge:</h4><p>1.Identifying the underlying CPU events&#x2F;metrics that can correlate to the slowdowns is challenging. </p>
+<ol start="2">
+<li>It is even more challenging to establish a precise correlation between workload performance and architecture-level performance metrics,</li>
+</ol>
+<h4 id="Why-not-TMA"><a href="#Why-not-TMA" class="headerlink" title="Why not TMA?"></a>Why not TMA?</h4><ol>
+<li>TMA does not provide a differential analysis to interpret pipeline differences resulting from varying backend memory (i.e., CXL vs. local DRAM).</li>
+<li>TMA is unable to precisely correlate architecture level metrics with workload slowdowns.</li>
+</ol>
+<h3 id="5-3-Spa-A-Bottom-Up-Approach"><a href="#5-3-Spa-A-Bottom-Up-Approach" class="headerlink" title="5.3 Spa: A Bottom-Up Approach"></a>5.3 Spa: A Bottom-Up Approach</h3>
+
+
+
+
+
+
+
+<h4 id="DRAM-Demand-Load-Slowdown"><a href="#DRAM-Demand-Load-Slowdown" class="headerlink" title="DRAM (Demand Load) Slowdown:"></a>DRAM (Demand Load) Slowdown:</h4><p>These misses denote demand read misses, excluding RFO and prefetch requests.</p>
+<h4 id="Store-Slowdown"><a href="#Store-Slowdown" class="headerlink" title="Store Slowdown :"></a>Store Slowdown :</h4><p>Incoming store requests queued in the store buffer are dequeued upon completion. Some writes issue RFO requests before execution. If the store buffer fills up, these RFOs would hinder load efficiency, causing CPU stalls.</p>
+<h4 id="Cache-Slowdown"><a href="#Cache-Slowdown" class="headerlink" title="Cache Slowdown:"></a>Cache Slowdown:</h4><p>On SKX, most cache slowdown occurs in L2 due to a significant rise in stall cycles for L1 load misses with CXL. Conversely, on SPR&#x2F;EMR, LLC experiences the bulk of slowdown, with a notable increase in stall cycles for L2 load misses with CXL.</p>
+<p><strong>key finding</strong>:</p>
+<p>This reduces L2 prefetcher’s coverage of both demand reads and L1 prefetch. L1 prefetches would either miss entirely in L2 or at best, they would hit on a pending L2 prefetch in L2. Consequently, CXL also negatively impacts L1 prefetcher’s timeliness.Loads that would have otherwise hit in the cache if L1 prefetches were timely, now are delayed. Consequently, overall prefetch efficiency suffers and stalls on caches increase.</p>
+<p>由于CXL的长延迟，L2预取的信息时效性降低，当L1需要相应数据的时候，L2还没有预取回来，导致L1认为miss，于是访问L2,再次发出请求。原本可以命中的Load请求变得不命中。</p>
+
+
+<p>intel没有计数器直接观测L1Pf-L2-hit与miss的情况，可以通过一些其他的计数器间接的观测情况。</p>
+<p>发现：L2PF-L3-miss减少，L1PF-L3-miss增多，L2PFL3-hit不变，因此推导出：L2预取器低效预取，L1预取增多。</p>
+<h3 id="5-5-5-6-Workload-Slowdown-Diversity-Period-based-Slowdown-Analysis"><a href="#5-5-5-6-Workload-Slowdown-Diversity-Period-based-Slowdown-Analysis" class="headerlink" title="5.5 &amp; 5.6 Workload Slowdown Diversity &amp;Period-based Slowdown Analysis"></a>5.5 &amp; 5.6 Workload Slowdown Diversity &amp;Period-based Slowdown Analysis</h3><p>An approach to convert time-based sampling data into a period-based slowdown analysis.</p>
+<h3 id="5-7-Spa-Use-Cases"><a href="#5-7-Spa-Use-Cases" class="headerlink" title="5.7 Spa Use Cases"></a>5.7 Spa Use Cases</h3><p><strong>Performance tuning.</strong> For example, to mitigate the slowdown bursts observed in 605.mcf (Figure 16b), we first identify memory accesses during bursty periods (e.g., exceeding 10%) using binary instrumentation via Intel Pin. Next, we pinpoint the source code responsible for high slowdowns using addr2line. Our analysis reveals that two performance-critical objects, each 2GB in size, are contributing to the slowdown.</p>
+<blockquote>
+<p>作者提到的两个case，一个是用来做性能优化，一个是作为性能指标来进行分层，这两个点其实都是和后一篇论文有联系，做铺垫。</p>
+</blockquote>
+<h2 id="不足与机会："><a href="#不足与机会：" class="headerlink" title="不足与机会："></a>不足与机会：</h2><ol>
+<li>作者在验证cache slow down的主要原因的 方法是： To validate this, we disable all the hardware prefetchers (L1 and L2) and measure workload slowdowns. With prefetchers off, we found virtually no stall cycles on cache。这样的方法并不深入，为什么降低？这些值得深挖，但是需要一些硬件探索。</li>
+<li>关于预取，可以增加预取器的深度(也就是再多预取几个周期)直接解决这个问题。</li>
+<li>5.7中讲到了一个关于SPA的使用案例，通过剖析SPA中的slowdown来分析slowdown，然后把slowdown严重的变量放置到CXL，这样的方法我觉得十分适用。</li>
+</ol>
+
 
 </article>
-<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">Newer</div><a href="/2025/04/23/%E5%A4%87%E5%BF%98%E5%BD%95/CXL-place-llvm-PGO%E6%9D%82%E8%AE%B0/">CXL-place-llvm-PGO杂记</a></div><div class="item" id="next"><div class="note">Older</div><a href="/2025/01/06/CXL/%E9%BE%99%E8%9C%A5CXL%E8%AE%B2%E8%A7%A3-%E9%AB%98%E6%98%BE%E6%89%AC/">龙蜥CXL讲解-高显扬</a></div></section></div>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"></div><div class="item" id="next"><div class="note">Older</div><a href="/2025/07/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/OSDI-25-Tiered-Memory-Management-Beyond-Hotness/">OSDI'25 Tiered Memory Management Beyond Hotness</a></div></section></div>
 
 
 
@@ -165,7 +207,7 @@
 
 
 
-<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">On This Page</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%B0%E6%97%A7%E6%96%B0%E5%A2%9Epass%E6%B5%81%E7%A8%8B"><span class="toc-text">新旧新增pass流程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#CRTP%EF%BC%88%E5%A5%87%E5%BC%82%E9%80%92%E5%BD%92%E6%A8%A1%E6%9D%BF%E6%A8%A1%E5%BC%8F%EF%BC%89-%E4%BB%A5%E4%B8%8B%E5%86%85%E5%AE%B9%E5%9F%BA%E4%BA%8EAI%E7%94%9F%E6%88%90%E5%90%8E%E4%BF%AE%E6%94%B9"><span class="toc-text">CRTP（奇异递归模板模式）(以下内容基于AI生成后修改)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E4%BD%9C%E7%94%A8"><span class="toc-text">核心作用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E9%9D%99%E6%80%81%E5%A4%9A%E6%80%81%EF%BC%88%E7%BC%96%E8%AF%91%E6%97%B6%E5%A4%9A%E6%80%81%EF%BC%89"><span class="toc-text">1. 静态多态（编译时多态）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E4%BB%A3%E7%A0%81%E5%A4%8D%E7%94%A8"><span class="toc-text">2. 代码复用</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CRTP-vs-%E8%99%9A%E5%87%BD%E6%95%B0"><span class="toc-text">CRTP vs 虚函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CRTP%E7%9A%84%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-text">CRTP的典型应用场景</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-LLVM%E4%B8%8ECPP%E5%AE%9E%E7%8E%B0"><span class="toc-text">4 LLVM与CPP实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DenseMap%E4%B8%8EstdMap"><span class="toc-text">DenseMap与stdMap</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#dyn-cast%E4%B8%8ERTTI-isa"><span class="toc-text">dyn_cast与RTTI isa</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#def-use-user-value"><span class="toc-text">def-use user-value</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A4%84%E7%90%86%E5%99%A8%E7%A1%AC%E4%BB%B6%E8%AE%A1%E6%95%B0"><span class="toc-text">处理器硬件计数</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#pt-LBR-PEBS"><span class="toc-text">pt LBR PEBS</span></a></li></ol></li></ol></div><div class="widget-footer">
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">On This Page</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Systematic-CXL-Memory-Characterization-and-Performance-Analysis-at-Scale"><span class="toc-text">Systematic CXL Memory Characterization and Performance Analysis at Scale</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Introduction"><span class="toc-text">1.Introduction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Background"><span class="toc-text">2.Background</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-CXL-Device-Characterization"><span class="toc-text">3.CXL Device Characterization</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-Testbed"><span class="toc-text">3.1 Testbed</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-CXL-latency-stability-and-its-relationship-with-bandwidth"><span class="toc-text">3.2 CXL latency stability and its relationship with bandwidth</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#CXL-latency-vs-bandwidth-under-various-read-write-ratios"><span class="toc-text">CXL latency vs. bandwidth under various read&#x2F;write ratios.</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Impact-of-CPU-prefetchers-on-tail-latency"><span class="toc-text">Impact of CPU prefetchers on (tail) latency.</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Reasoning"><span class="toc-text">Reasoning.</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Workload-Characterization"><span class="toc-text">4 Workload Characterization</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-Spa-for-CXL-Slowdown-Analysis"><span class="toc-text">5 Spa for CXL Slowdown Analysis</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-Challenges-and-Limitations-of-State-of-the-Art"><span class="toc-text">5.2 Challenges and Limitations of State-of-the-Art</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Challenge"><span class="toc-text">Challenge:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Why-not-TMA"><span class="toc-text">Why not TMA?</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-Spa-A-Bottom-Up-Approach"><span class="toc-text">5.3 Spa: A Bottom-Up Approach</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#DRAM-Demand-Load-Slowdown"><span class="toc-text">DRAM (Demand Load) Slowdown:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Store-Slowdown"><span class="toc-text">Store Slowdown :</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Cache-Slowdown"><span class="toc-text">Cache Slowdown:</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-5-5-6-Workload-Slowdown-Diversity-Period-based-Slowdown-Analysis"><span class="toc-text">5.5 &amp; 5.6 Workload Slowdown Diversity &amp;Period-based Slowdown Analysis</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-7-Spa-Use-Cases"><span class="toc-text">5.7 Spa Use Cases</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8D%E8%B6%B3%E4%B8%8E%E6%9C%BA%E4%BC%9A%EF%BC%9A"><span class="toc-text">不足与机会：</span></a></li></ol></li></ol></div><div class="widget-footer">
 
 <a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>Scroll to Top</span></a></div></widget>
 </div></aside><div class='float-panel blur'>
