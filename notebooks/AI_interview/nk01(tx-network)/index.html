@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.33.1" theme-name="Stellar" theme-version="1.33.1">
-  <link rel="canonical" href="https://zane-jiang.github.io/about/">
+  <link rel="canonical" href="https://zane-jiang.github.io/notebooks/AI_interview/nk01(tx-network)/">
   
   <meta name="generator" content="Hexo 7.3.0">
   <meta http-equiv='x-dns-prefetch-control' content='on' />
@@ -17,27 +17,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
   <meta name="theme-color" content="#f9fafb">
-  <title>Zane Jiang</title>
+  <title>nk01(tx-network) - Zane Jiang</title>
 
   
-    <meta name="description" content="🧑‍💻 About me Hello, welcome to my blog. I’m Zane Jiang.  I graduated with a bachelor’s degree in Computer Science from Nanjing Normal University(NNU), and I am currently pursuing a master’s degree">
+    <meta name="description" content="1.5层网络分别是什么，讲讲每层什么协议，有什么东西2.MTU包含哪些层的数据，大小一般多大怎么计算3.MTU和MSS区别4.TCP怎么保证可靠的6.建连和断连是怎么样7.为什么挥手四次要比握手多一次8.挥手并不是一定得四次，能在更少次数内实现，请分析可能怎么做的9.既然能挥手次数更少，但是为什么现在主流还是四次10.我假设是一个客户端，我在和服务端通信，我怎么知道发送窗口数据量是多大呢11.现在">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Zane Jiang">
-<meta property="og:url" content="https://zane-jiang.github.io/about/">
+<meta property="og:title" content="nk01(tx-network)">
+<meta property="og:url" content="https://zane-jiang.github.io/notebooks/AI_interview/nk01(tx-network)/">
 <meta property="og:site_name" content="Zane Jiang">
-<meta property="og:description" content="🧑‍💻 About me Hello, welcome to my blog. I’m Zane Jiang.  I graduated with a bachelor’s degree in Computer Science from Nanjing Normal University(NNU), and I am currently pursuing a master’s degree">
+<meta property="og:description" content="1.5层网络分别是什么，讲讲每层什么协议，有什么东西2.MTU包含哪些层的数据，大小一般多大怎么计算3.MTU和MSS区别4.TCP怎么保证可靠的6.建连和断连是怎么样7.为什么挥手四次要比握手多一次8.挥手并不是一定得四次，能在更少次数内实现，请分析可能怎么做的9.既然能挥手次数更少，但是为什么现在主流还是四次10.我假设是一个客户端，我在和服务端通信，我怎么知道发送窗口数据量是多大呢11.现在">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://zane-jiang.github.io/images/avatar.jpg">
-<meta property="article:published_time" content="2025-07-14T12:45:00.786Z">
-<meta property="article:modified_time" content="2025-07-14T12:45:00.786Z">
+<meta property="article:published_time" content="2025-07-20T14:04:34.000Z">
+<meta property="article:modified_time" content="2025-07-20T14:07:47.885Z">
 <meta property="article:author" content="Zane Jiang">
-<meta property="article:tag" content="OS">
+<meta property="article:tag" content="network">
+<meta property="article:tag" content="tencent">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://zane-jiang.github.io/images/avatar.jpg">
   
   
   
-  <meta name="keywords" content="OS">
+  <meta name="keywords" content=",">
 
   <!-- feed -->
   
@@ -49,7 +50,7 @@
 
   
 
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Website","@id":"https://zane-jiang.github.io/about/","author":{"@type":"Person","name":"Zane Jiang","sameAs":[],"image":"/images/avatar.jpg"},"name":"Zane Jiang","description":"\n\n🧑‍💻 About me\nHello, welcome to my blog. I’m Zane Jiang.\n\nI graduated with a bachelor’s degree in Computer Science from Nanjing Normal University(NNU), and I am currently pursuing a master’s deg...","url":"https://zane-jiang.github.io/about/","keywords":"OS"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Website","@id":"https://zane-jiang.github.io/notebooks/AI_interview/nk01(tx-network)/","author":{"@type":"Person","name":"Zane Jiang","sameAs":[],"image":"/images/avatar.jpg"},"name":"nk01(tx-network)","description":"1.5层网络分别是什么，讲讲每层什么协议，有什么东西2.MTU包含哪些层的数据，大小一般多大怎么计算3.MTU和MSS区别4.TCP怎么保证可靠的6.建连和断连是怎么样7.为什么挥手四次要比握手多一次8.挥手并不是一定得四次，能在更少次数内实现，请分析可能怎么做的9.既然能挥手次数更少，但是为什么现在主流还是四次10.我假设是一个客户端，我在和服务端通信，我怎么知道发送窗口数据量是多大呢11...","url":"https://zane-jiang.github.io/notebooks/AI_interview/nk01(tx-network)/","keywords":"OS"}</script>
   
 </head>
 <body>
@@ -66,7 +67,7 @@
 <div class="widgets">
 <div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
 
-<widget class="widget-wrapper recent post-list"><div class="widget-header dis-select"><span class="name">最近更新</span></div><div class="widget-body fs14"><a class="item title" href="/2025/07/18/Qt%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E4%B8%8E%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"><span class="title">Qt源码阅读与设计模式</span></a></div></widget>
+<widget class="widget-wrapper recent post-list"><div class="widget-header dis-select"><span class="name">最近更新</span></div><div class="widget-body fs14"><a class="item title" href="/notebooks/AI_interview/nk01(tx-network)/"><span class="title">nk01(tx-network)</span></a></div></widget>
 </div>
 <footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/Zane-Jiang" target="_blank" rel="external nofollow noopener noreferrer"><img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/08a41b181ce68.svg"/></a></div></footer>
 </div></aside><div class="l_main" id="main">
@@ -78,31 +79,24 @@
 <div class="article banner top">
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span>
+<a class="cap breadcrumb" href="/notebooks/">笔记本</a>
 
-  <span class="sep"></span>
-  <a class="cap breadcrumb" href="/about/"></a>
-  </div>
-<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2025-07-14T12:45:00.786Z">2025-07-14</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2025-07-14T12:45:00.786Z">2025-07-14</time></span></div></div></div>
+
+</div>
+<div class="flex-row" id="post-meta"><span class="text created">更新于：<time datetime="2025-07-20T14:07:47.885Z">2025-07-20</time></span><span class="sep updated"></span><span class="text updated">发布于：<time datetime="2025-07-20T14:04:34.000Z">2025-07-20</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>nk01(tx-network)</span></h1>
+        
+      </div>
+    </div>
     
   </div>
-  </div><article class="md-text content"><img src="/images/avatar.jpg" width="120" style="border-radius:50%;box-shadow:0 2px 8px #ccc;margin-bottom:1em;" align="center">
-
-<h2 id="🧑‍💻-About-me"><a href="#🧑‍💻-About-me" class="headerlink" title="🧑‍💻 About me"></a>🧑‍💻 About me</h2><ul>
-<li><p>Hello, welcome to my blog. I’m <strong>Zane Jiang</strong>.</p>
-</li>
-<li><p>I graduated with a bachelor’s degree in Computer Science from Nanjing Normal University(NNU), and I am currently pursuing a master’s degree at the College of Computer Science, Chongqing University(CQU).</p>
-</li>
-<li><p>I have worked as a C++ software development engineer for one year in a company specializing in LED control systems.</p>
-</li>
-<li><p>My current areas of interest include <code>OS</code>,<code>LLVM</code>, <code>CXL</code>, <code>Qt</code>, and more.</p>
-</li>
-<li><p>This blog is used to document some of my reflections on life, work, and study notes.</p>
-</li>
-</ul>
-<h2 id="📫-Contact"><a href="#📫-Contact" class="headerlink" title="📫 Contact"></a>📫 Contact</h2><ul>
-<li>Email: <a href="mailto:&#50;&#49;&#50;&#57;&#48;&#x35;&#x36;&#x38;&#54;&#55;&#x40;&#x71;&#113;&#46;&#x63;&#x6f;&#109;">2129056867@qq.com</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Zane-Jiang">GitHub</a></li>
-</ul>
+  </div><article class="md-text content"><h2 id="1-5层网络分别是什么，讲讲每层什么协议，有什么东西"><a href="#1-5层网络分别是什么，讲讲每层什么协议，有什么东西" class="headerlink" title="1.5层网络分别是什么，讲讲每层什么协议，有什么东西"></a>1.5层网络分别是什么，讲讲每层什么协议，有什么东西</h2><h2 id="2-MTU包含哪些层的数据，大小一般多大怎么计算"><a href="#2-MTU包含哪些层的数据，大小一般多大怎么计算" class="headerlink" title="2.MTU包含哪些层的数据，大小一般多大怎么计算"></a>2.MTU包含哪些层的数据，大小一般多大怎么计算</h2><h2 id="3-MTU和MSS区别"><a href="#3-MTU和MSS区别" class="headerlink" title="3.MTU和MSS区别"></a>3.MTU和MSS区别</h2><h2 id="4-TCP怎么保证可靠的"><a href="#4-TCP怎么保证可靠的" class="headerlink" title="4.TCP怎么保证可靠的"></a>4.TCP怎么保证可靠的</h2><p>6.建连和断连是怎么样<br>7.为什么挥手四次要比握手多一次<br>8.挥手并不是一定得四次，能在更少次数内实现，请分析可能怎么做的<br>9.既然能挥手次数更少，但是为什么现在主流还是四次<br>10.我假设是一个客户端，我在和服务端通信，我怎么知道发送窗口数据量是多大呢<br>11.现在已经有了一个滑动窗口了，这个滑动窗口大小变化的时候是怎么变化的<br>12.我丢包了，那这个窗口大小是不是就有问题了，有什么处理方案<br>13.你作为一个一端的程序，是怎么知道是网络拥塞还是是链路丢包的<br>14.TCP的拥塞控制是怎么做的<br>15.假设要让你设计一个完整的判断网络拥塞还是链路丢包的协议，你会怎么设计<br>16.现在假设你打开腾讯视频，突然某些（不是所有）视频你看不了了，你会怎么分析+排查+定位+解决这个问题，从app端上的问题-》网络的问题-》服务端的问题各个角度尽量全面的分析<br>17.wireshark你了解吗，怎么在手机上抓包呢<br>18.算了你假设你能在手机上抓包，你怎么从二进制数据排查定位分析这个场景的问题原因呢<br>19.抓包的底层原理是怎么样的，这个包是怎么从操作系统的内核态数据取到的<br>20.HTTP1-3对比，讲讲多路复用在内核是怎么实现的<br>21.QUIC保证udp可靠传输和tcp自身可靠传输的对比<br>22.HTTP和HTTPS区别<br>23.你讲讲HTTPS的完整的方案<br>24.你这种方案的RTT是多少<br>25.有1RTT的HTTPS方案，你了解吗<br>26.你对网络安全了解多少，像DDOS攻击，中间人攻击这些了解吗，有没有一些解决<br>27.k个一组翻转链表</p>
+<p>作者：静静地看你们表演<br>链接：<a target="_blank" rel="noopener" href="https://www.nowcoder.com/feed/main/detail/ebd659f61ec743d89c402d24311ca250">https://www.nowcoder.com/feed/main/detail/ebd659f61ec743d89c402d24311ca250</a><br>来源：牛客网</p>
 </article>
 
   <div class="related-wrap md-text" id="comments">
@@ -133,7 +127,7 @@
 <div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
 <div class="widgets">
 
-<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%A7%91%E2%80%8D%F0%9F%92%BB-About-me"><span class="toc-text">🧑‍💻 About me</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%93%AB-Contact"><span class="toc-text">📫 Contact</span></a></li></ol></div><div class="widget-footer"><a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/><path d="M7 3.338A9.95 9.95 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5"/></g></svg><span>回到顶部</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M8 10.5h8M8 14h5.5M17 3.338A9.95 9.95 0 0 0 12 2C6.477 2 2 6.477 2 12c0 1.6.376 3.112 1.043 4.453c.178.356.237.763.134 1.148l-.595 2.226a1.3 1.3 0 0 0 1.591 1.592l2.226-.596a1.63 1.63 0 0 1 1.149.133A9.96 9.96 0 0 0 12 22c5.523 0 10-4.477 10-10c0-1.821-.487-3.53-1.338-5"/></svg><span>参与讨论</span></a></div></widget>
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-5%E5%B1%82%E7%BD%91%E7%BB%9C%E5%88%86%E5%88%AB%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%8C%E8%AE%B2%E8%AE%B2%E6%AF%8F%E5%B1%82%E4%BB%80%E4%B9%88%E5%8D%8F%E8%AE%AE%EF%BC%8C%E6%9C%89%E4%BB%80%E4%B9%88%E4%B8%9C%E8%A5%BF"><span class="toc-text">1.5层网络分别是什么，讲讲每层什么协议，有什么东西</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-MTU%E5%8C%85%E5%90%AB%E5%93%AA%E4%BA%9B%E5%B1%82%E7%9A%84%E6%95%B0%E6%8D%AE%EF%BC%8C%E5%A4%A7%E5%B0%8F%E4%B8%80%E8%88%AC%E5%A4%9A%E5%A4%A7%E6%80%8E%E4%B9%88%E8%AE%A1%E7%AE%97"><span class="toc-text">2.MTU包含哪些层的数据，大小一般多大怎么计算</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-MTU%E5%92%8CMSS%E5%8C%BA%E5%88%AB"><span class="toc-text">3.MTU和MSS区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-TCP%E6%80%8E%E4%B9%88%E4%BF%9D%E8%AF%81%E5%8F%AF%E9%9D%A0%E7%9A%84"><span class="toc-text">4.TCP怎么保证可靠的</span></a></li></ol></div><div class="widget-footer"><a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/><path d="M7 3.338A9.95 9.95 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5"/></g></svg><span>回到顶部</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M8 10.5h8M8 14h5.5M17 3.338A9.95 9.95 0 0 0 12 2C6.477 2 2 6.477 2 12c0 1.6.376 3.112 1.043 4.453c.178.356.237.763.134 1.148l-.595 2.226a1.3 1.3 0 0 0 1.591 1.592l2.226-.596a1.63 1.63 0 0 1 1.149.133A9.96 9.96 0 0 0 12 22c5.523 0 10-4.477 10-10c0-1.821-.487-3.53-1.338-5"/></svg><span>参与讨论</span></a></div></widget>
 </div></aside><div class='float-panel'>
   <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>

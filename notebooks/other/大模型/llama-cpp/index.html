@@ -20,12 +20,12 @@
   <title>llama.cpp - Zane Jiang</title>
 
   
-    <meta name="description" content="Llama.cpp源码浅析学习入口函数简单以llama.cli作为推理学习的入口。其入口函数main位置为：llama.cpp&#x2F;tool&#x2F;main.cpp&#x2F;main() 关键数据结构内存管理Arena 分配器“批发内存，零售指针，整单清场” 批发内存：     零售指针     整场清除：     mmap">
+    <meta name="description" content="Llama.cpp源码浅析学习入口函数简单以llama.cli作为推理学习的入口。其入口函数main位置为：llama.cpp&#x2F;tool&#x2F;main.cpp&#x2F;main() 关键数据结构内存管理Arena 分配器“批发内存，零售指针，整单清场” 批发内存：   零售指针   整场清除： mmap">
 <meta property="og:type" content="website">
 <meta property="og:title" content="llama.cpp">
 <meta property="og:url" content="https://zane-jiang.github.io/notebooks/other/%E5%A4%A7%E6%A8%A1%E5%9E%8B/llama-cpp/">
 <meta property="og:site_name" content="Zane Jiang">
-<meta property="og:description" content="Llama.cpp源码浅析学习入口函数简单以llama.cli作为推理学习的入口。其入口函数main位置为：llama.cpp&#x2F;tool&#x2F;main.cpp&#x2F;main() 关键数据结构内存管理Arena 分配器“批发内存，零售指针，整单清场” 批发内存：     零售指针     整场清除：     mmap">
+<meta property="og:description" content="Llama.cpp源码浅析学习入口函数简单以llama.cli作为推理学习的入口。其入口函数main位置为：llama.cpp&#x2F;tool&#x2F;main.cpp&#x2F;main() 关键数据结构内存管理Arena 分配器“批发内存，零售指针，整单清场” 批发内存：   零售指针   整场清除： mmap">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://zane-jiang.github.io/images/avatar.jpg">
 <meta property="article:published_time" content="2025-07-16T09:21:00.000Z">
@@ -49,7 +49,7 @@
 
   
 
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Website","@id":"https://zane-jiang.github.io/notebooks/other/%E5%A4%A7%E6%A8%A1%E5%9E%8B/llama-cpp/","author":{"@type":"Person","name":"Zane Jiang","sameAs":[],"image":"/images/avatar.jpg"},"name":"llama.cpp","description":"Llama.cpp源码浅析学习入口函数简单以llama.cli作为推理学习的入口。其入口函数main位置为：llama.cpp/tool/main.cpp/main()\n关键数据结构内存管理Arena 分配器“批发内存，零售指针，整单清场”\n批发内存：\n\n\n\n\n零售指针\n\n\n\n\n整场清除：\n\n\n\n\nmmap","url":"https://zane-jiang.github.io/notebooks/other/%E5%A4%A7%E6%A8%A1%E5%9E%8B/llama-cpp/","keywords":"OS"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Website","@id":"https://zane-jiang.github.io/notebooks/other/%E5%A4%A7%E6%A8%A1%E5%9E%8B/llama-cpp/","author":{"@type":"Person","name":"Zane Jiang","sameAs":[],"image":"/images/avatar.jpg"},"name":"llama.cpp","description":"Llama.cpp源码浅析学习入口函数简单以llama.cli作为推理学习的入口。其入口函数main位置为：llama.cpp/tool/main.cpp/main()\n关键数据结构内存管理Arena 分配器“批发内存，零售指针，整单清场”\n批发内存：\n\n\n零售指针\n\n\n整场清除：\nmmap","url":"https://zane-jiang.github.io/notebooks/other/%E5%A4%A7%E6%A8%A1%E5%9E%8B/llama-cpp/","keywords":"OS"}</script>
   
 </head>
 <body>
@@ -185,6 +185,60 @@
   </div>
 
       
+        
+  
+  
+  
+  
+  <div class="tag-subtree parent-tag expanded" data-tag="tool">
+    
+  
+  <a class="link" href="/notebooks/other/tags/tool/">
+    <span class="toc-text">
+      
+        
+        <span class="tagcon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" d="m14.092 10.75l-.75 2.5H9.908l.75-2.5z"/><path fill="currentColor" fill-rule="evenodd" d="M3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465C22 19.072 22 16.714 22 12s0-7.071-1.465-8.536C19.072 2 16.714 2 12 2S4.929 2 3.464 3.464m7.752 2.818a.75.75 0 0 1 .502.934l-.61 2.034h3.434l.74-2.465a.75.75 0 0 1 1.436.43l-.61 2.035H18a.75.75 0 0 1 0 1.5h-2.342l-.75 2.5H17a.75.75 0 0 1 0 1.5h-2.542l-.74 2.465a.75.75 0 0 1-1.436-.43l.61-2.035H9.458l-.74 2.465a.75.75 0 1 1-1.436-.43l.61-2.035H6a.75.75 0 0 1 0-1.5h2.342l.75-2.5H7a.75.75 0 0 1 0-1.5h2.542l.74-2.465a.75.75 0 0 1 .934-.503" clip-rule="evenodd"/></svg></span>
+        tool
+      
+    </span>
+    <span class="toc-text tag-switcher-wrapper">
+      <span class="tag-switcher" />
+    </span>
+  </a>
+
+    
+      
+  
+    
+  
+  
+  
+  
+  <div class="tag-subtree leaf-tag expanded" data-tag="tool/perf">
+    
+  
+  <a class="link" href="/notebooks/other/tags/tool/perf/">
+    <span class="toc-text" style="padding-left: 0.875rem;">
+      
+        
+        <span class="tagcon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" d="m14.092 10.75l-.75 2.5H9.908l.75-2.5z"/><path fill="currentColor" fill-rule="evenodd" d="M3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465C22 19.072 22 16.714 22 12s0-7.071-1.465-8.536C19.072 2 16.714 2 12 2S4.929 2 3.464 3.464m7.752 2.818a.75.75 0 0 1 .502.934l-.61 2.034h3.434l.74-2.465a.75.75 0 0 1 1.436.43l-.61 2.035H18a.75.75 0 0 1 0 1.5h-2.342l-.75 2.5H17a.75.75 0 0 1 0 1.5h-2.542l-.74 2.465a.75.75 0 0 1-1.436-.43l.61-2.035H9.458l-.74 2.465a.75.75 0 1 1-1.436-.43l.61-2.035H6a.75.75 0 0 1 0-1.5h2.342l.75-2.5H7a.75.75 0 0 1 0-1.5h2.542l.74-2.465a.75.75 0 0 1 .934-.503" clip-rule="evenodd"/></svg></span>
+        perf
+      
+    </span>
+    <span class="toc-text tag-switcher-wrapper">
+      <span class="tag-switcher" />
+    </span>
+  </a>
+
+    
+  </div>
+
+  
+
+    
+  </div>
+
+      
     </div>
   </widget>
 
@@ -221,20 +275,12 @@
   </div><article class="md-text content"><h1 id="Llama-cpp源码浅析"><a href="#Llama-cpp源码浅析" class="headerlink" title="Llama.cpp源码浅析"></a>Llama.cpp源码浅析</h1><h2 id="学习入口函数"><a href="#学习入口函数" class="headerlink" title="学习入口函数"></a>学习入口函数</h2><p>简单以llama.cli作为推理学习的入口。其入口函数main位置为：<br><code>llama.cpp/tool/main.cpp/main()</code></p>
 <h2 id="关键数据结构"><a href="#关键数据结构" class="headerlink" title="关键数据结构"></a>关键数据结构</h2><h2 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h2><h4 id="Arena-分配器"><a href="#Arena-分配器" class="headerlink" title="Arena 分配器"></a>Arena 分配器</h4><p>“批发内存，零售指针，整单清场”</p>
 <p>批发内存：</p>
-
-
-
-
+<p><img src="image-20250716213909046.png" alt="image-20250716213909046"></p>
+<p><img src="image-20250716213843275.png" alt="image-20250716213843275"></p>
 <p>零售指针</p>
-
-
-
-
-<p>整场清除：</p>
-
-
-
-
+<p><img src="image-20250716213636373.png" alt="image-20250716213636373"></p>
+<p><img src="image-20250716213622044.png" alt="image-20250716213622044"></p>
+<p>整场清除：<br><img src="image-20250716214004280.png" alt="image-20250716214004280"></p>
 <h4 id="mmap"><a href="#mmap" class="headerlink" title="mmap"></a>mmap</h4>
 
   <div class="tag-list">

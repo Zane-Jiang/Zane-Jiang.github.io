@@ -20,12 +20,12 @@
   <title>龙蜥CXL讲解-高显扬 - Zane Jiang</title>
 
   
-    <meta name="description" content="CXL技术介绍对视频链接的PPT搬运，方便快速阅读  高显杨 浪潮   综述          协议协议演进  1.1内存拓展   2.0内存赤化     3.0特性     CXL子协议                      CXL设备        CXL Fabric 参考VPN，下边两张为单switch         CXL RAS特性     内存热插拔？如何避免宕机   CXL初">
+    <meta name="description" content="CXL技术介绍对视频链接的PPT搬运，方便快速阅读  高显杨 浪潮   综述    协议协议演进 1.1内存拓展  2.0内存赤化   3.0特性   CXL子协议           CXL设备    CXL Fabric 参考VPN，下边两张为单switch     CXL RAS特性   内存热插拔？如何避免宕机  CXL初始化  RCRB CXL 1.1跑CXL2实现协议兼容   CXL方">
 <meta property="og:type" content="website">
 <meta property="og:title" content="龙蜥CXL讲解-高显扬">
 <meta property="og:url" content="https://zane-jiang.github.io/notebooks/paper/%E9%BE%99%E8%9C%A5CXL%E8%AE%B2%E8%A7%A3-%E9%AB%98%E6%98%BE%E6%89%AC/">
 <meta property="og:site_name" content="Zane Jiang">
-<meta property="og:description" content="CXL技术介绍对视频链接的PPT搬运，方便快速阅读  高显杨 浪潮   综述          协议协议演进  1.1内存拓展   2.0内存赤化     3.0特性     CXL子协议                      CXL设备        CXL Fabric 参考VPN，下边两张为单switch         CXL RAS特性     内存热插拔？如何避免宕机   CXL初">
+<meta property="og:description" content="CXL技术介绍对视频链接的PPT搬运，方便快速阅读  高显杨 浪潮   综述    协议协议演进 1.1内存拓展  2.0内存赤化   3.0特性   CXL子协议           CXL设备    CXL Fabric 参考VPN，下边两张为单switch     CXL RAS特性   内存热插拔？如何避免宕机  CXL初始化  RCRB CXL 1.1跑CXL2实现协议兼容   CXL方">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://zane-jiang.github.io/images/avatar.jpg">
 <meta property="article:published_time" content="2025-01-06T05:39:31.000Z">
@@ -49,7 +49,7 @@
 
   
 
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Website","@id":"https://zane-jiang.github.io/notebooks/paper/%E9%BE%99%E8%9C%A5CXL%E8%AE%B2%E8%A7%A3-%E9%AB%98%E6%98%BE%E6%89%AC/","author":{"@type":"Person","name":"Zane Jiang","sameAs":[],"image":"/images/avatar.jpg"},"name":"龙蜥CXL讲解-高显扬","description":"CXL技术介绍对视频链接的PPT搬运，方便快速阅读\n\n高显杨 浪潮 \n\n综述\n\n\n\n\n\n\n\n\n\n协议协议演进\n\n1.1内存拓展\n\n\n2.0内存赤化\n\n\n\n\n3.0特性\n\n\n\n\nCXL子协议\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCXL设备\n\n\n\n\n\n\n\nCXL Fabric\n参考VPN，下边两张为单switch\n\n\n\n\n\n\n\n\nCXL RAS特性\n\n\n\n\n内存热插拔？如何避免宕机\n\n\nC...","url":"https://zane-jiang.github.io/notebooks/paper/%E9%BE%99%E8%9C%A5CXL%E8%AE%B2%E8%A7%A3-%E9%AB%98%E6%98%BE%E6%89%AC/","keywords":"OS"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Website","@id":"https://zane-jiang.github.io/notebooks/paper/%E9%BE%99%E8%9C%A5CXL%E8%AE%B2%E8%A7%A3-%E9%AB%98%E6%98%BE%E6%89%AC/","author":{"@type":"Person","name":"Zane Jiang","sameAs":[],"image":"/images/avatar.jpg"},"name":"龙蜥CXL讲解-高显扬","description":"CXL技术介绍对视频链接的PPT搬运，方便快速阅读\n\n高显杨 浪潮 \n\n综述\n\n\n\n协议协议演进\n1.1内存拓展\n\n2.0内存赤化\n\n\n3.0特性\n\n\nCXL子协议\n\n\n\n\n\n\n\n\n\n\nCXL设备\n\n\n\nCXL Fabric\n参考VPN，下边两张为单switch\n\n\n\n\nCXL RAS特性\n\n\n内存热插拔？如何避免宕机\n\nCXL初始化\n\nRCRB CXL 1.1跑CXL2实现协议兼容\n\n\nC...","url":"https://zane-jiang.github.io/notebooks/paper/%E9%BE%99%E8%9C%A5CXL%E8%AE%B2%E8%A7%A3-%E9%AB%98%E6%98%BE%E6%89%AC/","keywords":"OS"}</script>
   
 </head>
 <body>
@@ -155,15 +155,69 @@
   </div>
 
   
+
+    
+  </div>
+
+      
+        
+  
+  
+  
+  
+  <div class="tag-subtree parent-tag expanded" data-tag="paper">
+    
+  
+  <a class="link" href="/notebooks/paper/tags/paper/">
+    <span class="toc-text">
+      
+        
+        <span class="tagcon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" d="m14.092 10.75l-.75 2.5H9.908l.75-2.5z"/><path fill="currentColor" fill-rule="evenodd" d="M3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465C22 19.072 22 16.714 22 12s0-7.071-1.465-8.536C19.072 2 16.714 2 12 2S4.929 2 3.464 3.464m7.752 2.818a.75.75 0 0 1 .502.934l-.61 2.034h3.434l.74-2.465a.75.75 0 0 1 1.436.43l-.61 2.035H18a.75.75 0 0 1 0 1.5h-2.342l-.75 2.5H17a.75.75 0 0 1 0 1.5h-2.542l-.74 2.465a.75.75 0 0 1-1.436-.43l.61-2.035H9.458l-.74 2.465a.75.75 0 1 1-1.436-.43l.61-2.035H6a.75.75 0 0 1 0-1.5h2.342l.75-2.5H7a.75.75 0 0 1 0-1.5h2.542l.74-2.465a.75.75 0 0 1 .934-.503" clip-rule="evenodd"/></svg></span>
+        Paper
+      
+    </span>
+    <span class="toc-text tag-switcher-wrapper">
+      <span class="tag-switcher" />
+    </span>
+  </a>
+
+    
+      
+  
     
   
   
   
   
-  <div class="tag-subtree leaf-tag expanded" data-tag="cxl/llm">
+  <div class="tag-subtree leaf-tag expanded" data-tag="paper/cxl">
     
   
-  <a class="link" href="/notebooks/paper/tags/cxl/llm/">
+  <a class="link" href="/notebooks/paper/tags/paper/cxl/">
+    <span class="toc-text" style="padding-left: 0.875rem;">
+      
+        
+        <span class="tagcon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" d="m14.092 10.75l-.75 2.5H9.908l.75-2.5z"/><path fill="currentColor" fill-rule="evenodd" d="M3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465C22 19.072 22 16.714 22 12s0-7.071-1.465-8.536C19.072 2 16.714 2 12 2S4.929 2 3.464 3.464m7.752 2.818a.75.75 0 0 1 .502.934l-.61 2.034h3.434l.74-2.465a.75.75 0 0 1 1.436.43l-.61 2.035H18a.75.75 0 0 1 0 1.5h-2.342l-.75 2.5H17a.75.75 0 0 1 0 1.5h-2.542l-.74 2.465a.75.75 0 0 1-1.436-.43l.61-2.035H9.458l-.74 2.465a.75.75 0 1 1-1.436-.43l.61-2.035H6a.75.75 0 0 1 0-1.5h2.342l.75-2.5H7a.75.75 0 0 1 0-1.5h2.542l.74-2.465a.75.75 0 0 1 .934-.503" clip-rule="evenodd"/></svg></span>
+        CXL
+      
+    </span>
+    <span class="toc-text tag-switcher-wrapper">
+      <span class="tag-switcher" />
+    </span>
+  </a>
+
+    
+  </div>
+
+  
+    
+  
+  
+  
+  
+  <div class="tag-subtree leaf-tag expanded" data-tag="paper/llm">
+    
+  
+  <a class="link" href="/notebooks/paper/tags/paper/llm/">
     <span class="toc-text" style="padding-left: 0.875rem;">
       
         
@@ -185,15 +239,15 @@
   
   
   
-  <div class="tag-subtree leaf-tag expanded" data-tag="cxl/memory tiering">
+  <div class="tag-subtree leaf-tag expanded" data-tag="paper/perfomance analysis">
     
   
-  <a class="link" href="/notebooks/paper/tags/cxl/memory%20tiering/">
+  <a class="link" href="/notebooks/paper/tags/paper/perfomance%20analysis/">
     <span class="toc-text" style="padding-left: 0.875rem;">
       
         
         <span class="tagcon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" d="m14.092 10.75l-.75 2.5H9.908l.75-2.5z"/><path fill="currentColor" fill-rule="evenodd" d="M3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465C22 19.072 22 16.714 22 12s0-7.071-1.465-8.536C19.072 2 16.714 2 12 2S4.929 2 3.464 3.464m7.752 2.818a.75.75 0 0 1 .502.934l-.61 2.034h3.434l.74-2.465a.75.75 0 0 1 1.436.43l-.61 2.035H18a.75.75 0 0 1 0 1.5h-2.342l-.75 2.5H17a.75.75 0 0 1 0 1.5h-2.542l-.74 2.465a.75.75 0 0 1-1.436-.43l.61-2.035H9.458l-.74 2.465a.75.75 0 1 1-1.436-.43l.61-2.035H6a.75.75 0 0 1 0-1.5h2.342l.75-2.5H7a.75.75 0 0 1 0-1.5h2.542l.74-2.465a.75.75 0 0 1 .934-.503" clip-rule="evenodd"/></svg></span>
-        Memory tiering
+        perfomance analysis
       
     </span>
     <span class="toc-text tag-switcher-wrapper">
@@ -210,66 +264,11 @@
   
   
   
-  <div class="tag-subtree leaf-tag expanded" data-tag="cxl/performance analysis">
+  <div class="tag-subtree leaf-tag expanded" data-tag="paper/riscv">
     
   
-  <a class="link" href="/notebooks/paper/tags/cxl/performance%20analysis/">
+  <a class="link" href="/notebooks/paper/tags/paper/riscv/">
     <span class="toc-text" style="padding-left: 0.875rem;">
-      
-        
-        <span class="tagcon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" d="m14.092 10.75l-.75 2.5H9.908l.75-2.5z"/><path fill="currentColor" fill-rule="evenodd" d="M3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465C22 19.072 22 16.714 22 12s0-7.071-1.465-8.536C19.072 2 16.714 2 12 2S4.929 2 3.464 3.464m7.752 2.818a.75.75 0 0 1 .502.934l-.61 2.034h3.434l.74-2.465a.75.75 0 0 1 1.436.43l-.61 2.035H18a.75.75 0 0 1 0 1.5h-2.342l-.75 2.5H17a.75.75 0 0 1 0 1.5h-2.542l-.74 2.465a.75.75 0 0 1-1.436-.43l.61-2.035H9.458l-.74 2.465a.75.75 0 1 1-1.436-.43l.61-2.035H6a.75.75 0 0 1 0-1.5h2.342l.75-2.5H7a.75.75 0 0 1 0-1.5h2.542l.74-2.465a.75.75 0 0 1 .934-.503" clip-rule="evenodd"/></svg></span>
-        performance analysis
-      
-    </span>
-    <span class="toc-text tag-switcher-wrapper">
-      <span class="tag-switcher" />
-    </span>
-  </a>
-
-    
-  </div>
-
-  
-
-    
-  </div>
-
-      
-        
-  
-  
-  
-  
-  <div class="tag-subtree leaf-tag expanded" data-tag="llm">
-    
-  
-  <a class="link" href="/notebooks/paper/tags/llm/">
-    <span class="toc-text">
-      
-        
-        <span class="tagcon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" d="m14.092 10.75l-.75 2.5H9.908l.75-2.5z"/><path fill="currentColor" fill-rule="evenodd" d="M3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465C22 19.072 22 16.714 22 12s0-7.071-1.465-8.536C19.072 2 16.714 2 12 2S4.929 2 3.464 3.464m7.752 2.818a.75.75 0 0 1 .502.934l-.61 2.034h3.434l.74-2.465a.75.75 0 0 1 1.436.43l-.61 2.035H18a.75.75 0 0 1 0 1.5h-2.342l-.75 2.5H17a.75.75 0 0 1 0 1.5h-2.542l-.74 2.465a.75.75 0 0 1-1.436-.43l.61-2.035H9.458l-.74 2.465a.75.75 0 1 1-1.436-.43l.61-2.035H6a.75.75 0 0 1 0-1.5h2.342l.75-2.5H7a.75.75 0 0 1 0-1.5h2.542l.74-2.465a.75.75 0 0 1 .934-.503" clip-rule="evenodd"/></svg></span>
-        LLM
-      
-    </span>
-    <span class="toc-text tag-switcher-wrapper">
-      <span class="tag-switcher" />
-    </span>
-  </a>
-
-    
-  </div>
-
-      
-        
-  
-  
-  
-  
-  <div class="tag-subtree leaf-tag expanded" data-tag="riscv">
-    
-  
-  <a class="link" href="/notebooks/paper/tags/riscv/">
-    <span class="toc-text">
       
         
         <span class="tagcon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" d="m14.092 10.75l-.75 2.5H9.908l.75-2.5z"/><path fill="currentColor" fill-rule="evenodd" d="M3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465C22 19.072 22 16.714 22 12s0-7.071-1.465-8.536C19.072 2 16.714 2 12 2S4.929 2 3.464 3.464m7.752 2.818a.75.75 0 0 1 .502.934l-.61 2.034h3.434l.74-2.465a.75.75 0 0 1 1.436.43l-.61 2.035H18a.75.75 0 0 1 0 1.5h-2.342l-.75 2.5H17a.75.75 0 0 1 0 1.5h-2.542l-.74 2.465a.75.75 0 0 1-1.436-.43l.61-2.035H9.458l-.74 2.465a.75.75 0 1 1-1.436-.43l.61-2.035H6a.75.75 0 0 1 0-1.5h2.342l.75-2.5H7a.75.75 0 0 1 0-1.5h2.542l.74-2.465a.75.75 0 0 1 .934-.503" clip-rule="evenodd"/></svg></span>
@@ -280,6 +279,36 @@
       <span class="tag-switcher" />
     </span>
   </a>
+
+    
+  </div>
+
+  
+    
+  
+  
+  
+  
+  <div class="tag-subtree leaf-tag expanded" data-tag="paper/tiering-memory">
+    
+  
+  <a class="link" href="/notebooks/paper/tags/paper/tiering-memory/">
+    <span class="toc-text" style="padding-left: 0.875rem;">
+      
+        
+        <span class="tagcon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" d="m14.092 10.75l-.75 2.5H9.908l.75-2.5z"/><path fill="currentColor" fill-rule="evenodd" d="M3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465C22 19.072 22 16.714 22 12s0-7.071-1.465-8.536C19.072 2 16.714 2 12 2S4.929 2 3.464 3.464m7.752 2.818a.75.75 0 0 1 .502.934l-.61 2.034h3.434l.74-2.465a.75.75 0 0 1 1.436.43l-.61 2.035H18a.75.75 0 0 1 0 1.5h-2.342l-.75 2.5H17a.75.75 0 0 1 0 1.5h-2.542l-.74 2.465a.75.75 0 0 1-1.436-.43l.61-2.035H9.458l-.74 2.465a.75.75 0 1 1-1.436-.43l.61-2.035H6a.75.75 0 0 1 0-1.5h2.342l.75-2.5H7a.75.75 0 0 1 0-1.5h2.542l.74-2.465a.75.75 0 0 1 .934-.503" clip-rule="evenodd"/></svg></span>
+        tiering-memory
+      
+    </span>
+    <span class="toc-text tag-switcher-wrapper">
+      <span class="tag-switcher" />
+    </span>
+  </a>
+
+    
+  </div>
+
+  
 
     
   </div>
@@ -322,112 +351,63 @@
 <blockquote>
 <p>高显杨 浪潮 </p>
 </blockquote>
-<h2 id="综述"><a href="#综述" class="headerlink" title="综述"></a>综述</h2>
-
-
-
-
-
-
-
-
-
-<h2 id="协议"><a href="#协议" class="headerlink" title="协议"></a>协议</h2><h3 id="协议演进"><a href="#协议演进" class="headerlink" title="协议演进"></a>协议演进</h3>
-
+<h2 id="综述"><a href="#综述" class="headerlink" title="综述"></a>综述</h2><p><img src="image-20250106133738062.png" alt="image-20250106133738062"></p>
+<p><img src="image-20250106133834980.png" alt="image-20250106133834980"></p>
+<p><img src="image-20250106134139239.png" alt="image-20250106134139239"></p>
+<p><img src="image-20250106134228041.png" alt="image-20250106134228041"></p>
+<h2 id="协议"><a href="#协议" class="headerlink" title="协议"></a>协议</h2><h3 id="协议演进"><a href="#协议演进" class="headerlink" title="协议演进"></a>协议演进</h3><p><img src="image-20250106134319152.png" alt="image-20250106134319152"></p>
 <p><strong>1.1内存拓展</strong></p>
-
-
+<p><img src="image-20250106134416112.png" alt="image-20250106134416112"></p>
 <p><strong>2.0内存赤化</strong></p>
-
-
-
-
+<p><img src="image-20250106134439929.png" alt="image-20250106134439929"></p>
+<p><img src="image-20250106134526740.png" alt="image-20250106134526740"></p>
 <p><strong>3.0特性</strong></p>
-
-
-
-
-<h3 id="CXL子协议"><a href="#CXL子协议" class="headerlink" title="CXL子协议"></a>CXL子协议</h3>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h2 id="CXL设备"><a href="#CXL设备" class="headerlink" title="CXL设备"></a>CXL设备</h2>
-
-
-
-
-
-
-
+<p><img src="image-20250106134603445.png" alt="image-20250106134603445"></p>
+<p><img src="image-20250106134705444.png" alt="image-20250106134705444"></p>
+<h3 id="CXL子协议"><a href="#CXL子协议" class="headerlink" title="CXL子协议"></a>CXL子协议</h3><p><img src="image-20250106134745367.png" alt="image-20250106134745367"></p>
+<p><img src="image-20250106134814133.png" alt="image-20250106134814133"></p>
+<p><img src="image-20250106134929456.png" alt="image-20250106134929456"></p>
+<p><img src="image-20250106135005868.png" alt="image-20250106135005868"></p>
+<p><img src="image-20250106135041153.png" alt="image-20250106135041153"></p>
+<p><img src="image-20250106135125126.png" alt="image-20250106135125126"></p>
+<p><img src="image-20250106135242368.png" alt="image-20250106135242368"></p>
+<p><img src="image-20250106135257794.png" alt="image-20250106135257794"></p>
+<p><img src="image-20250106135334535.png" alt="image-20250106135334535"></p>
+<p><img src="image-20250106135356037.png" alt="image-20250106135356037"></p>
+<p><img src="image-20250106135430711.png" alt="image-20250106135430711"></p>
+<h2 id="CXL设备"><a href="#CXL设备" class="headerlink" title="CXL设备"></a>CXL设备</h2><p><img src="image-20250106135507348.png" alt="image-20250106135507348"></p>
+<p><img src="image-20250106135730733.png" alt="image-20250106135730733"></p>
+<p><img src="image-20250106135756241.png" alt="image-20250106135756241"></p>
+<p><img src="image-20250106135935488.png" alt="image-20250106135935488"></p>
 <p>CXL Fabric</p>
 <p>参考VPN，下边两张为单switch</p>
-
-
-
-
-
-
-
-
+<p><img src="image-20250106140008051.png" alt="image-20250106140008051"></p>
+<p><img src="image-20250106140058980.png" alt="image-20250106140058980"></p>
+<p><img src="image-20250106140147051.png" alt="image-20250106140147051"></p>
+<p><img src="image-20250106140237560.png" alt="image-20250106140237560"></p>
 <p>CXL RAS特性</p>
-
-
-
-
+<p><img src="image-20250106140324081.png" alt="image-20250106140324081"></p>
+<p><img src="image-20250106140421201.png" alt="image-20250106140421201"></p>
 <p>内存热插拔？如何避免宕机</p>
-
-
-<h2 id="CXL初始化"><a href="#CXL初始化" class="headerlink" title="CXL初始化"></a>CXL初始化</h2>
-
-
-
+<p><img src="image-20250106140633415.png" alt="image-20250106140633415"></p>
+<h2 id="CXL初始化"><a href="#CXL初始化" class="headerlink" title="CXL初始化"></a>CXL初始化</h2><p><img src="image-20250106140725069.png" alt="image-20250106140725069"></p>
+<p><img src="image-20250106140854784.png" alt="image-20250106140854784"></p>
 <p>RCRB CXL 1.1跑CXL2实现协议兼容</p>
-
-
-
-
-<h2 id="CXL方案"><a href="#CXL方案" class="headerlink" title="CXL方案"></a>CXL方案</h2>
-
-
-
-
-
-
-
-
-
+<p><img src="image-20250106140954315.png" alt="image-20250106140954315"></p>
+<p><img src="image-20250106141047597.png" alt="image-20250106141047597"></p>
+<h2 id="CXL方案"><a href="#CXL方案" class="headerlink" title="CXL方案"></a>CXL方案</h2><p><img src="image-20250106141233062.png" alt="image-20250106141233062"></p>
+<p><img src="image-20250106141341375.png" alt="image-20250106141341375"></p>
+<p><img src="image-20250106141451540.png" alt="image-20250106141451540"></p>
+<p><img src="image-20250106141522862.png" alt="image-20250106141522862"></p>
+<p><img src="image-20250106141646095.png" alt="image-20250106141646095"></p>
 <p>池化管理：FM中的bind和UnBind</p>
-
-
+<p><img src="image-20250106141739007.png" alt="image-20250106141739007"></p>
 <p>业界方案</p>
-
-
-
-
-<h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2>
-
-
-
-
-
+<p><img src="image-20250106141956564.png" alt="image-20250106141956564"></p>
+<p><img src="image-20250106142013632.png" alt="image-20250106142013632"></p>
+<h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><p><img src="image-20250106142427686.png" alt="image-20250106142427686"></p>
+<p><img src="image-20250106142457001.png" alt="image-20250106142457001"></p>
+<p><img src="image-20250106142543552.png" alt="image-20250106142543552"></p>
 
 
   <div class="tag-list">
@@ -453,25 +433,13 @@
 
 
 
-
-
-
-
-
-
 协议协议演进
-
 1.1内存拓展
-
 
 2.0内存赤化
 
 
-
-
 3.0特性
-
-
 
 
 CXL子协议
@@ -485,18 +453,12 @@ CXL子协议
 
 
 
+CXL设备
 
 
 
-
-
-
-
-
-
-
-
-C..."><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=龙蜥CXL讲解-高显扬 - Zane Jiang&amp;body=https://zane-jiang.github.io/notebooks/paper/%E9%BE%99%E8%9C%A5CXL%E8%AE%B2%E8%A7%A3-%E9%AB%98%E6%98%BE%E6%89%AC"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+CXL Fabric
+参考VP..."><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=龙蜥CXL讲解-高显扬 - Zane Jiang&amp;body=https://zane-jiang.github.io/notebooks/paper/%E9%BE%99%E8%9C%A5CXL%E8%AE%B2%E8%A7%A3-%E9%AB%98%E6%98%BE%E6%89%AC"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
         
         <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
           <img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://zane-jiang.github.io/notebooks/paper/%E9%BE%99%E8%9C%A5CXL%E8%AE%B2%E8%A7%A3-%E9%AB%98%E6%98%BE%E6%89%AC"/>
