@@ -17,19 +17,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
   <meta name="theme-color" content="#f9fafb">
-  <title>LLVM explore - Zane Jiang</title>
+  <title>LLVM - Zane Jiang</title>
 
   
-    <meta name="description" content="入门llvm笔记  新旧新增pass流程CRTP（奇异递归模板模式）(以下内容基于AI生成后修改)  通常通过继承的方式实现单例模式也是这样，只是不知道叫这个名字   CRTP（Curiously Recurring Template Pattern，奇异递归模板模式）是C++中的一种高级模板编程技术，通过让一个类继承自以自身为模板参数的基类模板，实现静态多态或代码复用。 123template">
+    <meta name="description" content="入门llvm笔记  1.新旧新增pass流程 2CRTP（奇异递归模板模式）(以下内容基于AI生成后修改)  通常通过继承的方式实现单例模式也是这样，只是不知道叫这个名字   CRTP（Curiously Recurring Template Pattern，奇异递归模板模式）是C++中的一种高级模板编程技术，通过让一个类继承自以自身为模板参数的基类模板，实现静态多态或代码复用。 123temp">
 <meta property="og:type" content="website">
-<meta property="og:title" content="LLVM explore">
+<meta property="og:title" content="LLVM">
 <meta property="og:url" content="https://zane-jiang.github.io/notebooks/compiler&kernel/LLVM/LLVM/">
 <meta property="og:site_name" content="Zane Jiang">
-<meta property="og:description" content="入门llvm笔记  新旧新增pass流程CRTP（奇异递归模板模式）(以下内容基于AI生成后修改)  通常通过继承的方式实现单例模式也是这样，只是不知道叫这个名字   CRTP（Curiously Recurring Template Pattern，奇异递归模板模式）是C++中的一种高级模板编程技术，通过让一个类继承自以自身为模板参数的基类模板，实现静态多态或代码复用。 123template">
+<meta property="og:description" content="入门llvm笔记  1.新旧新增pass流程 2CRTP（奇异递归模板模式）(以下内容基于AI生成后修改)  通常通过继承的方式实现单例模式也是这样，只是不知道叫这个名字   CRTP（Curiously Recurring Template Pattern，奇异递归模板模式）是C++中的一种高级模板编程技术，通过让一个类继承自以自身为模板参数的基类模板，实现静态多态或代码复用。 123temp">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://zane-jiang.github.io/images/avatar.jpg">
 <meta property="article:published_time" content="2025-04-23T05:04:33.000Z">
-<meta property="article:modified_time" content="2025-07-18T12:00:19.314Z">
+<meta property="article:modified_time" content="2025-08-04T03:13:04.821Z">
 <meta property="article:author" content="Zane Jiang">
 <meta property="article:tag" content="LLVM">
 <meta name="twitter:card" content="summary">
@@ -49,7 +49,7 @@
 
   
 
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Website","@id":"https://zane-jiang.github.io/notebooks/compiler&kernel/LLVM/LLVM/","author":{"@type":"Person","name":"Zane Jiang","sameAs":[],"image":"/images/avatar.jpg"},"name":"LLVM explore","description":"\n入门llvm笔记\n\n新旧新增pass流程CRTP（奇异递归模板模式）(以下内容基于AI生成后修改)\n 通常通过继承的方式实现单例模式也是这样，只是不知道叫这个名字\n\n\nCRTP（Curiously Recurring Template Pattern，奇异递归模板模式）是C++中的一种高级模板编程技术，通过让一个类继承自以自身为模板参数的基类模板，实现静态多态或代码复用。\n123templ...","url":"https://zane-jiang.github.io/notebooks/compiler&kernel/LLVM/LLVM/","keywords":"OS"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Website","@id":"https://zane-jiang.github.io/notebooks/compiler&kernel/LLVM/LLVM/","author":{"@type":"Person","name":"Zane Jiang","sameAs":[],"image":"/images/avatar.jpg"},"name":"LLVM","description":"\n入门llvm笔记\n\n1.新旧新增pass流程\n2CRTP（奇异递归模板模式）(以下内容基于AI生成后修改)\n 通常通过继承的方式实现单例模式也是这样，只是不知道叫这个名字\n\n\nCRTP（Curiously Recurring Template Pattern，奇异递归模板模式）是C++中的一种高级模板编程技术，通过让一个类继承自以自身为模板参数的基类模板，实现静态多态或代码复用。\n123t...","url":"https://zane-jiang.github.io/notebooks/compiler&kernel/LLVM/LLVM/","keywords":"OS"}</script>
   
 </head>
 <body>
@@ -357,12 +357,12 @@
   <a class="cap breadcrumb" href="/notebooks/compiler_kernel/">compiler_kernel</a>
 
 </div>
-<div class="flex-row" id="post-meta"><span class="text created">更新于：<time datetime="2025-07-18T12:00:19.314Z">2025-07-18</time></span><span class="sep updated"></span><span class="text updated">发布于：<time datetime="2025-04-23T05:04:33.000Z">2025-04-23</time></span></div></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">更新于：<time datetime="2025-08-04T03:13:04.821Z">2025-08-04</time></span><span class="sep updated"></span><span class="text updated">发布于：<time datetime="2025-04-23T05:04:33.000Z">2025-04-23</time></span></div></div></div>
     
     <div class="bottom only-title">
       
       <div class="text-area">
-        <h1 class="text title"><span>LLVM explore</span></h1>
+        <h1 class="text title"><span>LLVM</span></h1>
         
       </div>
     </div>
@@ -371,7 +371,8 @@
   </div><article class="md-text content"><blockquote>
 <p>入门llvm笔记</p>
 </blockquote>
-<h1 id="新旧新增pass流程"><a href="#新旧新增pass流程" class="headerlink" title="新旧新增pass流程"></a>新旧新增pass流程</h1><h2 id="CRTP（奇异递归模板模式）-以下内容基于AI生成后修改"><a href="#CRTP（奇异递归模板模式）-以下内容基于AI生成后修改" class="headerlink" title="CRTP（奇异递归模板模式）(以下内容基于AI生成后修改)"></a>CRTP（奇异递归模板模式）(以下内容基于AI生成后修改)</h2><blockquote>
+<h2 id="1-新旧新增pass流程"><a href="#1-新旧新增pass流程" class="headerlink" title="1.新旧新增pass流程"></a>1.新旧新增pass流程</h2><hr>
+<h2 id="2CRTP（奇异递归模板模式）-以下内容基于AI生成后修改"><a href="#2CRTP（奇异递归模板模式）-以下内容基于AI生成后修改" class="headerlink" title="2CRTP（奇异递归模板模式）(以下内容基于AI生成后修改)"></a>2CRTP（奇异递归模板模式）(以下内容基于AI生成后修改)</h2><blockquote>
 <p> 通常通过继承的方式实现单例模式也是这样，只是不知道叫这个名字</p>
 </blockquote>
 <p><img src="image-20250423132436982.png" alt="image-20250423132436982"></p>
@@ -425,7 +426,42 @@
 <li><strong>Mixin模式</strong>：为类动态添加功能（如LLVM的<code>PassInfoMixin</code>）。</li>
 <li><strong>链式调用</strong>：返回派生类引用以实现链式语法（<code>return static_cast&lt;Derived&amp;&gt;(*this);</code>）。</li>
 </ol>
-<h2 id="4-LLVM与CPP实现"><a href="#4-LLVM与CPP实现" class="headerlink" title="4 LLVM与CPP实现"></a>4 LLVM与CPP实现</h2><h3 id="DenseMap与stdMap"><a href="#DenseMap与stdMap" class="headerlink" title="DenseMap与stdMap"></a>DenseMap与stdMap</h3><h3 id="dyn-cast与RTTI-isa"><a href="#dyn-cast与RTTI-isa" class="headerlink" title="dyn_cast与RTTI isa"></a>dyn_cast与RTTI isa</h3><h2 id="def-use-user-value"><a href="#def-use-user-value" class="headerlink" title="def-use user-value"></a>def-use user-value</h2><p>为什么llvm中User会继承value</p>
+<hr>
+<h2 id="3-LLVM与CPP实现"><a href="#3-LLVM与CPP实现" class="headerlink" title="3 LLVM与CPP实现"></a>3 LLVM与CPP实现</h2><h3 id="DenseMap与stdMap"><a href="#DenseMap与stdMap" class="headerlink" title="DenseMap与stdMap"></a>DenseMap与stdMap</h3><h3 id="dyn-cast与RTTI-isa"><a href="#dyn-cast与RTTI-isa" class="headerlink" title="dyn_cast与RTTI isa"></a>dyn_cast与RTTI isa</h3><h2 id="def-use-user-value"><a href="#def-use-user-value" class="headerlink" title="def-use user-value"></a>def-use user-value</h2><p>为什么llvm中User会继承value</p>
+<hr>
+<h2 id="4-支配树"><a href="#4-支配树" class="headerlink" title="4 支配树"></a>4 支配树</h2><h4 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h4><p><a target="_blank" rel="noopener" href="https://oi-wiki.org/graph/dominator-tree/">支配树 wiki</a></p>
+<p><img src="image-20250730170324311.png" alt="image-20250730170324311"></p>
+<p><strong>严格支配（Strict Domination）</strong>：如果 A 支配 B 且 A ≠ B，则称 A 严格支配 B。</p>
+<p><strong>立即支配者（Immediate Dominator, idom）</strong>：对于某个基本块 B，其被严格支配的所有基本块中，离 B 最近的那个称为 B 的立即支配者。</p>
+<h4 id="LLVM中的使用场景"><a href="#LLVM中的使用场景" class="headerlink" title="LLVM中的使用场景"></a>LLVM中的使用场景</h4><ol>
+<li><h5 id="死代码消除-Dead-Code-Elimination"><a href="#死代码消除-Dead-Code-Elimination" class="headerlink" title="死代码消除 (Dead Code Elimination)"></a>死代码消除 (Dead Code Elimination)</h5><blockquote>
+<p>死代码消除有多种方法多种粒度，这里block为粒度可以使用支配树方法</p>
+</blockquote>
+<p>如果一个基本块<strong>不在入口块的支配树上</strong>，那说明它在某些路径上根本无法到达，因此可能是<strong>不可达代码</strong>。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!DT-&gt;<span class="built_in">dominates</span>(entry, B)) &#123;</span><br><span class="line">  B-&gt;<span class="built_in">eraseFromParent</span>(); <span class="comment">// 删除不可达的基本块</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><h5 id="循环识别-Loop-Identification"><a href="#循环识别-Loop-Identification" class="headerlink" title="循环识别 (Loop Identification)"></a>循环识别 (Loop Identification)</h5><blockquote>
+<p>LICM（Loop-Invariant Code Motion）是一种经典的循环优化策略。要安全地将一条指令从循环体中移出（外提到前置块中），必须保证其<strong>在所有循环入口都被执行</strong>。</p>
+</blockquote>
+<p>判断某条指令的基本开是够被循环入口块支配，如果支配，则说明每次都会执行这条指令，可以外提</p>
+</li>
+<li><p>静态单赋值节点Φ 节点插入</p>
+</li>
+<li></li>
+</ol>
+<h3 id="关键类与关键接口"><a href="#关键类与关键接口" class="headerlink" title="关键类与关键接口"></a>关键类与关键接口</h3><ol>
+<li><strong>DominatorTree</strong>：核心支配树实现，<code>llvm/IR/Dominators.h</code></li>
+<li><strong>DominatorTreeWrapperPass</strong>：将支配树封装为分析Pass</li>
+<li><strong>DominatorTreeAnalysis</strong>：支配树分析</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DominatorTree &amp;DT = <span class="built_in">getAnalysis</span>&lt;DominatorTreeWrapperPass&gt;().<span class="built_in">getDomTree</span>();</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>作用：</strong></p>
+<h2 id="invoke-call"><a href="#invoke-call" class="headerlink" title="invoke &amp;&amp; call"></a>invoke &amp;&amp; call</h2><p>CallBase<br>InvokeInst </p>
 <h1 id="处理器硬件计数"><a href="#处理器硬件计数" class="headerlink" title="处理器硬件计数"></a>处理器硬件计数</h1><h2 id="pt-LBR-PEBS"><a href="#pt-LBR-PEBS" class="headerlink" title="pt LBR PEBS"></a>pt LBR PEBS</h2>
 
   <div class="tag-list">
@@ -443,14 +479,15 @@
       <div class="header"><span>分享文章</span></div>
       <div class="body">
         <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://zane-jiang.github.io/notebooks/compiler&kernel/LLVM/LLVM" /></div>
-        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://zane-jiang.github.io/notebooks/compiler&kernel/LLVM/LLVM&title=LLVM explore - Zane Jiang&summary=
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://zane-jiang.github.io/notebooks/compiler&kernel/LLVM/LLVM&title=LLVM - Zane Jiang&summary=
 入门llvm笔记
 
-新旧新增pass流程CRTP（奇异递归模板模式）(以下内容基于AI生成后修改)
+1.新旧新增pass流程
+2CRTP（奇异递归模板模式）(以下内容基于AI生成后修改)
  通常通过继承的方式实现单例模式也是这样，只是不知道叫这个名字
 
 
-CRTP（Curiously Recurring Templat..."><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=LLVM explore - Zane Jiang&amp;body=https://zane-jiang.github.io/notebooks/compiler&kernel/LLVM/LLVM"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+CRTP（Curiously Recurring Tem..."><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=LLVM - Zane Jiang&amp;body=https://zane-jiang.github.io/notebooks/compiler&kernel/LLVM/LLVM"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
         
         <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
           <img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://zane-jiang.github.io/notebooks/compiler&kernel/LLVM/LLVM"/>
@@ -489,7 +526,7 @@ CRTP（Curiously Recurring Templat..."><img  src="https://gcore.jsdelivr.net/gh/
 <div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
 <div class="widgets">
 
-<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%B0%E6%97%A7%E6%96%B0%E5%A2%9Epass%E6%B5%81%E7%A8%8B"><span class="toc-text">新旧新增pass流程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#CRTP%EF%BC%88%E5%A5%87%E5%BC%82%E9%80%92%E5%BD%92%E6%A8%A1%E6%9D%BF%E6%A8%A1%E5%BC%8F%EF%BC%89-%E4%BB%A5%E4%B8%8B%E5%86%85%E5%AE%B9%E5%9F%BA%E4%BA%8EAI%E7%94%9F%E6%88%90%E5%90%8E%E4%BF%AE%E6%94%B9"><span class="toc-text">CRTP（奇异递归模板模式）(以下内容基于AI生成后修改)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E4%BD%9C%E7%94%A8"><span class="toc-text">核心作用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E9%9D%99%E6%80%81%E5%A4%9A%E6%80%81%EF%BC%88%E7%BC%96%E8%AF%91%E6%97%B6%E5%A4%9A%E6%80%81%EF%BC%89"><span class="toc-text">1. 静态多态（编译时多态）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E4%BB%A3%E7%A0%81%E5%A4%8D%E7%94%A8"><span class="toc-text">2. 代码复用</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CRTP-vs-%E8%99%9A%E5%87%BD%E6%95%B0"><span class="toc-text">CRTP vs 虚函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CRTP%E7%9A%84%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-text">CRTP的典型应用场景</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-LLVM%E4%B8%8ECPP%E5%AE%9E%E7%8E%B0"><span class="toc-text">4 LLVM与CPP实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DenseMap%E4%B8%8EstdMap"><span class="toc-text">DenseMap与stdMap</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#dyn-cast%E4%B8%8ERTTI-isa"><span class="toc-text">dyn_cast与RTTI isa</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#def-use-user-value"><span class="toc-text">def-use user-value</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A4%84%E7%90%86%E5%99%A8%E7%A1%AC%E4%BB%B6%E8%AE%A1%E6%95%B0"><span class="toc-text">处理器硬件计数</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#pt-LBR-PEBS"><span class="toc-text">pt LBR PEBS</span></a></li></ol></li></ol></div><div class="widget-footer"><a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/><path d="M7 3.338A9.95 9.95 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5"/></g></svg><span>回到顶部</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M8 10.5h8M8 14h5.5M17 3.338A9.95 9.95 0 0 0 12 2C6.477 2 2 6.477 2 12c0 1.6.376 3.112 1.043 4.453c.178.356.237.763.134 1.148l-.595 2.226a1.3 1.3 0 0 0 1.591 1.592l2.226-.596a1.63 1.63 0 0 1 1.149.133A9.96 9.96 0 0 0 12 22c5.523 0 10-4.477 10-10c0-1.821-.487-3.53-1.338-5"/></svg><span>参与讨论</span></a></div></widget>
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%96%B0%E6%97%A7%E6%96%B0%E5%A2%9Epass%E6%B5%81%E7%A8%8B"><span class="toc-text">1.新旧新增pass流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2CRTP%EF%BC%88%E5%A5%87%E5%BC%82%E9%80%92%E5%BD%92%E6%A8%A1%E6%9D%BF%E6%A8%A1%E5%BC%8F%EF%BC%89-%E4%BB%A5%E4%B8%8B%E5%86%85%E5%AE%B9%E5%9F%BA%E4%BA%8EAI%E7%94%9F%E6%88%90%E5%90%8E%E4%BF%AE%E6%94%B9"><span class="toc-text">2CRTP（奇异递归模板模式）(以下内容基于AI生成后修改)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E4%BD%9C%E7%94%A8"><span class="toc-text">核心作用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E9%9D%99%E6%80%81%E5%A4%9A%E6%80%81%EF%BC%88%E7%BC%96%E8%AF%91%E6%97%B6%E5%A4%9A%E6%80%81%EF%BC%89"><span class="toc-text">1. 静态多态（编译时多态）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E4%BB%A3%E7%A0%81%E5%A4%8D%E7%94%A8"><span class="toc-text">2. 代码复用</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CRTP-vs-%E8%99%9A%E5%87%BD%E6%95%B0"><span class="toc-text">CRTP vs 虚函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CRTP%E7%9A%84%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-text">CRTP的典型应用场景</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-LLVM%E4%B8%8ECPP%E5%AE%9E%E7%8E%B0"><span class="toc-text">3 LLVM与CPP实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DenseMap%E4%B8%8EstdMap"><span class="toc-text">DenseMap与stdMap</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#dyn-cast%E4%B8%8ERTTI-isa"><span class="toc-text">dyn_cast与RTTI isa</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#def-use-user-value"><span class="toc-text">def-use user-value</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E6%94%AF%E9%85%8D%E6%A0%91"><span class="toc-text">4 支配树</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-text">基本概念</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#LLVM%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-text">LLVM中的使用场景</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%AD%BB%E4%BB%A3%E7%A0%81%E6%B6%88%E9%99%A4-Dead-Code-Elimination"><span class="toc-text">死代码消除 (Dead Code Elimination)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%BE%AA%E7%8E%AF%E8%AF%86%E5%88%AB-Loop-Identification"><span class="toc-text">循环识别 (Loop Identification)</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E7%B1%BB%E4%B8%8E%E5%85%B3%E9%94%AE%E6%8E%A5%E5%8F%A3"><span class="toc-text">关键类与关键接口</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#invoke-call"><span class="toc-text">invoke &amp;&amp; call</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A4%84%E7%90%86%E5%99%A8%E7%A1%AC%E4%BB%B6%E8%AE%A1%E6%95%B0"><span class="toc-text">处理器硬件计数</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#pt-LBR-PEBS"><span class="toc-text">pt LBR PEBS</span></a></li></ol></div><div class="widget-footer"><a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/><path d="M7 3.338A9.95 9.95 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5"/></g></svg><span>回到顶部</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M8 10.5h8M8 14h5.5M17 3.338A9.95 9.95 0 0 0 12 2C6.477 2 2 6.477 2 12c0 1.6.376 3.112 1.043 4.453c.178.356.237.763.134 1.148l-.595 2.226a1.3 1.3 0 0 0 1.591 1.592l2.226-.596a1.63 1.63 0 0 1 1.149.133A9.96 9.96 0 0 0 12 22c5.523 0 10-4.477 10-10c0-1.821-.487-3.53-1.338-5"/></svg><span>参与讨论</span></a></div></widget>
 </div></aside><div class='float-panel'>
   <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
