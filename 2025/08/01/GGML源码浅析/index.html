@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.33.1" theme-name="Stellar" theme-version="1.33.1">
-  <link rel="canonical" href="https://zane-jiang.github.io/notebooks/other/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90/">
+  <link rel="canonical" href="https://zane-jiang.github.io/2025/08/01/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90/">
   
   <meta name="generator" content="Hexo 7.3.0">
   <meta http-equiv='x-dns-prefetch-control' content='on' />
@@ -21,15 +21,15 @@
 
   
     <meta name="description" content="GGML 源码浅析1.核心数据结构1.1ggml_context1234567891011121314151617181920212223242526struct ggml_context &#123;    size_t mem_size;    void* mem_buffer; &#x2F;&#x2F;cpu采用由poxsi_align分配的内存对齐内存，对于不同的后端，分配不同的内存    bool   me">
-<meta property="og:type" content="website">
+<meta property="og:type" content="article">
 <meta property="og:title" content="GGML源码浅析">
-<meta property="og:url" content="https://zane-jiang.github.io/notebooks/other/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90/">
+<meta property="og:url" content="https://zane-jiang.github.io/2025/08/01/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90/">
 <meta property="og:site_name" content="Zane Jiang">
 <meta property="og:description" content="GGML 源码浅析1.核心数据结构1.1ggml_context1234567891011121314151617181920212223242526struct ggml_context &#123;    size_t mem_size;    void* mem_buffer; &#x2F;&#x2F;cpu采用由poxsi_align分配的内存对齐内存，对于不同的后端，分配不同的内存    bool   me">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://zane-jiang.github.io/images/avatar.jpg">
 <meta property="article:published_time" content="2025-08-01T09:33:53.000Z">
-<meta property="article:modified_time" content="2025-08-04T07:44:33.686Z">
+<meta property="article:modified_time" content="2025-08-04T09:08:50.147Z">
 <meta property="article:author" content="Zane Jiang">
 <meta property="article:tag" content="LLM&#x2F;ggml">
 <meta name="twitter:card" content="summary">
@@ -37,7 +37,7 @@
   
   
   
-  <meta name="keywords" content="">
+  <meta name="keywords" content="LLM/ggml">
 
   <!-- feed -->
   
@@ -49,224 +49,26 @@
 
   
 
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Website","@id":"https://zane-jiang.github.io/notebooks/other/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90/","author":{"@type":"Person","name":"Zane Jiang","sameAs":[],"image":"/images/avatar.jpg"},"name":"GGML源码浅析","description":"GGML 源码浅析1.核心数据结构1.1ggml_context1234567891011121314151617181920212223242526struct ggml_context &#123;    size_t mem_size;    void* mem_buffer; //cpu采用由poxsi_align分配的内存对齐内存，对于不同的后端，分配不同的内存    bool  ...","url":"https://zane-jiang.github.io/notebooks/other/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90/","keywords":"OS"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Zane Jiang","sameAs":[],"image":"/images/avatar.jpg"},"dateCreated":"2025-08-01T17:33:53+08:00","dateModified":"2025-08-04T17:08:50+08:00","datePublished":"2025-08-01T17:33:53+08:00","description":"","headline":"GGML源码浅析","mainEntityOfPage":{"@type":"WebPage","@id":"https://zane-jiang.github.io/2025/08/01/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90/"},"publisher":{"@type":"Organization","name":"Zane Jiang","sameAs":[],"image":"/images/avatar.jpg","logo":{"@type":"ImageObject","url":"/images/avatar.jpg"}},"url":"https://zane-jiang.github.io/2025/08/01/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90/","keywords":"LLM/ggml","image":[]}</script>
   
 </head>
 <body>
 
-<div class="l_body content" id="start" layout="page" type="tech" ><aside class="l_left"><div class="sidebg"></div><div class="leftbar-container">
+<div class="l_body content" id="start" layout="post" type="tech" ><aside class="l_left"><div class="sidebg"></div><div class="leftbar-container">
 
 
 <header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/images/avatar.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main">Zane Jiang</div><div class="sub cap">My notebooks & blog</div></a></div></header>
 
 <div class="nav-area">
 
-<nav class="menu dis-select"><a class="nav-item" title="Blog" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item active" title="notebooks" href="/notebooks/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.25 4.48v3.057c0 .111 0 .27.02.406a.936.936 0 0 0 .445.683a.96.96 0 0 0 .783.072c.13-.04.272-.108.378-.159L17 8.005l1.124.534c.106.05.248.119.378.16a.958.958 0 0 0 .783-.073a.936.936 0 0 0 .444-.683c.021-.136.021-.295.021-.406V3.031c.113-.005.224-.01.332-.013C21.154 2.98 22 3.86 22 4.933v11.21c0 1.112-.906 2.01-2.015 2.08c-.97.06-2.108.179-2.985.41c-1.082.286-1.99 1.068-3.373 1.436c-.626.167-1.324.257-1.627.323V5.174c.32-.079 1.382-.203 1.674-.371c.184-.107.377-.216.576-.323m5.478 8.338a.75.75 0 0 1-.546.91l-4 1a.75.75 0 0 1-.364-1.456l4-1a.75.75 0 0 1 .91.546" clip-rule="evenodd"/><path fill="currentColor" d="M18.25 3.151c-.62.073-1.23.18-1.75.336a8.2 8.2 0 0 0-.75.27v3.182l.75-.356l.008-.005a1.13 1.13 0 0 1 .492-.13c.047 0 .094.004.138.01c.175.029.315.1.354.12l.009.005l.749.356V3.647z"/><path fill="currentColor" d="M12 5.214c-.334-.064-1.057-.161-1.718-.339C8.938 4.515 8.05 3.765 7 3.487c-.887-.234-2.041-.352-3.018-.412C2.886 3.007 2 3.9 2 4.998v11.146c0 1.11.906 2.01 2.015 2.079c.97.06 2.108.179 2.985.41c.486.129 1.216.431 1.873.726c1.005.451 2.052.797 3.127 1.034z" opacity=".5"/><path fill="currentColor" d="M4.273 12.818a.75.75 0 0 1 .91-.545l4 1a.75.75 0 1 1-.365 1.455l-4-1a.75.75 0 0 1-.545-.91m.909-4.545a.75.75 0 1 0-.364 1.455l4 1a.75.75 0 0 0 .364-1.455z"/></svg></a><a class="nav-item" title="Project" href="/project/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none"><path stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M19.647 15.536V8c0-1.886 0-2.828-.586-3.414C18.476 4 17.533 4 15.647 4H12m7.647 11.536l1.744 1.8l.088.092a2 2 0 0 1 .52 1.284l.001.127c0 .15 0 .224-.004.287a2 2 0 0 1-1.87 1.87a5 5 0 0 1-.287.004H4.161c-.15 0-.224 0-.287-.004a2 2 0 0 1-1.87-1.87C2 19.063 2 18.988 2 18.84l.001-.127a2 2 0 0 1 .52-1.284l.088-.092l1.744-1.8m15.294 0h-2.611m-12.683 0V8c0-1.886 0-2.828.586-3.414S6.467 4 8.353 4m-4 11.536H13M9.5 18.5h5"/><path fill="currentColor" d="M12.75 6.75a.75.75 0 1 1-1.5 0a.75.75 0 0 1 1.5 0"/></g></svg></a></nav>
+<nav class="menu dis-select"><a class="nav-item active" title="Blog" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="notebooks" href="/notebooks/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.25 4.48v3.057c0 .111 0 .27.02.406a.936.936 0 0 0 .445.683a.96.96 0 0 0 .783.072c.13-.04.272-.108.378-.159L17 8.005l1.124.534c.106.05.248.119.378.16a.958.958 0 0 0 .783-.073a.936.936 0 0 0 .444-.683c.021-.136.021-.295.021-.406V3.031c.113-.005.224-.01.332-.013C21.154 2.98 22 3.86 22 4.933v11.21c0 1.112-.906 2.01-2.015 2.08c-.97.06-2.108.179-2.985.41c-1.082.286-1.99 1.068-3.373 1.436c-.626.167-1.324.257-1.627.323V5.174c.32-.079 1.382-.203 1.674-.371c.184-.107.377-.216.576-.323m5.478 8.338a.75.75 0 0 1-.546.91l-4 1a.75.75 0 0 1-.364-1.456l4-1a.75.75 0 0 1 .91.546" clip-rule="evenodd"/><path fill="currentColor" d="M18.25 3.151c-.62.073-1.23.18-1.75.336a8.2 8.2 0 0 0-.75.27v3.182l.75-.356l.008-.005a1.13 1.13 0 0 1 .492-.13c.047 0 .094.004.138.01c.175.029.315.1.354.12l.009.005l.749.356V3.647z"/><path fill="currentColor" d="M12 5.214c-.334-.064-1.057-.161-1.718-.339C8.938 4.515 8.05 3.765 7 3.487c-.887-.234-2.041-.352-3.018-.412C2.886 3.007 2 3.9 2 4.998v11.146c0 1.11.906 2.01 2.015 2.079c.97.06 2.108.179 2.985.41c.486.129 1.216.431 1.873.726c1.005.451 2.052.797 3.127 1.034z" opacity=".5"/><path fill="currentColor" d="M4.273 12.818a.75.75 0 0 1 .91-.545l4 1a.75.75 0 1 1-.365 1.455l-4-1a.75.75 0 0 1-.545-.91m.909-4.545a.75.75 0 1 0-.364 1.455l4 1a.75.75 0 0 0 .364-1.455z"/></svg></a><a class="nav-item" title="Project" href="/project/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none"><path stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M19.647 15.536V8c0-1.886 0-2.828-.586-3.414C18.476 4 17.533 4 15.647 4H12m7.647 11.536l1.744 1.8l.088.092a2 2 0 0 1 .52 1.284l.001.127c0 .15 0 .224-.004.287a2 2 0 0 1-1.87 1.87a5 5 0 0 1-.287.004H4.161c-.15 0-.224 0-.287-.004a2 2 0 0 1-1.87-1.87C2 19.063 2 18.988 2 18.84l.001-.127a2 2 0 0 1 .52-1.284l.088-.092l1.744-1.8m15.294 0h-2.611m-12.683 0V8c0-1.886 0-2.828.586-3.414S6.467 4 8.353 4m-4 11.536H13M9.5 18.5h5"/><path fill="currentColor" d="M12.75 6.75a.75.75 0 1 1-1.5 0a.75.75 0 0 1 1.5 0"/></g></svg></a></nav>
 </div>
 <div class="widgets">
-<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" data-filter="/notebooks/other" placeholder="在 other 中搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
 
 
 
-
-
-
-
-
-
-
-
-
-
-  <widget class="widget-wrapper post-list">
-    <div class="widget-header dis-select">
-      <span class="name">标签</span>
-    </div>
-    <div class="widget-body fs14 tag-tree">
-      
-  
-  
-  
-  
-  <div class="tag-subtree leaf-tag expanded" data-tag="">
-    
-  
-  <a class="link" href="/notebooks/other/">
-    <span class="toc-text">
-      
-        所有笔记
-      
-    </span>
-    <span class="toc-text tag-switcher-wrapper">
-      <span class="tag-switcher" />
-    </span>
-  </a>
-
-    
-  </div>
-
-      
-        
-  
-  
-  
-  
-  <div class="tag-subtree leaf-tag expanded" data-tag="hexo">
-    
-  
-  <a class="link" href="/notebooks/other/tags/hexo/">
-    <span class="toc-text">
-      
-        
-        <span class="tagcon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" d="m14.092 10.75l-.75 2.5H9.908l.75-2.5z"/><path fill="currentColor" fill-rule="evenodd" d="M3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465C22 19.072 22 16.714 22 12s0-7.071-1.465-8.536C19.072 2 16.714 2 12 2S4.929 2 3.464 3.464m7.752 2.818a.75.75 0 0 1 .502.934l-.61 2.034h3.434l.74-2.465a.75.75 0 0 1 1.436.43l-.61 2.035H18a.75.75 0 0 1 0 1.5h-2.342l-.75 2.5H17a.75.75 0 0 1 0 1.5h-2.542l-.74 2.465a.75.75 0 0 1-1.436-.43l.61-2.035H9.458l-.74 2.465a.75.75 0 1 1-1.436-.43l.61-2.035H6a.75.75 0 0 1 0-1.5h2.342l.75-2.5H7a.75.75 0 0 1 0-1.5h2.542l.74-2.465a.75.75 0 0 1 .934-.503" clip-rule="evenodd"/></svg></span>
-        Hexo
-      
-    </span>
-    <span class="toc-text tag-switcher-wrapper">
-      <span class="tag-switcher" />
-    </span>
-  </a>
-
-    
-  </div>
-
-      
-        
-  
-  
-  
-  
-  <div class="tag-subtree parent-tag expanded" data-tag="llm">
-    
-  
-  <a class="link" href="/notebooks/other/tags/llm/">
-    <span class="toc-text">
-      
-        
-        <span class="tagcon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" d="m14.092 10.75l-.75 2.5H9.908l.75-2.5z"/><path fill="currentColor" fill-rule="evenodd" d="M3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465C22 19.072 22 16.714 22 12s0-7.071-1.465-8.536C19.072 2 16.714 2 12 2S4.929 2 3.464 3.464m7.752 2.818a.75.75 0 0 1 .502.934l-.61 2.034h3.434l.74-2.465a.75.75 0 0 1 1.436.43l-.61 2.035H18a.75.75 0 0 1 0 1.5h-2.342l-.75 2.5H17a.75.75 0 0 1 0 1.5h-2.542l-.74 2.465a.75.75 0 0 1-1.436-.43l.61-2.035H9.458l-.74 2.465a.75.75 0 1 1-1.436-.43l.61-2.035H6a.75.75 0 0 1 0-1.5h2.342l.75-2.5H7a.75.75 0 0 1 0-1.5h2.542l.74-2.465a.75.75 0 0 1 .934-.503" clip-rule="evenodd"/></svg></span>
-        LLM
-      
-    </span>
-    <span class="toc-text tag-switcher-wrapper">
-      <span class="tag-switcher" />
-    </span>
-  </a>
-
-    
-      
-  
-    
-  
-  
-  
-  
-  <div class="tag-subtree leaf-tag expanded" data-tag="llm/ggml">
-    
-  
-  <a class="link" href="/notebooks/other/tags/llm/ggml/">
-    <span class="toc-text" style="padding-left: 0.875rem;">
-      
-        
-        <span class="tagcon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" d="m14.092 10.75l-.75 2.5H9.908l.75-2.5z"/><path fill="currentColor" fill-rule="evenodd" d="M3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465C22 19.072 22 16.714 22 12s0-7.071-1.465-8.536C19.072 2 16.714 2 12 2S4.929 2 3.464 3.464m7.752 2.818a.75.75 0 0 1 .502.934l-.61 2.034h3.434l.74-2.465a.75.75 0 0 1 1.436.43l-.61 2.035H18a.75.75 0 0 1 0 1.5h-2.342l-.75 2.5H17a.75.75 0 0 1 0 1.5h-2.542l-.74 2.465a.75.75 0 0 1-1.436-.43l.61-2.035H9.458l-.74 2.465a.75.75 0 1 1-1.436-.43l.61-2.035H6a.75.75 0 0 1 0-1.5h2.342l.75-2.5H7a.75.75 0 0 1 0-1.5h2.542l.74-2.465a.75.75 0 0 1 .934-.503" clip-rule="evenodd"/></svg></span>
-        ggml
-      
-    </span>
-    <span class="toc-text tag-switcher-wrapper">
-      <span class="tag-switcher" />
-    </span>
-  </a>
-
-    
-  </div>
-
-  
-    
-  
-  
-  
-  
-  <div class="tag-subtree leaf-tag expanded" data-tag="llm/llama.cpp">
-    
-  
-  <a class="link" href="/notebooks/other/tags/llm/llama.cpp">
-    <span class="toc-text" style="padding-left: 0.875rem;">
-      
-        
-        <span class="tagcon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" d="m14.092 10.75l-.75 2.5H9.908l.75-2.5z"/><path fill="currentColor" fill-rule="evenodd" d="M3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465C22 19.072 22 16.714 22 12s0-7.071-1.465-8.536C19.072 2 16.714 2 12 2S4.929 2 3.464 3.464m7.752 2.818a.75.75 0 0 1 .502.934l-.61 2.034h3.434l.74-2.465a.75.75 0 0 1 1.436.43l-.61 2.035H18a.75.75 0 0 1 0 1.5h-2.342l-.75 2.5H17a.75.75 0 0 1 0 1.5h-2.542l-.74 2.465a.75.75 0 0 1-1.436-.43l.61-2.035H9.458l-.74 2.465a.75.75 0 1 1-1.436-.43l.61-2.035H6a.75.75 0 0 1 0-1.5h2.342l.75-2.5H7a.75.75 0 0 1 0-1.5h2.542l.74-2.465a.75.75 0 0 1 .934-.503" clip-rule="evenodd"/></svg></span>
-        llama.cpp
-      
-    </span>
-    <span class="toc-text tag-switcher-wrapper">
-      <span class="tag-switcher" />
-    </span>
-  </a>
-
-    
-  </div>
-
-  
-
-    
-  </div>
-
-      
-        
-  
-  
-  
-  
-  <div class="tag-subtree parent-tag expanded" data-tag="tool">
-    
-  
-  <a class="link" href="/notebooks/other/tags/tool/">
-    <span class="toc-text">
-      
-        
-        <span class="tagcon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" d="m14.092 10.75l-.75 2.5H9.908l.75-2.5z"/><path fill="currentColor" fill-rule="evenodd" d="M3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465C22 19.072 22 16.714 22 12s0-7.071-1.465-8.536C19.072 2 16.714 2 12 2S4.929 2 3.464 3.464m7.752 2.818a.75.75 0 0 1 .502.934l-.61 2.034h3.434l.74-2.465a.75.75 0 0 1 1.436.43l-.61 2.035H18a.75.75 0 0 1 0 1.5h-2.342l-.75 2.5H17a.75.75 0 0 1 0 1.5h-2.542l-.74 2.465a.75.75 0 0 1-1.436-.43l.61-2.035H9.458l-.74 2.465a.75.75 0 1 1-1.436-.43l.61-2.035H6a.75.75 0 0 1 0-1.5h2.342l.75-2.5H7a.75.75 0 0 1 0-1.5h2.542l.74-2.465a.75.75 0 0 1 .934-.503" clip-rule="evenodd"/></svg></span>
-        tool
-      
-    </span>
-    <span class="toc-text tag-switcher-wrapper">
-      <span class="tag-switcher" />
-    </span>
-  </a>
-
-    
-      
-  
-    
-  
-  
-  
-  
-  <div class="tag-subtree leaf-tag expanded" data-tag="tool/perf">
-    
-  
-  <a class="link" href="/notebooks/other/tags/tool/perf/">
-    <span class="toc-text" style="padding-left: 0.875rem;">
-      
-        
-        <span class="tagcon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" d="m14.092 10.75l-.75 2.5H9.908l.75-2.5z"/><path fill="currentColor" fill-rule="evenodd" d="M3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465C22 19.072 22 16.714 22 12s0-7.071-1.465-8.536C19.072 2 16.714 2 12 2S4.929 2 3.464 3.464m7.752 2.818a.75.75 0 0 1 .502.934l-.61 2.034h3.434l.74-2.465a.75.75 0 0 1 1.436.43l-.61 2.035H18a.75.75 0 0 1 0 1.5h-2.342l-.75 2.5H17a.75.75 0 0 1 0 1.5h-2.542l-.74 2.465a.75.75 0 0 1-1.436-.43l.61-2.035H9.458l-.74 2.465a.75.75 0 1 1-1.436-.43l.61-2.035H6a.75.75 0 0 1 0-1.5h2.342l.75-2.5H7a.75.75 0 0 1 0-1.5h2.542l.74-2.465a.75.75 0 0 1 .934-.503" clip-rule="evenodd"/></svg></span>
-        perf
-      
-    </span>
-    <span class="toc-text tag-switcher-wrapper">
-      <span class="tag-switcher" />
-    </span>
-  </a>
-
-    
-  </div>
-
-  
-
-    
-  </div>
-
-      
-    </div>
-  </widget>
-
+<widget class="widget-wrapper recent post-list"><div class="widget-header dis-select"><span class="name">最近更新</span></div><div class="widget-body fs14"><a class="item title" href="/2025/08/01/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90/"><span class="title">GGML源码浅析</span></a><a class="item title" href="/2025/07/29/%E5%87%A0%E7%A7%8D%E7%A8%8B%E5%BA%8F%E6%8E%A5%E5%8F%A3%E9%87%8D%E5%AE%9A%E5%90%91%E3%80%81%E6%8F%92%E6%A1%A9%E6%96%B9%E5%BC%8F%E6%AF%94%E8%BE%83/"><span class="title">几种程序接口重定向、插桩方式比较</span></a><a class="item title" href="/2025/07/18/Qt%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E4%B8%8E%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"><span class="title">Qt源码阅读与设计模式</span></a><a class="item title" href="/2025/07/27/%E8%AE%BA%E6%96%87%E4%B8%AD%E5%B8%B8%E8%A7%81%E5%86%85%E5%AD%98%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90workloads/"><span class="title">论文中常见内存性能分析workloads</span></a></div></widget>
 </div>
 <footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/Zane-Jiang" target="_blank" rel="external nofollow noopener noreferrer"><img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/08a41b181ce68.svg"/></a></div></footer>
 </div></aside><div class="l_main" id="main">
@@ -278,15 +80,8 @@
 <div class="article banner top">
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
-<span class="sep"></span>
-<a class="cap breadcrumb" href="/notebooks/">笔记本</a>
-
-
-  <span class="sep"></span>
-  <a class="cap breadcrumb" href="/notebooks/other/">other</a>
-
-</div>
-<div class="flex-row" id="post-meta"><span class="text created">更新于：<time datetime="2025-08-04T07:44:33.686Z">2025-08-04</time></span><span class="sep updated"></span><span class="text updated">发布于：<time datetime="2025-08-01T09:33:53.000Z">2025-08-01</time></span></div></div></div>
+<span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-%E5%A4%A7%E6%A8%A1%E5%9E%8B/">源码解析/大模型</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2025-08-01T09:33:53.000Z">2025-08-01</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2025-08-04T09:08:50.147Z">2025-08-04</time></span></div></div></div>
     
     <div class="bottom only-title">
       
@@ -332,6 +127,16 @@
 
 
 
+<p>下边小红书博主**<a target="_blank" rel="noopener" href="https://www.xiaohongshu.com/explore/68428c20000000002202f5ed?xsec_token=ABf90k6lmJoCaqvN2246b6ncEjAfuaRYtQVFSvncJAaZ4=&xsec_source=pc_user">TransormerX</a>**绘制的这几张图 <strong>清晰 美观</strong>的展示了内存分配情况：</p>
+<style>.ygqtuorlecip{zoom:80%;}</style><img src="/2025/08/01/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90/image-20250804160456419.png" class="ygqtuorlecip" alt="image-20250804160456419">
+
+<style>.gfyvevcmcqyt{zoom:67%;}</style><img src="/2025/08/01/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90/image-20250804160520957.png" class="gfyvevcmcqyt" alt="image-20250804160520957">
+
+<style>.qpimnwgbkgwy{zoom:50%;}</style><img src="/2025/08/01/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90/image-20250804160533369.png" class="qpimnwgbkgwy" alt="image-20250804160533369">
+
+<p>除了图中绘制的tensor是按照这样的内存分布以外，其他类型graph、workbuffer等类型的object都是采用这样的内存排布，即：object结构体-&gt;对应类型结构体（tensor\graph)-&gt;相应data</p>
+<p>比如图的存储就是object-&gt;ggml_cgraph(结构体本身)-&gt;节点叶子等指针数组</p>
+<p>WORK_BUFFER就是object–&gt;work_data （直接被cplan中的指针所指）</p>
 <h3 id="1-2ggml-state"><a href="#1-2ggml-state" class="headerlink" title="1.2ggml_state"></a>1.2<strong>ggml_state</strong></h3><p>整个<code>ggml</code>程序运行过程中有一个全局的<code>g_state</code>.</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">ggml_state</span> <span class="title">g_state</span>;</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> GGML_MAX_CONTEXTS       64</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ggml_state</span> &#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">ggml_context_container</span> <span class="title">contexts</span>[<span class="title">GGML_MAX_CONTEXTS</span>];</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">ggml_numa_nodes</span> <span class="title">numa</span>;</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ggml_context_container</span> &#123;</span></span><br><span class="line">    <span class="type">bool</span> used;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">ggml_context</span> <span class="title">context</span>;</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ggml_numa_nodes</span> &#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">enum</span> <span class="title">ggml_numa_strategy</span> <span class="title">numa_strategy</span>;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">ggml_numa_node</span> <span class="title">nodes</span>[<span class="title">GGML_NUMA_MAX_NODES</span>];</span></span><br><span class="line">    <span class="type">uint32_t</span> n_nodes;</span><br><span class="line">    <span class="type">uint32_t</span> total_cpus; <span class="comment">// hardware threads on system</span></span><br><span class="line">    <span class="type">uint32_t</span> current_node; <span class="comment">// node on which main process is execting</span></span><br><span class="line"><span class="meta">#<span class="keyword">if</span> defined(__gnu_linux__)</span></span><br><span class="line">    <span class="type">cpu_set_t</span> cpuset; <span class="comment">// cpuset from numactl</span></span><br><span class="line"><span class="meta">#<span class="keyword">else</span></span></span><br><span class="line">    <span class="type">uint32_t</span> cpuset; <span class="comment">// no NUMA support outside of Linux at this time. Use a portable datatype</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
@@ -347,7 +152,7 @@
 <h3 id="1-4-ggml-cgraph"><a href="#1-4-ggml-cgraph" class="headerlink" title="1.4 ggml_cgraph"></a>1.4 <strong>ggml_cgraph</strong></h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ggml_cgraph</span> &#123;</span></span><br><span class="line">        <span class="type">int</span> size;</span><br><span class="line">        <span class="type">int</span> n_nodes;<span class="comment">//节点</span></span><br><span class="line">        <span class="type">int</span> n_leafs;<span class="comment">//叶子节点数</span></span><br><span class="line"></span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">ggml_tensor</span> ** <span class="title">nodes</span>;</span><span class="comment">//中间节点数</span></span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">ggml_tensor</span> ** <span class="title">grads</span>;</span></span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">ggml_tensor</span> ** <span class="title">leafs</span>;</span><span class="comment">//叶子节点</span></span><br><span class="line"></span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">ggml_hash_set</span> <span class="title">visited_hash_set</span>;</span><span class="comment">//反向构建中 hash去重</span></span><br><span class="line"></span><br><span class="line">        <span class="class"><span class="keyword">enum</span> <span class="title">ggml_cgraph_eval_order</span> <span class="title">order</span>;</span></span><br><span class="line">    &#125;;</span><br></pre></td></tr></table></figure>
 
 <h2 id="2-核心操作"><a href="#2-核心操作" class="headerlink" title="2.核心操作"></a>2.核心操作</h2><h3 id="2-1模型加载"><a href="#2-1模型加载" class="headerlink" title="2.1模型加载"></a>2.1模型加载</h3><h4 id="gguf结构与解析"><a href="#gguf结构与解析" class="headerlink" title="gguf结构与解析"></a>gguf结构与解析</h4><p>gguf定义了模型的权重保存方式，以下为gguf的结构</p>
-<p><img src="c3623641-3a1d-408e-bfaf-1b7c4e16aa63.png" alt="image"></p>
+<p><img src="/2025/08/01/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90/c3623641-3a1d-408e-bfaf-1b7c4e16aa63.png" alt="image"></p>
 <blockquote>
 <p>主要可以分为以下4部分：</p>
 <p>1.header 包含模式，tensor数量、kv元数据数、版本等</p>
@@ -356,8 +161,8 @@
 <p>4.tensor的值</p>
 </blockquote>
 <p>文件<code>ggml.c</code>中，定义了<code>gguf</code>相关的结构体，其中<code>gguf_context</code>对应于一个文件，包含<code>header</code>、<code>kv</code>、<code>tensor_info</code>等</p>
-<p><img src="image-20250802154806923.png" alt="image-20250802154806923"></p>
-<p><img src="image-20250802154925097.png" alt="image-20250802154925097"></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">union</span> <span class="title">gguf_value</span> &#123;</span></span><br><span class="line">    <span class="type">uint8_t</span>  uint8;</span><br><span class="line">    <span class="type">int8_t</span>   int8;</span><br><span class="line">    <span class="type">uint16_t</span> uint16;</span><br><span class="line">    <span class="type">int16_t</span>  int16;</span><br><span class="line">    <span class="type">uint32_t</span> uint32;</span><br><span class="line">    <span class="type">int32_t</span>  int32;</span><br><span class="line">    <span class="type">float</span>    float32;</span><br><span class="line">    <span class="type">uint64_t</span> uint64;</span><br><span class="line">    <span class="type">int64_t</span>  int64;</span><br><span class="line">    <span class="type">double</span>   float64;</span><br><span class="line">    <span class="type">bool</span>     bool_;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">gguf_str</span> <span class="title">str</span>;</span></span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">        <span class="class"><span class="keyword">enum</span> <span class="title">gguf_type</span> <span class="title">type</span>;</span></span><br><span class="line"></span><br><span class="line">        <span class="type">uint64_t</span> n;  <span class="comment">// GGUFv2</span></span><br><span class="line">        <span class="type">void</span> * data;</span><br><span class="line">    &#125; arr;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">gguf_kv</span> &#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">gguf_str</span> <span class="title">key</span>;</span></span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">enum</span>  <span class="title">gguf_type</span>  <span class="title">type</span>;</span></span><br><span class="line">    <span class="class"><span class="keyword">union</span> <span class="title">gguf_value</span> <span class="title">value</span>;</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">gguf_header</span> &#123;</span></span><br><span class="line">    <span class="type">char</span> magic[<span class="number">4</span>];</span><br><span class="line"></span><br><span class="line">    <span class="type">uint32_t</span> version;</span><br><span class="line">    <span class="type">uint64_t</span> n_tensors; <span class="comment">// GGUFv2</span></span><br><span class="line">    <span class="type">uint64_t</span> n_kv;      <span class="comment">// GGUFv2</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">gguf_tensor_info</span> &#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">gguf_str</span> <span class="title">name</span>;</span></span><br><span class="line"></span><br><span class="line">    <span class="type">uint32_t</span> n_dims;</span><br><span class="line">    <span class="type">uint64_t</span> ne[GGML_MAX_DIMS];</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">enum</span> <span class="title">ggml_type</span> <span class="title">type</span>;</span></span><br><span class="line"></span><br><span class="line">    <span class="type">uint64_t</span> offset; <span class="comment">// offset from start of `data`, must be a multiple of `ALIGNMENT`</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// for writing API</span></span><br><span class="line">    <span class="type">const</span> <span class="type">void</span> * data;</span><br><span class="line">    <span class="type">size_t</span> size;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">gguf_context</span> &#123;</span> </span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">gguf_header</span> <span class="title">header</span>;</span></span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">gguf_kv</span>          * <span class="title">kv</span>;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">gguf_tensor_info</span> * <span class="title">infos</span>;</span></span><br><span class="line"></span><br><span class="line">    <span class="type">size_t</span> alignment;</span><br><span class="line">    <span class="type">size_t</span> offset;    <span class="comment">// offset of `data` from beginning of file</span></span><br><span class="line">    <span class="type">size_t</span> size;      <span class="comment">// size of `data` in bytes</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//uint8_t * padding;</span></span><br><span class="line">    <span class="type">void</span> * data;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
 <p><code>ggml.c/gguf_init_from_file</code>实现了从文件加载模型到结构体中</p>
 <h3 id="2-2计算图构建"><a href="#2-2计算图构建" class="headerlink" title="2.2计算图构建"></a>2.2计算图构建</h3><p>以simple-ctx为例说明计算图构建流程</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> ggml_cgraph * <span class="title function_">build_graph</span><span class="params">(<span class="type">const</span> simple_model&amp; model)</span> &#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">ggml_cgraph</span>  * <span class="title">gf</span> =</span> ggml_new_graph(model.ctx);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// result = a*b^T</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">ggml_tensor</span> * <span class="title">result</span> =</span> ggml_mul_mat(model.ctx, model.a, model.b);</span><br><span class="line"></span><br><span class="line">    ggml_build_forward_expand(gf, result);</span><br><span class="line">    <span class="keyword">return</span> gf;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">struct</span> ggml_tensor * <span class="title function_">ggml_mul_mat</span><span class="params">(</span></span><br><span class="line"><span class="params">        <span class="keyword">struct</span> ggml_context * ctx,</span></span><br><span class="line"><span class="params">        <span class="keyword">struct</span> ggml_tensor  * a,</span></span><br><span class="line"><span class="params">        <span class="keyword">struct</span> ggml_tensor  * b)</span> &#123;</span><br><span class="line">    GGML_ASSERT(ggml_can_mul_mat(a, b));</span><br><span class="line">    GGML_ASSERT(!ggml_is_transposed(a));</span><br><span class="line"></span><br><span class="line">    <span class="type">bool</span> is_node = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (a-&gt;grad || b-&gt;grad) &#123;</span><br><span class="line">        is_node = <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">const</span> <span class="type">int64_t</span> ne[<span class="number">4</span>] = &#123; a-&gt;ne[<span class="number">1</span>], b-&gt;ne[<span class="number">1</span>], b-&gt;ne[<span class="number">2</span>], b-&gt;ne[<span class="number">3</span>] &#125;;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">ggml_tensor</span> * <span class="title">result</span> =</span> ggml_new_tensor(ctx, GGML_TYPE_F32, <span class="number">4</span>, ne);</span><br><span class="line"></span><br><span class="line">    result-&gt;op   = GGML_OP_MUL_MAT;</span><br><span class="line">    result-&gt;grad = is_node ? ggml_dup_tensor(ctx, result) : <span class="literal">NULL</span>;</span><br><span class="line">    result-&gt;src[<span class="number">0</span>] = a;</span><br><span class="line">    result-&gt;src[<span class="number">1</span>] = b;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
@@ -374,20 +179,18 @@
 <p>2.<code>ggml_new_object</code>生成任务缓冲区,<code>ggml_context</code>中 。</p>
 <p>3.执行计算图<code>ggml_graph_compute</code></p>
 <p><strong>ggml_graph_compute</strong></p>
-<p>调用了<code>ggml_graph_compute_thread</code>这一段比较复杂，</p>
-<p>最后调用了<code>ggml_compute_forward</code>，转发到不同的算子进行计算，每个算子内部又考虑线程分配，内存存取</p>
-<blockquote>
-<p> &#x2F;&#x2F;todo多线程场景下数据划分，内存分配 、ggml_threadpool结构</p>
-</blockquote>
+<p>执行<code>ggml_graph_compute</code>时，首先初始化或者设置ggml_threadpool中的相关参数，包括cplan等</p>
+<p>只有调用<code>ggml_graph_compute_thread</code>进行多线程处理，启用omp进行多线程处理，否则单线程</p>
+<p>其中遍历cgraph中的每个算子节点，通过<code>ggml_compute_forward</code>转发到不同的算子进行计算，每个算子内部区分不同的精读，转发到不同的精度处理函数，最后不同的精度计算算子函数 通过<code>ith\nth</code>考虑线程分配，内存存取</p>
+<p>将线程划分计算的权利交给了算子自身来执行。</p>
+<p>例如以f16_add为例,通过ith划分举证的行和列，每个线程计算不同的小矩阵，实现并行化。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">ggml_compute_forward_add_f16_f16</span><span class="params">(</span></span><br><span class="line"><span class="params">        <span class="type">const</span> <span class="keyword">struct</span> ggml_compute_params * params,</span></span><br><span class="line"><span class="params">        <span class="keyword">struct</span> ggml_tensor * dst)</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">ggml_tensor</span> * <span class="title">src0</span> =</span> dst-&gt;src[<span class="number">0</span>];</span><br><span class="line">    <span class="type">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">ggml_tensor</span> * <span class="title">src1</span> =</span> dst-&gt;src[<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">    GGML_ASSERT(ggml_are_same_shape(src0, src1) &amp;&amp; ggml_are_same_shape(src0, dst));</span><br><span class="line"></span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> ith = params-&gt;ith;</span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> nth = params-&gt;nth;</span><br><span class="line"></span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> nr  = ggml_nrows(src0);</span><br><span class="line"></span><br><span class="line">    GGML_TENSOR_BINARY_OP_LOCALS</span><br><span class="line"></span><br><span class="line">    <span class="title function_">GGML_ASSERT</span><span class="params">(src0-&gt;type == GGML_TYPE_F16)</span>;</span><br><span class="line">    GGML_ASSERT(src1-&gt;type == GGML_TYPE_F16);</span><br><span class="line">    GGML_ASSERT(dst-&gt;type  == GGML_TYPE_F16);</span><br><span class="line"></span><br><span class="line">    GGML_ASSERT( nb0 == <span class="keyword">sizeof</span>(<span class="type">ggml_fp16_t</span>));</span><br><span class="line">    GGML_ASSERT(nb00 == <span class="keyword">sizeof</span>(<span class="type">ggml_fp16_t</span>));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// rows per thread</span></span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> dr = (nr + nth - <span class="number">1</span>)/nth;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// row range for this thread</span></span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> ir0 = dr*ith;</span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> ir1 = MIN(ir0 + dr, nr);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (nb10 == <span class="keyword">sizeof</span>(<span class="type">ggml_fp16_t</span>)) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> ir = ir0; ir &lt; ir1; ++ir) &#123;</span><br><span class="line">            <span class="comment">// src0, src1 and dst are same shape =&gt; same indices</span></span><br><span class="line">            <span class="type">const</span> <span class="type">int</span> i3 = ir/(ne2*ne1);</span><br><span class="line">            <span class="type">const</span> <span class="type">int</span> i2 = (ir - i3*ne2*ne1)/ne1;</span><br><span class="line">            <span class="type">const</span> <span class="type">int</span> i1 = (ir - i3*ne2*ne1 - i2*ne1);</span><br><span class="line"></span><br><span class="line">            <span class="type">ggml_fp16_t</span> * dst_ptr  = (<span class="type">ggml_fp16_t</span> *) ((<span class="type">char</span> *) dst-&gt;data  + i3*nb3  + i2*nb2  + i1*nb1);</span><br><span class="line">            <span class="type">ggml_fp16_t</span> * src0_ptr = (<span class="type">ggml_fp16_t</span> *) ((<span class="type">char</span> *) src0-&gt;data + i3*nb03 + i2*nb02 + i1*nb01);</span><br><span class="line">            <span class="type">ggml_fp16_t</span> * src1_ptr = (<span class="type">ggml_fp16_t</span> *) ((<span class="type">char</span> *) src1-&gt;data + i3*nb13 + i2*nb12 + i1*nb11);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; ne0; i++) &#123;</span><br><span class="line">                dst_ptr[i] = GGML_FP32_TO_FP16(GGML_FP16_TO_FP32(src0_ptr[i]) + GGML_FP16_TO_FP32(src1_ptr[i]));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// src1 is not contiguous</span></span><br><span class="line">        GGML_ABORT(<span class="string">&quot;fatal error&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
-  <div class="tag-list">
-    
-      
-      <a class="tag" href="/notebooks/other/tags/llm/ggml/">LLM/ggml</a>
-    
-  </div>
 
+
+
+<p>&#x2F;&#x2F;todo ggml backend</p>
 </article>
 <div class="article-footer">
 
@@ -395,16 +198,20 @@
     <section id="share">
       <div class="header"><span>分享文章</span></div>
       <div class="body">
-        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://zane-jiang.github.io/notebooks/other/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90" /></div>
-        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://zane-jiang.github.io/notebooks/other/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90&title=GGML源码浅析 - Zane Jiang&summary=GGML 源码浅析1.核心数据结构1.1ggml_context1234567891011121314151617181920212223242526struct ggml_context &#123;    size_t mem_s..."><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=GGML源码浅析 - Zane Jiang&amp;body=https://zane-jiang.github.io/notebooks/other/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://zane-jiang.github.io/2025/08/01/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://zane-jiang.github.io/2025/08/01/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90/&title=GGML源码浅析 - Zane Jiang&summary=GGML 源码浅析1.核心数据结构1.1ggml_context1234567891011121314151617181920212223242526struct ggml_context &#123;    size_t mem_s..."><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=GGML源码浅析 - Zane Jiang&amp;body=https://zane-jiang.github.io/2025/08/01/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90/"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
         
         <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://zane-jiang.github.io/notebooks/other/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90"/>
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://zane-jiang.github.io/2025/08/01/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90/"/>
         </div>
         
       </div>
     </section>
     </div>
+
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2025/07/29/%E5%87%A0%E7%A7%8D%E7%A8%8B%E5%BA%8F%E6%8E%A5%E5%8F%A3%E9%87%8D%E5%AE%9A%E5%90%91%E3%80%81%E6%8F%92%E6%A1%A9%E6%96%B9%E5%BC%8F%E6%AF%94%E8%BE%83/">几种程序接口重定向、插桩方式比较</a></div></section></div>
+
+
 
 
   <div class="related-wrap md-text" id="comments">
@@ -434,6 +241,8 @@
 </div></footer>
 <div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
 <div class="widgets">
+
+
 
 <widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#GGML-%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90"><span class="toc-text">GGML 源码浅析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%A0%B8%E5%BF%83%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-text">1.核心数据结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1ggml-context"><span class="toc-text">1.1ggml_context</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2ggml-state"><span class="toc-text">1.2ggml_state</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3ggml-tensor"><span class="toc-text">1.3ggml_tensor</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4-ggml-cgraph"><span class="toc-text">1.4 ggml_cgraph</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%A0%B8%E5%BF%83%E6%93%8D%E4%BD%9C"><span class="toc-text">2.核心操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1%E6%A8%A1%E5%9E%8B%E5%8A%A0%E8%BD%BD"><span class="toc-text">2.1模型加载</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#gguf%E7%BB%93%E6%9E%84%E4%B8%8E%E8%A7%A3%E6%9E%90"><span class="toc-text">gguf结构与解析</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2%E8%AE%A1%E7%AE%97%E5%9B%BE%E6%9E%84%E5%BB%BA"><span class="toc-text">2.2计算图构建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3%E8%AE%A1%E7%AE%97"><span class="toc-text">2.3计算</span></a></li></ol></li></ol></li></ol></div><div class="widget-footer"><a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/><path d="M7 3.338A9.95 9.95 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5"/></g></svg><span>回到顶部</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M8 10.5h8M8 14h5.5M17 3.338A9.95 9.95 0 0 0 12 2C6.477 2 2 6.477 2 12c0 1.6.376 3.112 1.043 4.453c.178.356.237.763.134 1.148l-.595 2.226a1.3 1.3 0 0 0 1.591 1.592l2.226-.596a1.63 1.63 0 0 1 1.149.133A9.96 9.96 0 0 0 12 22c5.523 0 10-4.477 10-10c0-1.821-.487-3.53-1.338-5"/></svg><span>参与讨论</span></a></div></widget>
 </div></aside><div class='float-panel'>
