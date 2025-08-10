@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.33.1" theme-name="Stellar" theme-version="1.33.1">
-  <link rel="canonical" href="https://zane-jiang.github.io/notebooks/compiler&kernel/LLVM/LLVM/">
+  <link rel="canonical" href="https://zane-jiang.github.io/notebooks/compiler_kernel/LLVM/LLVM/">
   
   <meta name="generator" content="Hexo 7.3.0">
   <meta http-equiv='x-dns-prefetch-control' content='on' />
@@ -23,7 +23,7 @@
     <meta name="description" content="入门llvm笔记  1.新旧新增pass流程 2CRTP（奇异递归模板模式）(以下内容基于AI生成后修改)  通常通过继承的方式实现单例模式也是这样，只是不知道叫这个名字   CRTP（Curiously Recurring Template Pattern，奇异递归模板模式）是C++中的一种高级模板编程技术，通过让一个类继承自以自身为模板参数的基类模板，实现静态多态或代码复用。 123temp">
 <meta property="og:type" content="website">
 <meta property="og:title" content="LLVM">
-<meta property="og:url" content="https://zane-jiang.github.io/notebooks/compiler&kernel/LLVM/LLVM/">
+<meta property="og:url" content="https://zane-jiang.github.io/notebooks/compiler_kernel/LLVM/LLVM/">
 <meta property="og:site_name" content="Zane Jiang">
 <meta property="og:description" content="入门llvm笔记  1.新旧新增pass流程 2CRTP（奇异递归模板模式）(以下内容基于AI生成后修改)  通常通过继承的方式实现单例模式也是这样，只是不知道叫这个名字   CRTP（Curiously Recurring Template Pattern，奇异递归模板模式）是C++中的一种高级模板编程技术，通过让一个类继承自以自身为模板参数的基类模板，实现静态多态或代码复用。 123temp">
 <meta property="og:locale" content="zh_CN">
@@ -49,7 +49,7 @@
 
   
 
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Website","@id":"https://zane-jiang.github.io/notebooks/compiler&kernel/LLVM/LLVM/","author":{"@type":"Person","name":"Zane Jiang","sameAs":[],"image":"/images/avatar.jpg"},"name":"LLVM","description":"\n入门llvm笔记\n\n1.新旧新增pass流程\n2CRTP（奇异递归模板模式）(以下内容基于AI生成后修改)\n 通常通过继承的方式实现单例模式也是这样，只是不知道叫这个名字\n\n\nCRTP（Curiously Recurring Template Pattern，奇异递归模板模式）是C++中的一种高级模板编程技术，通过让一个类继承自以自身为模板参数的基类模板，实现静态多态或代码复用。\n123t...","url":"https://zane-jiang.github.io/notebooks/compiler&kernel/LLVM/LLVM/","keywords":"OS"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Website","@id":"https://zane-jiang.github.io/notebooks/compiler_kernel/LLVM/LLVM/","author":{"@type":"Person","name":"Zane Jiang","sameAs":[],"image":"/images/avatar.jpg"},"name":"LLVM","description":"\n入门llvm笔记\n\n1.新旧新增pass流程\n2CRTP（奇异递归模板模式）(以下内容基于AI生成后修改)\n 通常通过继承的方式实现单例模式也是这样，只是不知道叫这个名字\n\n\nCRTP（Curiously Recurring Template Pattern，奇异递归模板模式）是C++中的一种高级模板编程技术，通过让一个类继承自以自身为模板参数的基类模板，实现静态多态或代码复用。\n123t...","url":"https://zane-jiang.github.io/notebooks/compiler_kernel/LLVM/LLVM/","keywords":"OS"}</script>
   
 </head>
 <body>
@@ -478,8 +478,8 @@
     <section id="share">
       <div class="header"><span>分享文章</span></div>
       <div class="body">
-        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://zane-jiang.github.io/notebooks/compiler&kernel/LLVM/LLVM" /></div>
-        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://zane-jiang.github.io/notebooks/compiler&kernel/LLVM/LLVM&title=LLVM - Zane Jiang&summary=
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://zane-jiang.github.io/notebooks/compiler_kernel/LLVM/LLVM" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://zane-jiang.github.io/notebooks/compiler_kernel/LLVM/LLVM&title=LLVM - Zane Jiang&summary=
 入门llvm笔记
 
 1.新旧新增pass流程
@@ -487,10 +487,10 @@
  通常通过继承的方式实现单例模式也是这样，只是不知道叫这个名字
 
 
-CRTP（Curiously Recurring Tem..."><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=LLVM - Zane Jiang&amp;body=https://zane-jiang.github.io/notebooks/compiler&kernel/LLVM/LLVM"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+CRTP（Curiously Recurring Tem..."><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=LLVM - Zane Jiang&amp;body=https://zane-jiang.github.io/notebooks/compiler_kernel/LLVM/LLVM"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
         
         <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://zane-jiang.github.io/notebooks/compiler&kernel/LLVM/LLVM"/>
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://zane-jiang.github.io/notebooks/compiler_kernel/LLVM/LLVM"/>
         </div>
         
       </div>

@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.33.1" theme-name="Stellar" theme-version="1.33.1">
-  <link rel="canonical" href="https://zane-jiang.github.io/notebooks/compiler&kernel/Linux%20kernel/Neoperf-study/">
+  <link rel="canonical" href="https://zane-jiang.github.io/notebooks/compiler_kernel/Linux%20kernel/linux%E8%84%9A%E6%9C%AC%E5%A4%87%E5%BF%98%E5%BD%95/">
   
   <meta name="generator" content="Hexo 7.3.0">
   <meta http-equiv='x-dns-prefetch-control' content='on' />
@@ -17,31 +17,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
   <meta name="theme-color" content="#f9fafb">
-  <title>Neoperf_study - Zane Jiang</title>
+  <title>linux脚本备忘录 - Zane Jiang</title>
 
   
-    <meta name="description" content="NeoPerf study 本文主要为学习论文《NeoMem: Hardware&#x2F;Software Co-Design for CXL-Native Memory Tiering》的工作，分为三个部分，用户态、内核以及FPGA部分，内核开源仓库地址为：  PKUZHOU&#x2F;linux  代码基于linux内核代码6.0开始修改。 由于初步探索linux内核代码，所以没有按照自顶向">
+    <meta name="description" content="Linux脚本备忘录安装系统后的环境准备添加新用户 123456adduser #封装命令，处理完添加用户的全部过程 su到新用户显示username@hostname~$:useradd #底层命令，什么都没有加,su到新用户显示$:# 生成 8 位强密码PASSWORD&#x3D;$(openssl rand -base64 6 | cut -c1-8)echo &quot;Password: $PAS">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Neoperf_study">
-<meta property="og:url" content="https://zane-jiang.github.io/notebooks/compiler&kernel/Linux%20kernel/Neoperf-study/">
+<meta property="og:title" content="linux脚本备忘录">
+<meta property="og:url" content="https://zane-jiang.github.io/notebooks/compiler_kernel/Linux%20kernel/linux%E8%84%9A%E6%9C%AC%E5%A4%87%E5%BF%98%E5%BD%95/">
 <meta property="og:site_name" content="Zane Jiang">
-<meta property="og:description" content="NeoPerf study 本文主要为学习论文《NeoMem: Hardware&#x2F;Software Co-Design for CXL-Native Memory Tiering》的工作，分为三个部分，用户态、内核以及FPGA部分，内核开源仓库地址为：  PKUZHOU&#x2F;linux  代码基于linux内核代码6.0开始修改。 由于初步探索linux内核代码，所以没有按照自顶向">
+<meta property="og:description" content="Linux脚本备忘录安装系统后的环境准备添加新用户 123456adduser #封装命令，处理完添加用户的全部过程 su到新用户显示username@hostname~$:useradd #底层命令，什么都没有加,su到新用户显示$:# 生成 8 位强密码PASSWORD&#x3D;$(openssl rand -base64 6 | cut -c1-8)echo &quot;Password: $PAS">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://zane-jiang.github.io/images/avatar.jpg">
-<meta property="article:published_time" content="2024-11-28T11:55:34.000Z">
-<meta property="article:modified_time" content="2025-07-18T12:01:22.791Z">
+<meta property="article:published_time" content="2024-11-25T16:07:30.000Z">
+<meta property="article:modified_time" content="2025-07-18T11:59:34.038Z">
 <meta property="article:author" content="Zane Jiang">
-<meta property="article:tag" content="CXL">
-<meta property="article:tag" content="kernel">
-<meta property="article:tag" content="neoprof">
-<meta property="article:tag" content="Sofrware hardware co-design">
-<meta property="article:tag" content="driver">
+<meta property="article:tag" content="Linux&#x2F;script">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://zane-jiang.github.io/images/avatar.jpg">
   
   
   
-  <meta name="keywords" content=",,,,">
+  <meta name="keywords" content="">
 
   <!-- feed -->
   
@@ -53,7 +49,7 @@
 
   
 
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Website","@id":"https://zane-jiang.github.io/notebooks/compiler&kernel/Linux%20kernel/Neoperf-study/","author":{"@type":"Person","name":"Zane Jiang","sameAs":[],"image":"/images/avatar.jpg"},"name":"Neoperf_study","description":"NeoPerf study\n本文主要为学习论文《NeoMem: Hardware&#x2F;Software Co-Design for CXL-Native Memory Tiering》的工作，分为三个部分，用户态、内核以及FPGA部分，内核开源仓库地址为：  PKUZHOU&#x2F;linux\n\n代码基于linux内核代码6.0开始修改。\n由于初步探索linux内核代码，所以没有按照...","url":"https://zane-jiang.github.io/notebooks/compiler&kernel/Linux%20kernel/Neoperf-study/","keywords":"OS"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Website","@id":"https://zane-jiang.github.io/notebooks/compiler_kernel/Linux%20kernel/linux%E8%84%9A%E6%9C%AC%E5%A4%87%E5%BF%98%E5%BD%95/","author":{"@type":"Person","name":"Zane Jiang","sameAs":[],"image":"/images/avatar.jpg"},"name":"linux脚本备忘录","description":"Linux脚本备忘录安装系统后的环境准备添加新用户\n123456adduser #封装命令，处理完添加用户的全部过程 su到新用户显示username@hostname~$:useradd #底层命令，什么都没有加,su到新用户显示$:# 生成 8 位强密码PASSWORD=$(openssl rand -base64 6 | cut -c1-8)echo &quot;Password: $...","url":"https://zane-jiang.github.io/notebooks/compiler_kernel/Linux%20kernel/linux%E8%84%9A%E6%9C%AC%E5%A4%87%E5%BF%98%E5%BD%95/","keywords":"OS"}</script>
   
 </head>
 <body>
@@ -361,99 +357,100 @@
   <a class="cap breadcrumb" href="/notebooks/compiler_kernel/">compiler_kernel</a>
 
 </div>
-<div class="flex-row" id="post-meta"><span class="text created">更新于：<time datetime="2025-07-18T12:01:22.791Z">2025-07-18</time></span><span class="sep updated"></span><span class="text updated">发布于：<time datetime="2024-11-28T11:55:34.000Z">2024-11-28</time></span></div></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">更新于：<time datetime="2025-07-18T11:59:34.038Z">2025-07-18</time></span><span class="sep updated"></span><span class="text updated">发布于：<time datetime="2024-11-25T16:07:30.000Z">2024-11-26</time></span></div></div></div>
     
     <div class="bottom only-title">
       
       <div class="text-area">
-        <h1 class="text title"><span>Neoperf_study</span></h1>
+        <h1 class="text title"><span>linux脚本备忘录</span></h1>
         
       </div>
     </div>
     
   </div>
-  </div><article class="md-text content"><h1 id="NeoPerf-study"><a href="#NeoPerf-study" class="headerlink" title="NeoPerf study"></a>NeoPerf study</h1><blockquote>
-<p>本文主要为学习论文《NeoMem: Hardware&#x2F;Software Co-Design for CXL-Native Memory Tiering》的工作，分为三个部分，用户态、内核以及FPGA部分，内核开源仓库地址为：  <a target="_blank" rel="noopener" href="https://github.com/PKUZHOU/linux">PKUZHOU&#x2F;linux</a></p>
+  </div><article class="md-text content"><h1 id="Linux脚本备忘录"><a href="#Linux脚本备忘录" class="headerlink" title="Linux脚本备忘录"></a>Linux脚本备忘录</h1><h2 id="安装系统后的环境准备"><a href="#安装系统后的环境准备" class="headerlink" title="安装系统后的环境准备"></a>安装系统后的环境准备</h2><p>添加新用户</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">adduser <span class="comment">#封装命令，处理完添加用户的全部过程 su到新用户显示username@hostname~$:</span></span><br><span class="line">useradd <span class="comment">#底层命令，什么都没有加,su到新用户显示$:</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成 8 位强密码</span></span><br><span class="line">PASSWORD=$(openssl rand -<span class="built_in">base64</span> 6 | <span class="built_in">cut</span> -c1-8)</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Password: <span class="variable">$PASSWORD</span>&quot;</span> </span><br></pre></td></tr></table></figure>
+
+<p>用户添加sudo组</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">usermod -aG <span class="built_in">sudo</span> new_user</span><br><span class="line"><span class="comment">#加完以后记得:</span></span><br><span class="line">newgrp <span class="built_in">sudo</span></span><br><span class="line"><span class="comment">#作用有3：</span></span><br><span class="line"><span class="comment">#1.切换到指定的组上下文</span></span><br><span class="line"><span class="comment">#2.即时生效组更改</span></span><br><span class="line"><span class="comment">#3.启动一个子 shell</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="配置sshd"><a href="#配置sshd" class="headerlink" title="配置sshd"></a>配置sshd</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#服务端安装</span></span><br><span class="line">apt install ssh-server</span><br><span class="line"></span><br><span class="line"><span class="comment">#配置</span></span><br><span class="line"><span class="built_in">sudo</span> vim /etc/ssh/sshd_config</span><br><span class="line"></span><br><span class="line"><span class="comment">#重启服务</span></span><br><span class="line"><span class="built_in">sudo</span> service  restart sshd</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="Vim"><a href="#Vim" class="headerlink" title="Vim"></a>Vim</h3><p><a target="_blank" rel="noopener" href="https://github.com/ma6174/vim">Vim配置推荐 - ma6174</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget 47.93.11.51:88/install_vim.sh</span><br><span class="line">bash install_vim.sh</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h3 id="zsh"><a href="#zsh" class="headerlink" title="zsh"></a>zsh</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#安装zsh</span></span><br><span class="line"><span class="built_in">sudo</span> apt install zsh</span><br><span class="line"></span><br><span class="line"><span class="comment">#修改默认shell为zsh</span></span><br><span class="line">chsh -s /bin/zsh</span><br><span class="line"></span><br><span class="line"><span class="comment">#安装oh-my-zsh</span></span><br><span class="line">sh -c <span class="string">&quot;<span class="subst">$(wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)</span>&quot;</span></span><br><span class="line"><span class="comment">##如果不成功，请执行下面两条命令，成功了就不需要做下面两条</span></span><br><span class="line">wget 47.93.11.51:88/install_zsh.sh</span><br><span class="line">bash install_zsh.sh</span><br><span class="line"></span><br><span class="line"><span class="comment">#安装zsh-syntax-highlighting</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/zsh-users/zsh-syntax-highlighting.git <span class="variable">$&#123;ZSH_CUSTOM:-~/.oh-my-zsh/custom&#125;</span>/plugins/zsh-syntax-highlighting</span><br></pre></td></tr></table></figure>
+
+<h4 id="历史记录推荐命令插件"><a href="#历史记录推荐命令插件" class="headerlink" title="历史记录推荐命令插件"></a>历史记录推荐命令插件</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">##命令自动推荐，根据历史记录</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/zsh-users/zsh-autosuggestions <span class="variable">$&#123;ZSH_CUSTOM:-~/.oh-my-zsh/custom&#125;</span>/plugins/zsh-autosuggestions</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="命令自动补全"><a href="#命令自动补全" class="headerlink" title="命令自动补全"></a>命令自动补全</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">##命令自动补全插件</span></span><br><span class="line"><span class="built_in">mkdir</span> ~/.oh-my-zsh/plugins/incr</span><br><span class="line">wget http://mimosa-pudica.net/src/incr-0.2.zsh -O ~/.oh-my-zsh/plugins/incr/incr.plugin.zsh</span><br><span class="line"><span class="comment">##目录自动跳转插件</span></span><br><span class="line"><span class="built_in">sudo</span> apt install autojump</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="zshrc配置文件配置"><a href="#zshrc配置文件配置" class="headerlink" title=".zshrc配置文件配置"></a><code>.zshrc</code>配置文件配置</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#插件添加zsh-syntax-highlighting</span></span><br><span class="line">plugins=(git zsh-syntax-highlighting)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#设置终端颜色，提示符，及上一条指令返回码提示</span></span><br><span class="line"><span class="built_in">autoload</span> -U colors &amp;&amp; colors</span><br><span class="line">PROMPT=<span class="string">&quot;%&#123;<span class="variable">$fg</span>[red]%&#125;%n%&#123;<span class="variable">$reset_color</span>%&#125;@%&#123;<span class="variable">$fg</span>[blue]%&#125;%m %&#123;<span class="variable">$fg</span>[yellow]%&#125;%1~ %&#123;<span class="variable">$reset_color</span>%&#125;%# &quot;</span></span><br><span class="line">RPROMPT=<span class="string">&quot;[%&#123;<span class="variable">$fg</span>[yellow]%&#125;%?%&#123;<span class="variable">$reset_color</span>%&#125;]&quot;</span></span><br><span class="line"><span class="comment"># Useful support for interacting with Terminal.app or other terminal programs</span></span><br><span class="line">[ -r <span class="string">&quot;/etc/zshrc_<span class="variable">$TERM_PROGRAM</span>&quot;</span> ] &amp;&amp; . <span class="string">&quot;/etc/zshrc_<span class="variable">$TERM_PROGRAM</span>&quot;</span></span><br><span class="line"><span class="built_in">source</span> ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh</span><br><span class="line"><span class="built_in">source</span> /usr/share/autojump/autojump.sh</span><br><span class="line"><span class="built_in">source</span> ~/.oh-my-zsh/plugins/incr/incr*.zsh</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="ctags"><a href="#ctags" class="headerlink" title="ctags"></a>ctags</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#安装</span></span><br><span class="line"><span class="built_in">sudo</span> apt install ctags     </span><br><span class="line"></span><br><span class="line"><span class="comment">#建立索引</span></span><br><span class="line">ctags -I __THROW -I __attribute_pure__ -I __nonnull -I __attribute__ --file-scope=<span class="built_in">yes</span> --langmap=c:+.h --languages=c,c++ --links=<span class="built_in">yes</span> --c-kinds=+p --c++-kinds=+p --fields=+iaS --extra=+q  -f ~/.vim/systags /usr/include/* /usr/include/x86_64-linux-gnu/sys/* /usr/include/x86_64-linux-gnu/bits/*  /usr/include/arpa/*</span><br></pre></td></tr></table></figure>
+
+<p><code>.vimrc</code>添加索引</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">set</span> tags+=~/systags</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="安装glibc-doc"><a href="#安装glibc-doc" class="headerlink" title="安装glibc-doc"></a>安装glibc-doc</h3><ol>
+<li>使用以下命令安装</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt install glibc-doc</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="常见路径"><a href="#常见路径" class="headerlink" title="常见路径"></a>常见路径</h3><p>hostname  :<code>/etc/hostname</code></p>
+<p>host: <code>/ect/hosts</code> </p>
+<h2 id="tomcat"><a href="#tomcat" class="headerlink" title="tomcat"></a>tomcat</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">安装JDK8</span></span><br><span class="line">sudo apt install default-jre            -y</span><br><span class="line">sudo apt install openjdk-11-jre-headless -y</span><br><span class="line">sudo apt install openjdk-8-jre-headless  -y </span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="built_in">sudo</span> wget https://downloads.apache.org/tomcat/tomcat-8/v8.5.65/bin/apache-tomcat-8.5.65.tar.gz</span></span><br><span class="line">sudo wget https://mirrors.bfsu.edu.cn/apache/tomcat/tomcat-8/v8.5.73/bin/apache-tomcat-8.5.73.tar.gz</span><br><span class="line">tar zxf apache-tomcat-8.5.73.tar.gz</span><br><span class="line">sudo mv apache-tomcat-8.5.73 /usr/local/tomcat</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">建立软连接</span></span><br><span class="line">sudo ln -s /usr/local/tomcat/bin/*  /usr/local/sbin/</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">启动</span></span><br><span class="line">startup.sh start </span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">端口检查</span></span><br><span class="line">netstat -anput |  grep 8080</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">启动命令</span></span><br><span class="line">startup.sh start #//启动</span><br><span class="line">shutdown.sh #//关闭</span><br><span class="line"></span><br><span class="line">catalina.sh stop #//启动</span><br><span class="line">catalina.sh start #//关闭</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">关闭防火墙</span></span><br><span class="line">sudo ufw disable </span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">tomcat 参数配置</span></span><br><span class="line">vim /usr/local/tomcat/conf/server.xml </span><br><span class="line"><span class="meta prompt_">	#</span><span class="language-bash">.......</span></span><br><span class="line"></span><br><span class="line">&lt;Connector port=&quot;8081&quot; protocol=&quot;HTTP/1.1&quot;   #将之前8080端口改成8081端口</span><br><span class="line"></span><br><span class="line">connectionTimeout=&quot;20000&quot;</span><br><span class="line"></span><br><span class="line">     #          redirectPort=&quot;8443&quot; /&gt;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">目录修</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">  # </span><span class="language-bash"> &lt;Host name=<span class="string">&quot;localhost&quot;</span>  appBase=<span class="string">&quot;/opt/www&quot;</span>  <span class="comment">#将网站根目录改到/opt/www</span></span></span><br><span class="line"></span><br><span class="line">      #      unpackWARs=&quot;true&quot; autoDeploy=&quot;true&quot;&gt;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">更改网站家目录，这里的ROOT必须大写，更改完成后需要重启</span></span><br><span class="line">sudo mkdir /opt/www/ROOT -p</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="mysql"><a href="#mysql" class="headerlink" title="mysql"></a>mysql</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44129085/article/details/104481986">mysql 8.0下载</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://repo.mysql.com//mysql-apt-config_0.8.20-1_all.deb</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#MySQL 设置</span><br><span class="line">#密码</span><br><span class="line">sudo  mysql <span class="operator">-</span>uroot </span><br><span class="line">use mysql;</span><br><span class="line"><span class="keyword">update</span> <span class="keyword">user</span> <span class="keyword">set</span> authentication_string<span class="operator">=</span>PASSWORD(&quot;自定义密码&quot;) <span class="keyword">where</span> <span class="keyword">User</span><span class="operator">=</span>&quot;root&quot;;</span><br><span class="line"><span class="keyword">update</span> <span class="keyword">user</span> <span class="keyword">set</span> plugin<span class="operator">=</span>&quot;mysql_native_password&quot; <span class="keyword">where</span>  <span class="keyword">User</span> <span class="operator">=</span>&quot;root&quot;;</span><br><span class="line">flush privileges;</span><br><span class="line">quit;</span><br></pre></td></tr></table></figure>
+
+<p>对于Linux和windows下字符集不兼容的情况，需要替换</p>
+<blockquote>
+<p>• 把文件中的所有的<code>utf8mb4_0900_ai_ci</code>替换为<code>utf8_general_ci</code><br>• 以及<code>utf8mb4</code>替换为<code>utf8</code><br>• 如上图所示的位置，上图只是一部分，注意全部替换。</p>
 </blockquote>
-<p>代码基于linux内核代码6.0开始修改。</p>
-<p>由于初步探索linux内核代码，所以没有按照自顶向下的视角分析代码，而是基于git提交记录，借助AI与互联网搜索，平铺遇到的相关知识。版本不断更新……</p>
-<h2 id="a-naive-neoprof-driver"><a href="#a-naive-neoprof-driver" class="headerlink" title="a naive neoprof driver"></a>a naive neoprof driver</h2><p>commit ID <code>9bd35383</code></p>
-<p>本次主要在driver目录下提交了一个驱动neoperf:</p>
-<p>主要是实现了一些对外设的IO操作</p>
-<h3 id="Linux内核配置文件Kconfig"><a href="#Linux内核配置文件Kconfig" class="headerlink" title="Linux内核配置文件Kconfig"></a>Linux内核配置文件<code>Kconfig</code></h3><p><code>Kconfig</code>文件用于定义内核配置菜单，这些菜单可以在编译内核时启用或禁用特定的功能。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#Kconfig文件</span></span><br><span class="line">config NEOPROF#定义了一个名为`NEOPROF`的内核配置选项，将在内核配置菜单中创建选项</span><br><span class="line">	bool <span class="string">&quot;Enable Neoprofiler&quot;</span> <span class="comment">#bool类型，是否启用</span></span><br><span class="line">    default n <span class="comment">#默认不启用</span></span><br></pre></td></tr></table></figure>
+<p>数据库导出</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysqldump -uroot -p &gt;c:ShareYunAlbum。sql</span><br></pre></td></tr></table></figure>
 
-<p>在内核编译过程中可以在Drivers下查找到</p>
-<p><img src="neoperf-study/image-20241128201430600.png" alt="aba"></p>
-<p>Kconfig有其独特的语法，也是可以一层一层包裹下去：<code>menu</code>、<code>source</code>、<code>endmenu</code>等组成了编译选项配置过程中的树状菜单</p>
-<p>Kconfig设置对应的编译变量后，makefile指导构建编译的过程中会利用这些变量，从而实现选择性的编译</p>
-<h3 id="neoperf-h"><a href="#neoperf-h" class="headerlink" title="neoperf.h"></a>neoperf.h</h3><p>主要新增了四个接口，对neoprof设备（此处指Type2-CXL设备）进行访问：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    * The following functions are used to access the neoprof device</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">u64 <span class="title function_">get_nr_hotpages</span><span class="params">(<span class="type">void</span>)</span>;<span class="comment">//获取当前系统中的热页数量</span></span><br><span class="line"></span><br><span class="line">u64*  <span class="title function_">get_hotpages</span><span class="params">(<span class="type">void</span>)</span>;<span class="comment">//获取热页</span></span><br><span class="line"></span><br><span class="line">u64 <span class="title function_">get_hotness_threshold</span><span class="params">(<span class="type">void</span>)</span>;<span class="comment">//获取热度阈值</span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">set_hotness_threshold</span><span class="params">(u64 threshold)</span>;<span class="comment">//设置热度阈值</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>数据库导入</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">use ShareYunAlbum </span><br><span class="line">source <span class="operator">~</span><span class="operator">/</span>ShqreYunAlbum.sql</span><br></pre></td></tr></table></figure>
+
+<p>卸载mysql</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt purge mysql-* -y</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">rm</span> -rf /etc/mysql/ /var/lib/mysql</span><br><span class="line"><span class="built_in">sudo</span> apt autoremove</span><br><span class="line"><span class="built_in">sudo</span> apt autoreclean</span><br><span class="line"><span class="built_in">sudo</span> apt-get remove mysql-common </span><br><span class="line">dpkg -l |grep ^rc|awk <span class="string">&#x27;&#123;print $2&#125;&#x27;</span> |<span class="built_in">sudo</span> xargs dpkg -P</span><br></pre></td></tr></table></figure>
 
 
-
-<h3 id="neoperf-c"><a href="#neoperf-c" class="headerlink" title="neoperf.c"></a>neoperf.c</h3><h4 id="驱动开发hello-world"><a href="#驱动开发hello-world" class="headerlink" title="驱动开发hello world"></a>驱动开发hello world</h4><p>neoperf.c 以下部分参考驱动开发知识：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/downey-blog/p/10500828.html">https://www.cnblogs.com/downey-blog/p/10500828.html</a></p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">module_init(neoprof_init);</span><br><span class="line">module_exit(neoprof_exit);</span><br><span class="line"></span><br><span class="line">MODULE_LICENSE(<span class="string">&quot;GPL v2&quot;</span>);</span><br><span class="line">MODULE_AUTHOR(<span class="string">&quot;PKUZHOU&quot;</span>);</span><br><span class="line">MODULE_DESCRIPTION(<span class="string">&quot;Neoprofiler Linux driver&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="io地址映射相关知识"><a href="#io地址映射相关知识" class="headerlink" title="io地址映射相关知识"></a>io地址映射相关知识</h4><p>需要理解</p>
-<ol>
-<li><p>IO端口的编址方式：</p>
-<p>包括IO指令的端口映射方式、MMIO的统一内存映射方式</p>
-</li>
-<li><p>一些常见的IO操作函数</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> * <span class="title function_">ioremap</span><span class="params">(<span class="type">unsigned</span> <span class="type">long</span> phys_addr, <span class="type">unsigned</span> <span class="type">long</span> size, <span class="type">unsigned</span> <span class="type">long</span> flags)</span>;</span><br><span class="line"> <span class="comment">//memset_io\memcpy_fromio\readb</span></span><br></pre></td></tr></table></figure></li>
-</ol>
-<p>参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/do2jiang/article/details/5450839">https://blog.csdn.net/do2jiang/article/details/5450839</a></p>
-<h2 id="neomem-migration-skeleton"><a href="#neomem-migration-skeleton" class="headerlink" title="neomem migration skeleton"></a>neomem migration skeleton</h2><p>commit ID <code>26cabad18</code></p>
-<p>新增 NeoMem模块:</p>
-<h3 id="migrate-c"><a href="#migrate-c" class="headerlink" title="migrate.c"></a>migrate.c</h3><p>主要是提供接口<code>migrate_misplaced_page_no_vma</code></p>
-<p>调用一些mm中的内存操作函数，进行页面隔离、迁移</p>
-<h3 id="neomem-h-neomem-c"><a href="#neomem-h-neomem-c" class="headerlink" title="neomem.h \neomem.c"></a>neomem.h \neomem.c</h3><p>主要就是启动 neomem模块（调用core文件中启动守护进程）</p>
-<h4 id="late-initcall"><a href="#late-initcall" class="headerlink" title="late_initcall()"></a>late_initcall()</h4><p>在内核启动后期适当时间执行，理解module_init等init宏的顺序，在<code>include/linux/init.h</code>中</p>
-<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/linhaostudy/p/9112264.html">linux设备驱动加载的先后顺序</a></p>
-<h3 id="neomem-core-c"><a href="#neomem-core-c" class="headerlink" title="neomem_core.c"></a>neomem_core.c</h3><ol>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/liangzc1124/article/details/120837260">内存中的各种分配函数</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/huofeng_2008/article/details/21177459">kthread_run内核线程</a></li>
-</ol>
-<h2 id="FPGA端侧"><a href="#FPGA端侧" class="headerlink" title="FPGA端侧"></a>FPGA端侧</h2><h3 id="模块结构"><a href="#模块结构" class="headerlink" title="模块结构"></a>模块结构</h3><p>顶层模块：</p>
-<p><code>cxltyp3_memexp_ddr4_top</code>-&gt;<code>ed_top_wrapper_typ3</code></p>
-<h4 id="ddr内存参数调整"><a href="#ddr内存参数调整" class="headerlink" title="ddr内存参数调整"></a>ddr内存参数调整</h4><p>cxl ip考虑了不同ddr的，包括是否支持DBI、内存通道数量等。采用宏的方式区分，设置不同的方式时，需要对ip内通过宏定义来确定相关的内存参数，同时也需要在顶层模块对相关参数进行修改。</p>
-<style>.sdxvrzvqxczq{zoom:50%;}</style>
-
-<style>.rtfbtiynsbtd{zoom:50%;}</style>
-
-<style>.teguifwzujmk{zoom:50%;}</style>
-
-<p>或者通过更改ip文件，重新生成新的IP文件夹</p>
-<style>.lpwytlqxqvgh{zoom:50%;}</style>
-
-<h3 id="quartus"><a href="#quartus" class="headerlink" title="quartus"></a>quartus</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set_global_assignment -name OPTIMIZATION_MODE <span class="string">&quot;AGGRESSIVE COMPILE TIME&quot;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="烧录模式"><a href="#烧录模式" class="headerlink" title="烧录模式"></a>烧录模式</h3><p>AS Jtag ps <a target="_blank" rel="noopener" href="https://blog.csdn.net/dongdongnihao_/article/details/80258573">三种烧录模式</a></p>
-<h1 id="Neomem-todo"><a href="#Neomem-todo" class="headerlink" title="Neomem todo"></a>Neomem todo</h1><p>代码存在一些可以完善的地方：</p>
-<ol>
-<li>CXL地址采用硬编码，可以引入设备树或者其他检测CXL物理地址的工具进行优化，<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_44814825/article/details/129107911">参考</a></li>
-</ol>
 
 
   <div class="tag-list">
     
       
-      <a class="tag" href="/notebooks/compiler_kernel/tags/cxl/">CXL</a>
-    
-      
-      <a class="tag" href="/notebooks/compiler_kernel/tags/kernel/">kernel</a>
-    
-      
-      <a class="tag" href="/notebooks/compiler_kernel/tags/neoprof/">neoprof</a>
-    
-      
-      <a class="tag" href="/notebooks/compiler_kernel/tags/sofrware%20hardware%20co-design/">Sofrware hardware co-design</a>
-    
-      
-      <a class="tag" href="/notebooks/compiler_kernel/tags/driver/">driver</a>
+      <a class="tag" href="/notebooks/compiler_kernel/tags/linux/script/">Linux/script</a>
     
   </div>
 
@@ -464,12 +461,12 @@
     <section id="share">
       <div class="header"><span>分享文章</span></div>
       <div class="body">
-        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://zane-jiang.github.io/notebooks/compiler&kernel/Linux%20kernel/Neoperf-study" /></div>
-        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://zane-jiang.github.io/notebooks/compiler&kernel/Linux%20kernel/Neoperf-study&title=Neoperf_study - Zane Jiang&summary=NeoPerf study
-本文主要为学习论文《NeoMem: Hardware&#x2F;Software Co-Design for CXL-Native Memory Tiering》的工作，分为三个部分，用户态、内核以及FPG..."><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=Neoperf_study - Zane Jiang&amp;body=https://zane-jiang.github.io/notebooks/compiler&kernel/Linux%20kernel/Neoperf-study"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://zane-jiang.github.io/notebooks/compiler_kernel/Linux%20kernel/linux%E8%84%9A%E6%9C%AC%E5%A4%87%E5%BF%98%E5%BD%95" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://zane-jiang.github.io/notebooks/compiler_kernel/Linux%20kernel/linux%E8%84%9A%E6%9C%AC%E5%A4%87%E5%BF%98%E5%BD%95&title=linux脚本备忘录 - Zane Jiang&summary=Linux脚本备忘录安装系统后的环境准备添加新用户
+123456adduser #封装命令，处理完添加用户的全部过程 su到新用户显示username@hostname~$:useradd #底层命令，什么都没有加,su到新用户显示$..."><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=linux脚本备忘录 - Zane Jiang&amp;body=https://zane-jiang.github.io/notebooks/compiler_kernel/Linux%20kernel/linux%E8%84%9A%E6%9C%AC%E5%A4%87%E5%BF%98%E5%BD%95"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
         
         <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://zane-jiang.github.io/notebooks/compiler&kernel/Linux%20kernel/Neoperf-study"/>
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://zane-jiang.github.io/notebooks/compiler_kernel/Linux%20kernel/linux%E8%84%9A%E6%9C%AC%E5%A4%87%E5%BF%98%E5%BD%95"/>
         </div>
         
       </div>
@@ -505,7 +502,7 @@
 <div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
 <div class="widgets">
 
-<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#NeoPerf-study"><span class="toc-text">NeoPerf study</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#a-naive-neoprof-driver"><span class="toc-text">a naive neoprof driver</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux%E5%86%85%E6%A0%B8%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6Kconfig"><span class="toc-text">Linux内核配置文件Kconfig</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#neoperf-h"><span class="toc-text">neoperf.h</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#neoperf-c"><span class="toc-text">neoperf.c</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91hello-world"><span class="toc-text">驱动开发hello world</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#io%E5%9C%B0%E5%9D%80%E6%98%A0%E5%B0%84%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86"><span class="toc-text">io地址映射相关知识</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#neomem-migration-skeleton"><span class="toc-text">neomem migration skeleton</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#migrate-c"><span class="toc-text">migrate.c</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#neomem-h-neomem-c"><span class="toc-text">neomem.h \neomem.c</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#late-initcall"><span class="toc-text">late_initcall()</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#neomem-core-c"><span class="toc-text">neomem_core.c</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#FPGA%E7%AB%AF%E4%BE%A7"><span class="toc-text">FPGA端侧</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97%E7%BB%93%E6%9E%84"><span class="toc-text">模块结构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#ddr%E5%86%85%E5%AD%98%E5%8F%82%E6%95%B0%E8%B0%83%E6%95%B4"><span class="toc-text">ddr内存参数调整</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#quartus"><span class="toc-text">quartus</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%83%A7%E5%BD%95%E6%A8%A1%E5%BC%8F"><span class="toc-text">烧录模式</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Neomem-todo"><span class="toc-text">Neomem todo</span></a></li></ol></div><div class="widget-footer"><a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/><path d="M7 3.338A9.95 9.95 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5"/></g></svg><span>回到顶部</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M8 10.5h8M8 14h5.5M17 3.338A9.95 9.95 0 0 0 12 2C6.477 2 2 6.477 2 12c0 1.6.376 3.112 1.043 4.453c.178.356.237.763.134 1.148l-.595 2.226a1.3 1.3 0 0 0 1.591 1.592l2.226-.596a1.63 1.63 0 0 1 1.149.133A9.96 9.96 0 0 0 12 22c5.523 0 10-4.477 10-10c0-1.821-.487-3.53-1.338-5"/></svg><span>参与讨论</span></a></div></widget>
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Linux%E8%84%9A%E6%9C%AC%E5%A4%87%E5%BF%98%E5%BD%95"><span class="toc-text">Linux脚本备忘录</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E7%B3%BB%E7%BB%9F%E5%90%8E%E7%9A%84%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87"><span class="toc-text">安装系统后的环境准备</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AEsshd"><span class="toc-text">配置sshd</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Vim"><span class="toc-text">Vim</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#zsh"><span class="toc-text">zsh</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8E%86%E5%8F%B2%E8%AE%B0%E5%BD%95%E6%8E%A8%E8%8D%90%E5%91%BD%E4%BB%A4%E6%8F%92%E4%BB%B6"><span class="toc-text">历史记录推荐命令插件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E8%87%AA%E5%8A%A8%E8%A1%A5%E5%85%A8"><span class="toc-text">命令自动补全</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#zshrc%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E9%85%8D%E7%BD%AE"><span class="toc-text">.zshrc配置文件配置</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ctags"><span class="toc-text">ctags</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85glibc-doc"><span class="toc-text">安装glibc-doc</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E8%B7%AF%E5%BE%84"><span class="toc-text">常见路径</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#tomcat"><span class="toc-text">tomcat</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#mysql"><span class="toc-text">mysql</span></a></li></ol></li></ol></div><div class="widget-footer"><a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/><path d="M7 3.338A9.95 9.95 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5"/></g></svg><span>回到顶部</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M8 10.5h8M8 14h5.5M17 3.338A9.95 9.95 0 0 0 12 2C6.477 2 2 6.477 2 12c0 1.6.376 3.112 1.043 4.453c.178.356.237.763.134 1.148l-.595 2.226a1.3 1.3 0 0 0 1.591 1.592l2.226-.596a1.63 1.63 0 0 1 1.149.133A9.96 9.96 0 0 0 12 22c5.523 0 10-4.477 10-10c0-1.821-.487-3.53-1.338-5"/></svg><span>参与讨论</span></a></div></widget>
 </div></aside><div class='float-panel'>
   <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
