@@ -20,16 +20,16 @@
   <title>nk01(tx-network) - Zane Jiang</title>
 
   
-    <meta name="description" content="1.5层网络分别是什么，讲讲每层什么协议，有什么东西2.MTU包含哪些层的数据，大小一般多大怎么计算3.MTU和MSS区别4.TCP怎么保证可靠的6.建连和断连是怎么样7.为什么挥手四次要比握手多一次8.挥手并不是一定得四次，能在更少次数内实现，请分析可能怎么做的9.既然能挥手次数更少，但是为什么现在主流还是四次10.我假设是一个客户端，我在和服务端通信，我怎么知道发送窗口数据量是多大呢11.现在">
+    <meta name="description" content="1.5层网络分别是什么，讲讲每层什么协议，有什么东西2.MTU包含哪些层的数据，大小一般多大怎么计算3.MTU和MSS区别4.TCP怎么保证可靠的13.你作为一个一端的程序，是怎么知道是网络拥塞还是是链路丢包的 27.k个一组翻转链表 作者：静静地看你们表演链接：https:&#x2F;&#x2F;www.nowcoder.com&#x2F;feed&#x2F;main&#x2F;detail&#x2F;ebd659f61ec743d89c402d2431">
 <meta property="og:type" content="website">
 <meta property="og:title" content="nk01(tx-network)">
 <meta property="og:url" content="https://zane-jiang.github.io/notebooks/AI_interview/nk01(tx-network)/">
 <meta property="og:site_name" content="Zane Jiang">
-<meta property="og:description" content="1.5层网络分别是什么，讲讲每层什么协议，有什么东西2.MTU包含哪些层的数据，大小一般多大怎么计算3.MTU和MSS区别4.TCP怎么保证可靠的6.建连和断连是怎么样7.为什么挥手四次要比握手多一次8.挥手并不是一定得四次，能在更少次数内实现，请分析可能怎么做的9.既然能挥手次数更少，但是为什么现在主流还是四次10.我假设是一个客户端，我在和服务端通信，我怎么知道发送窗口数据量是多大呢11.现在">
+<meta property="og:description" content="1.5层网络分别是什么，讲讲每层什么协议，有什么东西2.MTU包含哪些层的数据，大小一般多大怎么计算3.MTU和MSS区别4.TCP怎么保证可靠的13.你作为一个一端的程序，是怎么知道是网络拥塞还是是链路丢包的 27.k个一组翻转链表 作者：静静地看你们表演链接：https:&#x2F;&#x2F;www.nowcoder.com&#x2F;feed&#x2F;main&#x2F;detail&#x2F;ebd659f61ec743d89c402d2431">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://zane-jiang.github.io/images/avatar.jpg">
 <meta property="article:published_time" content="2025-07-20T14:04:34.000Z">
-<meta property="article:modified_time" content="2025-07-26T12:14:49.530Z">
+<meta property="article:modified_time" content="2025-08-23T08:37:39.504Z">
 <meta property="article:author" content="Zane Jiang">
 <meta property="article:tag" content="network">
 <meta property="article:tag" content="tencent">
@@ -50,7 +50,7 @@
 
   
 
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Website","@id":"https://zane-jiang.github.io/notebooks/AI_interview/nk01(tx-network)/","author":{"@type":"Person","name":"Zane Jiang","sameAs":[],"image":"/images/avatar.jpg"},"name":"nk01(tx-network)","description":"1.5层网络分别是什么，讲讲每层什么协议，有什么东西2.MTU包含哪些层的数据，大小一般多大怎么计算3.MTU和MSS区别4.TCP怎么保证可靠的6.建连和断连是怎么样7.为什么挥手四次要比握手多一次8.挥手并不是一定得四次，能在更少次数内实现，请分析可能怎么做的9.既然能挥手次数更少，但是为什么现在主流还是四次10.我假设是一个客户端，我在和服务端通信，我怎么知道发送窗口数据量是多大呢11...","url":"https://zane-jiang.github.io/notebooks/AI_interview/nk01(tx-network)/","keywords":"OS"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Website","@id":"https://zane-jiang.github.io/notebooks/AI_interview/nk01(tx-network)/","author":{"@type":"Person","name":"Zane Jiang","sameAs":[],"image":"/images/avatar.jpg"},"name":"nk01(tx-network)","description":"1.5层网络分别是什么，讲讲每层什么协议，有什么东西2.MTU包含哪些层的数据，大小一般多大怎么计算3.MTU和MSS区别4.TCP怎么保证可靠的13.你作为一个一端的程序，是怎么知道是网络拥塞还是是链路丢包的\n27.k个一组翻转链表\n作者：静静地看你们表演链接：https://www.nowcoder.com/feed/main/detail/ebd659f61ec743d89c402d2...","url":"https://zane-jiang.github.io/notebooks/AI_interview/nk01(tx-network)/","keywords":"OS"}</script>
   
 </head>
 <body>
@@ -96,6 +96,56 @@
     <span class="toc-text">
       
         所有笔记
+      
+    </span>
+    <span class="toc-text tag-switcher-wrapper">
+      <span class="tag-switcher" />
+    </span>
+  </a>
+
+    
+  </div>
+
+      
+        
+  
+  
+  
+  
+  <div class="tag-subtree leaf-tag expanded" data-tag="cuda">
+    
+  
+  <a class="link" href="/notebooks/AI_interview/tags/cuda/">
+    <span class="toc-text">
+      
+        
+        <span class="tagcon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" d="m14.092 10.75l-.75 2.5H9.908l.75-2.5z"/><path fill="currentColor" fill-rule="evenodd" d="M3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465C22 19.072 22 16.714 22 12s0-7.071-1.465-8.536C19.072 2 16.714 2 12 2S4.929 2 3.464 3.464m7.752 2.818a.75.75 0 0 1 .502.934l-.61 2.034h3.434l.74-2.465a.75.75 0 0 1 1.436.43l-.61 2.035H18a.75.75 0 0 1 0 1.5h-2.342l-.75 2.5H17a.75.75 0 0 1 0 1.5h-2.542l-.74 2.465a.75.75 0 0 1-1.436-.43l.61-2.035H9.458l-.74 2.465a.75.75 0 1 1-1.436-.43l.61-2.035H6a.75.75 0 0 1 0-1.5h2.342l.75-2.5H7a.75.75 0 0 1 0-1.5h2.542l.74-2.465a.75.75 0 0 1 .934-.503" clip-rule="evenodd"/></svg></span>
+        cuda
+      
+    </span>
+    <span class="toc-text tag-switcher-wrapper">
+      <span class="tag-switcher" />
+    </span>
+  </a>
+
+    
+  </div>
+
+      
+        
+  
+  
+  
+  
+  <div class="tag-subtree leaf-tag expanded" data-tag="hpc">
+    
+  
+  <a class="link" href="/notebooks/AI_interview/tags/hpc/">
+    <span class="toc-text">
+      
+        
+        <span class="tagcon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" d="m14.092 10.75l-.75 2.5H9.908l.75-2.5z"/><path fill="currentColor" fill-rule="evenodd" d="M3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465C22 19.072 22 16.714 22 12s0-7.071-1.465-8.536C19.072 2 16.714 2 12 2S4.929 2 3.464 3.464m7.752 2.818a.75.75 0 0 1 .502.934l-.61 2.034h3.434l.74-2.465a.75.75 0 0 1 1.436.43l-.61 2.035H18a.75.75 0 0 1 0 1.5h-2.342l-.75 2.5H17a.75.75 0 0 1 0 1.5h-2.542l-.74 2.465a.75.75 0 0 1-1.436-.43l.61-2.035H9.458l-.74 2.465a.75.75 0 1 1-1.436-.43l.61-2.035H6a.75.75 0 0 1 0-1.5h2.342l.75-2.5H7a.75.75 0 0 1 0-1.5h2.542l.74-2.465a.75.75 0 0 1 .934-.503" clip-rule="evenodd"/></svg></span>
+        hpc
       
     </span>
     <span class="toc-text tag-switcher-wrapper">
@@ -179,7 +229,7 @@
   <a class="cap breadcrumb" href="/notebooks/AI_interview/">AI_interview</a>
 
 </div>
-<div class="flex-row" id="post-meta"><span class="text created">更新于：<time datetime="2025-07-26T12:14:49.530Z">2025-07-26</time></span><span class="sep updated"></span><span class="text updated">发布于：<time datetime="2025-07-20T14:04:34.000Z">2025-07-20</time></span></div></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">更新于：<time datetime="2025-08-23T08:37:39.504Z">2025-08-23</time></span><span class="sep updated"></span><span class="text updated">发布于：<time datetime="2025-07-20T14:04:34.000Z">2025-07-20</time></span></div></div></div>
     
     <div class="bottom only-title">
       
@@ -190,7 +240,8 @@
     </div>
     
   </div>
-  </div><article class="md-text content"><h2 id="1-5层网络分别是什么，讲讲每层什么协议，有什么东西"><a href="#1-5层网络分别是什么，讲讲每层什么协议，有什么东西" class="headerlink" title="1.5层网络分别是什么，讲讲每层什么协议，有什么东西"></a>1.5层网络分别是什么，讲讲每层什么协议，有什么东西</h2><h2 id="2-MTU包含哪些层的数据，大小一般多大怎么计算"><a href="#2-MTU包含哪些层的数据，大小一般多大怎么计算" class="headerlink" title="2.MTU包含哪些层的数据，大小一般多大怎么计算"></a>2.MTU包含哪些层的数据，大小一般多大怎么计算</h2><h2 id="3-MTU和MSS区别"><a href="#3-MTU和MSS区别" class="headerlink" title="3.MTU和MSS区别"></a>3.MTU和MSS区别</h2><h2 id="4-TCP怎么保证可靠的"><a href="#4-TCP怎么保证可靠的" class="headerlink" title="4.TCP怎么保证可靠的"></a>4.TCP怎么保证可靠的</h2><p>6.建连和断连是怎么样<br>7.为什么挥手四次要比握手多一次<br>8.挥手并不是一定得四次，能在更少次数内实现，请分析可能怎么做的<br>9.既然能挥手次数更少，但是为什么现在主流还是四次<br>10.我假设是一个客户端，我在和服务端通信，我怎么知道发送窗口数据量是多大呢<br>11.现在已经有了一个滑动窗口了，这个滑动窗口大小变化的时候是怎么变化的<br>12.我丢包了，那这个窗口大小是不是就有问题了，有什么处理方案<br>13.你作为一个一端的程序，是怎么知道是网络拥塞还是是链路丢包的<br>14.TCP的拥塞控制是怎么做的<br>15.假设要让你设计一个完整的判断网络拥塞还是链路丢包的协议，你会怎么设计<br>16.现在假设你打开腾讯视频，突然某些（不是所有）视频你看不了了，你会怎么分析+排查+定位+解决这个问题，从app端上的问题-》网络的问题-》服务端的问题各个角度尽量全面的分析<br>17.wireshark你了解吗，怎么在手机上抓包呢<br>18.算了你假设你能在手机上抓包，你怎么从二进制数据排查定位分析这个场景的问题原因呢<br>19.抓包的底层原理是怎么样的，这个包是怎么从操作系统的内核态数据取到的<br>20.HTTP1-3对比，讲讲多路复用在内核是怎么实现的<br>21.QUIC保证udp可靠传输和tcp自身可靠传输的对比<br>22.HTTP和HTTPS区别<br>23.你讲讲HTTPS的完整的方案<br>24.你这种方案的RTT是多少<br>25.有1RTT的HTTPS方案，你了解吗<br>26.你对网络安全了解多少，像DDOS攻击，中间人攻击这些了解吗，有没有一些解决<br>27.k个一组翻转链表</p>
+  </div><article class="md-text content"><h2 id="1-5层网络分别是什么，讲讲每层什么协议，有什么东西"><a href="#1-5层网络分别是什么，讲讲每层什么协议，有什么东西" class="headerlink" title="1.5层网络分别是什么，讲讲每层什么协议，有什么东西"></a>1.5层网络分别是什么，讲讲每层什么协议，有什么东西</h2><h2 id="2-MTU包含哪些层的数据，大小一般多大怎么计算"><a href="#2-MTU包含哪些层的数据，大小一般多大怎么计算" class="headerlink" title="2.MTU包含哪些层的数据，大小一般多大怎么计算"></a>2.MTU包含哪些层的数据，大小一般多大怎么计算</h2><h2 id="3-MTU和MSS区别"><a href="#3-MTU和MSS区别" class="headerlink" title="3.MTU和MSS区别"></a>3.MTU和MSS区别</h2><h2 id="4-TCP怎么保证可靠的"><a href="#4-TCP怎么保证可靠的" class="headerlink" title="4.TCP怎么保证可靠的"></a>4.TCP怎么保证可靠的</h2><p>13.你作为一个一端的程序，是怎么知道是网络拥塞还是是链路丢包的</p>
+<p>27.k个一组翻转链表</p>
 <p>作者：静静地看你们表演<br>链接：<a target="_blank" rel="noopener" href="https://www.nowcoder.com/feed/main/detail/ebd659f61ec743d89c402d24311ca250">https://www.nowcoder.com/feed/main/detail/ebd659f61ec743d89c402d24311ca250</a><br>来源：牛客网</p>
 
 
@@ -229,7 +280,8 @@
       <div class="header"><span>分享文章</span></div>
       <div class="body">
         <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://zane-jiang.github.io/notebooks/AI_interview/nk01(tx-network)" /></div>
-        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://zane-jiang.github.io/notebooks/AI_interview/nk01(tx-network)&title=nk01(tx-network) - Zane Jiang&summary=1.5层网络分别是什么，讲讲每层什么协议，有什么东西2.MTU包含哪些层的数据，大小一般多大怎么计算3.MTU和MSS区别4.TCP怎么保证可靠的6.建连和断连是怎么样7.为什么挥手四次要比握手多一次8.挥手并不是一定得四次，能在更少..."><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=nk01(tx-network) - Zane Jiang&amp;body=https://zane-jiang.github.io/notebooks/AI_interview/nk01(tx-network)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://zane-jiang.github.io/notebooks/AI_interview/nk01(tx-network)&title=nk01(tx-network) - Zane Jiang&summary=1.5层网络分别是什么，讲讲每层什么协议，有什么东西2.MTU包含哪些层的数据，大小一般多大怎么计算3.MTU和MSS区别4.TCP怎么保证可靠的13.你作为一个一端的程序，是怎么知道是网络拥塞还是是链路丢包的
+27.k个一组翻转链表..."><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=nk01(tx-network) - Zane Jiang&amp;body=https://zane-jiang.github.io/notebooks/AI_interview/nk01(tx-network)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
         
         <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
           <img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://zane-jiang.github.io/notebooks/AI_interview/nk01(tx-network)"/>

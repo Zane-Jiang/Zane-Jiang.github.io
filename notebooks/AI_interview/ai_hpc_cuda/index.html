@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.33.1" theme-name="Stellar" theme-version="1.33.1">
-  <link rel="canonical" href="https://zane-jiang.github.io/notebooks/AI_interview/tags/tencent/">
+  <link rel="canonical" href="https://zane-jiang.github.io/notebooks/AI_interview/ai_hpc_cuda/">
   
   <meta name="generator" content="Hexo 7.3.0">
   <meta http-equiv='x-dns-prefetch-control' content='on' />
@@ -17,23 +17,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
   <meta name="theme-color" content="#f9fafb">
-  <title>Zane Jiang</title>
+  <title>ai_hpc_cuda - Zane Jiang</title>
 
   
-    <meta property="og:type" content="website">
-<meta property="og:title" content="Zane Jiang">
-<meta property="og:url" content="https://zane-jiang.github.io/notebooks/AI_interview/tags/tencent/">
+    <meta name="description" content="Nvidia&#x2F;GPU&#x2F;CUDA相关：1.描述一下SM的结构，在写kernel的时候共享内存大小和寄存器文件数量需要注意吗？ SM是NVIDIA GPU的核心计算单元,包含 CUDA core，最核心的基本计算单元，处理整形和单精度浮点运算。 寄存器文件、 Warp Scheduler线程数调度器， 共享内存 L1cache 等   写kernel时共享内存大小和寄存器文件数量直">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ai_hpc_cuda">
+<meta property="og:url" content="https://zane-jiang.github.io/notebooks/AI_interview/ai_hpc_cuda/">
 <meta property="og:site_name" content="Zane Jiang">
+<meta property="og:description" content="Nvidia&#x2F;GPU&#x2F;CUDA相关：1.描述一下SM的结构，在写kernel的时候共享内存大小和寄存器文件数量需要注意吗？ SM是NVIDIA GPU的核心计算单元,包含 CUDA core，最核心的基本计算单元，处理整形和单精度浮点运算。 寄存器文件、 Warp Scheduler线程数调度器， 共享内存 L1cache 等   写kernel时共享内存大小和寄存器文件数量直">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://zane-jiang.github.io/images/avatar.jpg">
+<meta property="article:published_time" content="2025-08-23T08:38:26.000Z">
+<meta property="article:modified_time" content="2025-08-23T09:48:31.418Z">
 <meta property="article:author" content="Zane Jiang">
-<meta property="article:tag" content="OS">
+<meta property="article:tag" content="hpc">
+<meta property="article:tag" content="cuda">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://zane-jiang.github.io/images/avatar.jpg">
   
   
   
-  <meta name="keywords" content="OS">
+  <meta name="keywords" content=",">
 
   <!-- feed -->
   
@@ -45,12 +50,12 @@
 
   
 
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Website","@id":"https://zane-jiang.github.io","author":{"@type":"Person","name":"Zane Jiang","sameAs":[],"image":"/images/avatar.jpg"},"name":"Zane Jiang","description":"","url":"https://zane-jiang.github.io"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Website","@id":"https://zane-jiang.github.io/notebooks/AI_interview/ai_hpc_cuda/","author":{"@type":"Person","name":"Zane Jiang","sameAs":[],"image":"/images/avatar.jpg"},"name":"ai_hpc_cuda","description":"Nvidia&#x2F;GPU&#x2F;CUDA相关：1.描述一下SM的结构，在写kernel的时候共享内存大小和寄存器文件数量需要注意吗？\nSM是NVIDIA GPU的核心计算单元,包含\nCUDA core，最核心的基本计算单元，处理整形和单精度浮点运算。\n寄存器文件、\nWarp Scheduler线程数调度器，\n共享内存\nL1cache\n等\n\n\n写kernel时共享内存大小和寄存器文件...","url":"https://zane-jiang.github.io/notebooks/AI_interview/ai_hpc_cuda/","keywords":"OS"}</script>
   
 </head>
 <body>
 
-<div class="l_body index" id="start" layout="notes" type="undefined" ><aside class="l_left"><div class="sidebg"></div><div class="leftbar-container">
+<div class="l_body content" id="start" layout="page" type="tech" ><aside class="l_left"><div class="sidebg"></div><div class="leftbar-container">
 
 
 <header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/images/avatar.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main">Zane Jiang</div><div class="sub cap">My notebooks & blog</div></a></div></header>
@@ -185,7 +190,7 @@
   <div class="tag-subtree leaf-tag expanded" data-tag="tencent">
     
   
-  <a class="link active" href="/notebooks/AI_interview/tags/tencent/">
+  <a class="link" href="/notebooks/AI_interview/tags/tencent/">
     <span class="toc-text">
       
         
@@ -209,50 +214,182 @@
 <footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/Zane-Jiang" target="_blank" rel="external nofollow noopener noreferrer"><img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/08a41b181ce68.svg"/></a></div></footer>
 </div></aside><div class="l_main" id="main">
 
-<header class="header mobile-only"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/images/avatar.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main">Zane Jiang</div><div class="sub cap">My notebooks & blog</div></a></div></header>
 
-<div class="post-list post">
-  
-    <a
-      class="post-card post"
-      href="/notebooks/AI_interview/nk01(tx-network)/?tag=tencent"
-    >
-      
-<article class="md-text">
-  
-  <h2 class="post-title">nk01(tx-network)</h2>
-  <div class="excerpt">
-    <p>
-      
-        1.5层网络分别是什么，讲讲每层什么协议，有什么东西2.MTU包含哪些层的数据，大小一般多大怎么计算3.MTU和MSS区别4.TCP怎么保证可靠的13.你作为一个一端的程序，是怎么知道是网络拥塞还是是链路丢包的
-27.k个一组翻转链表
-作者：静静地看...
-      
-    </p>
-  </div>
-  <div class="meta cap">
-    
-    <span class="cap" id="post-meta">
-      <svg style="margin-bottom:2px" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M6.94 2c.416 0 .753.324.753.724v1.46c.668-.012 1.417-.012 2.26-.012h4.015c.842 0 1.591 0 2.259.013v-1.46c0-.4.337-.725.753-.725s.753.324.753.724V4.25c1.445.111 2.394.384 3.09 1.055c.698.67.982 1.582 1.097 2.972L22 9H2v-.724c.116-1.39.4-2.302 1.097-2.972c.697-.67 1.645-.944 3.09-1.055V2.724c0-.4.337-.724.753-.724"/><path fill="currentColor" d="M22 14v-2c0-.839-.004-2.335-.017-3H2.01c-.013.665-.01 2.161-.01 3v2c0 3.771 0 5.657 1.172 6.828C4.343 22 6.228 22 10 22h4c3.77 0 5.656 0 6.828-1.172C22 19.658 22 17.772 22 14" opacity=".5"/><path fill="currentColor" d="M18 17a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m-5 4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m-5 4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0"/></svg>
-      <time datetime="2025-08-23T08:37:39.504Z">2025-08-23</time>
-    </span>
-    
-      
-        <span class="cap breadcrumb" >
-          <span class="tag">network</span>
-        </span>
-      
-        <span class="cap breadcrumb" >
-          <span class="tag">tencent</span>
-        </span>
-      
-    
-  </div>
-</article>
 
-    </a>
-  
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span>
+<a class="cap breadcrumb" href="/notebooks/">笔记本</a>
+
+
+  <span class="sep"></span>
+  <a class="cap breadcrumb" href="/notebooks/AI_interview/">AI_interview</a>
+
 </div>
+<div class="flex-row" id="post-meta"><span class="text created">更新于：<time datetime="2025-08-23T09:48:31.418Z">2025-08-23</time></span><span class="sep updated"></span><span class="text updated">发布于：<time datetime="2025-08-23T08:38:26.000Z">2025-08-23</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>ai_hpc_cuda</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><h1 id="Nvidia-GPU-CUDA相关："><a href="#Nvidia-GPU-CUDA相关：" class="headerlink" title="Nvidia&#x2F;GPU&#x2F;CUDA相关："></a>Nvidia&#x2F;GPU&#x2F;CUDA相关：</h1><h2 id="1-描述一下SM的结构，在写kernel的时候共享内存大小和寄存器文件数量需要注意吗？"><a href="#1-描述一下SM的结构，在写kernel的时候共享内存大小和寄存器文件数量需要注意吗？" class="headerlink" title="1.描述一下SM的结构，在写kernel的时候共享内存大小和寄存器文件数量需要注意吗？"></a>1.描述一下SM的结构，在写kernel的时候共享内存大小和寄存器文件数量需要注意吗？</h2><blockquote>
+<p>SM是NVIDIA GPU的核心计算单元,包含</p>
+<p>CUDA core，最核心的基本计算单元，处理整形和单精度浮点运算。</p>
+<p>寄存器文件、</p>
+<p>Warp Scheduler线程数调度器，</p>
+<p>共享内存</p>
+<p>L1cache</p>
+<p>等</p>
+<p><img src="a7f859bdbba3e7492d28d18cd48d0761.png" alt="img"></p>
+</blockquote>
+<p>写kernel时共享内存大小和寄存器文件数量直接影响SM的<strong>活跃线程束数量（Occupancy）</strong>—-即SM上同时可执行的线程束数与最大可支持线程束数的比率。</p>
+<p><strong>共享内存大小</strong>：</p>
+<ul>
+<li><p><strong>注意</strong>：必须注意。共享内存是<strong>按块分配</strong>的有限资源。</p>
+</li>
+<li><p><strong>影响</strong>：每个块申请的共享内存越大，一个SM上能同时驻留的线程块就越少，会降低<strong>占用率（Occupancy）</strong>，可能影响性能。</p>
+</li>
+<li><p><strong>寄存器数量</strong>：</p>
+<ul>
+<li><strong>注意</strong>：必须注意。寄存器是<strong>按线程分配</strong>的有限资源。</li>
+<li><strong>影响</strong>：<ul>
+<li>每个线程使用的寄存器越多，一个SM上能同时驻留的线程就越少，同样会降低占用率。</li>
+<li>寄存器使用过多会导致<strong>寄存器溢出（Register Spilling）</strong>，编译器被迫将变量存储到慢速的全局内存中，严重损害性能。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="2-共享内存和寄存器分别应该存放哪些数据，其用量与SM上活跃的线程块的关系。"><a href="#2-共享内存和寄存器分别应该存放哪些数据，其用量与SM上活跃的线程块的关系。" class="headerlink" title="2.共享内存和寄存器分别应该存放哪些数据，其用量与SM上活跃的线程块的关系。"></a>2.共享内存和寄存器分别应该存放哪些数据，其用量与SM上活跃的线程块的关系。</h2><p><strong>共享内存</strong></p>
+<p>从全局内存预加载的数据块、中间计算结果（如规约运算的局部和）</p>
+<p>作用：协作、缓存、通信</p>
+<p><strong>寄存器</strong></p>
+<p>线程私有的局部数据</p>
+<p>作用：私有性、高性能</p>
+<p><strong>关系</strong></p>
+<p>SM上的活跃线程块数量同时受<strong>共享内存总量</strong>和<strong>寄存器总量</strong>的<strong>硬性约束</strong>，最终的实际数量是以下三个计算结果中的<strong>最小值</strong>：</p>
+<ol>
+<li>SM支持的最大线程块数（架构限制）。</li>
+<li><code>SM共享内存总量 / 每块申请的共享内存大小</code>。</li>
+<li><code>SM寄存器总量 / (每线程寄存器数量 * 每块线程数)</code>。</li>
+</ol>
+<h2 id="3-bank冲突是什么？描述具体结构，如何解决？"><a href="#3-bank冲突是什么？描述具体结构，如何解决？" class="headerlink" title="3.bank冲突是什么？描述具体结构，如何解决？"></a>3.bank冲突是什么？描述具体结构，如何解决？</h2><h3 id="Bank冲突"><a href="#Bank冲突" class="headerlink" title="Bank冲突"></a>Bank冲突</h3><p>为了提供高带宽，共享内存被物理上划分为若干个（通常是<strong>32个</strong>，与Warp大小对应）同样大小的、能同时被访问的内存模块，这些模块称为 <strong>Bank</strong>。</p>
+<ul>
+<li><p><strong>理想情况（无冲突）</strong>： 如果一个Warp中的32个线程分别访问32个<strong>不同Bank</strong>中的地址（或者访问<strong>同一个Bank中的完全相同的一个地址</strong>，即广播），那么所有这些访问都可以在一个时钟周期内一次性完成。</p>
+</li>
+<li><p><strong>冲突情况</strong>： 如果一个Warp中的多个线程访问了<strong>同一个Bank</strong>中的<strong>不同地址</strong>，就会发生Bank冲突。硬件必须将这些冲突的访问拆分成多个没有冲突的周期依次执行。有<code>n</code>个线程访问同一个Bank的不同地址，就需要<code>n</code>个时钟周期来完成原本一个周期就能完成的工作。</p>
+</li>
+</ul>
+<h4 id="Bank编号"><a href="#Bank编号" class="headerlink" title="Bank编号"></a>Bank编号</h4><p>Bank编号 &#x3D; (地址字节偏移量 &#x2F; 4字节) % 32</p>
+<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p>核心思路是：<strong>改变数据在共享内存中的布局或访问模式，确保一个Warp内的线程访问不同的Bank。</strong></p>
+<h4 id="方法一：内存填充（Memory-Padding）"><a href="#方法一：内存填充（Memory-Padding）" class="headerlink" title="方法一：内存填充（Memory Padding）"></a>方法一：内存填充（Memory Padding）</h4><ul>
+<li><strong>问题</strong>： 在操作二维数组（例如矩阵）的Tile时，如果数组的宽度是Bank数量（32）的整数倍，那么同一行中相邻的元素会位于不同的Bank，但<strong>同一列中相邻的元素</strong>会因为固定的步长而落在<strong>同一个Bank</strong>里。当线程按列读取时，就会导致严重的Bank冲突。</li>
+<li><strong>解决方案</strong>： 在声明共享内存数组时，<strong>人为地给每一行增加一些多余的“填充”元素</strong>，使实际的行长（Pitch）不再是32的整数倍。</li>
+</ul>
+<p><strong>示例：一个32x32的Tile</strong></p>
+<p>cpp</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 可能产生Bank冲突的声明</span><br><span class="line">__shared__ float tile[32][32];</span><br><span class="line"></span><br><span class="line">// 使用填充避免Bank冲突的声明（例如，多加1个元素）</span><br><span class="line">__shared__ float tile_padded[32][33]; // 33不再是32的因数</span><br></pre></td></tr></table></figure>
+
+<p>这样，原来在同一列上的元素 <code>tile[0][0]</code>, <code>tile[1][0]</code>, <code>tile[2][0]</code>… 现在变成了 <code>tile_padded[0][0]</code>, <code>tile_padded[1][0]</code>, <code>tile_padded[2][0]</code>…。<br>计算它们的Bank编号：</p>
+<ul>
+<li><code>(0 / 4) % 32 = 0</code></li>
+<li><code>( (1 * 33 * 4) / 4 ) % 32 = (33) % 32 = 1</code></li>
+<li><code>( (2 * 33 * 4) / 4 ) % 32 = (66) % 32 = 2</code><br>它们被巧妙地分散到了不同的Bank中，从而避免了冲突。</li>
+</ul>
+<h4 id="方法二：改变访问模式或算法"><a href="#方法二：改变访问模式或算法" class="headerlink" title="方法二：改变访问模式或算法"></a>方法二：改变访问模式或算法</h4><p>设计核函数时，尽量让一个Warp内的线程访问<strong>连续</strong>的共享内存地址。因为连续地址通常映射到不同的Bank，这是最友好的访问模式。</p>
+<h4 id="方法三：使用不同的广播机制"><a href="#方法三：使用不同的广播机制" class="headerlink" title="方法三：使用不同的广播机制"></a>方法三：使用不同的广播机制</h4><p>如果确实需要让多个线程读取同一个值，应尽量确保它们访问的是<strong>完全相同的地址</strong>，这会触发广播机制，在一个周期内完成操作，而不是产生冲突。</p>
+<h2 id="4-说一下分支冲突（线程束分化），如果warp内有冲突，部分符合if条件，部分符合else条件，是否需要等待？"><a href="#4-说一下分支冲突（线程束分化），如果warp内有冲突，部分符合if条件，部分符合else条件，是否需要等待？" class="headerlink" title="4.说一下分支冲突（线程束分化），如果warp内有冲突，部分符合if条件，部分符合else条件，是否需要等待？"></a>4.说一下分支冲突（线程束分化），如果warp内有冲突，部分符合if条件，部分符合else条件，是否需要等待？</h2><p>分支冲突发生在<strong>同一个Warp内部</strong>的线程执行了<strong>不同的控制流路径</strong>时。例如，部分线程满足<code>if</code>条件，而另一部分线程满足<code>else</code>条件。</p>
+<ol>
+<li><strong>串行化执行</strong>： GPU的Warp调度器会让Warp<strong>先执行所有走<code>if</code>路径的线程</strong>。此时，那些本该走<code>else</code>路径的线程在这个阶段是<strong>被禁用（masked out）</strong> 的，它们不会执行任何操作，但必须<strong>等待</strong>。</li>
+<li><strong>再次执行</strong>： 当<code>if</code>路径执行完毕后，调度器会再让Warp<strong>执行所有走<code>else</code>路径的线程</strong>。同样，此时走<code>if</code>路径的线程被禁用并等待。</li>
+<li><strong>汇合后继续</strong>： 当所有不同的控制流路径都执行完毕后，Warp内的所有线程才会在<strong>汇合点（reconvergence point）</strong> 重新同步，并继续一起执行后续的相同指令。</li>
+</ol>
+<p><strong>因此，分支冲突的性能代价是：执行时间变成了所有不同路径执行时间的总和，而不是其中最长路径的时间。</strong></p>
+<p>怎样避免线程束分化</p>
+<p>核心思想：<strong>同一个Warp内的数据具有相同的特性，从而执行相同的指令路径。</strong></p>
+<p> 预处理数据，使同一Warp数据特征一致</p>
+<p>谓词执行   用条件赋值 <code>?:</code> 替代短小的 <code>if-else</code></p>
+<p>项目中用过TensorCore吗？了解TensorCore的原理吗？</p>
+<p>为什么用float4向量来存取数据？有什么好处？</p>
+<p>为什么用双缓冲优化？了解cuda流和cuda graph吗？</p>
+<p>除了MPI，有知道现在用的更多的GPU通信库吗？</p>
+<p>在Nsight Computing中，经常关注的与内存相关的指标。有关注L1 Cache命中率吗？</p>
+<p>GPU指令集优化方面了解吗？有做过PTX相关的优化吗？</p>
+<p>GEMM是计算密集型还是访存密集型算子？</p>
+<p>知道cutlass中如何对GEMM进行优化的吗？</p>
+<h1 id="训练推理"><a href="#训练推理" class="headerlink" title="训练推理"></a>训练推理</h1><p>了解Transformer吗？底层是什么结构？cuda中如何优化？<br>说一下你对大模型的理解。<br>cuda中如何写Softmax？某个参数过大如何解决？<br>Dropout和BatchNorm在训练和推理时有什么区别？<br>说一下你了解的无监督学习算法。<br>知道Faster Transformer吗？有了解如何实现的吗？<br>Paged Attention有了解吗？<br>知道TensorRT吗？部署过推理模型吗？</p>
+
+
+  <div class="tag-list">
+    
+      
+      <a class="tag" href="/notebooks/AI_interview/tags/hpc/">hpc</a>
+    
+      
+      <a class="tag" href="/notebooks/AI_interview/tags/cuda/">cuda</a>
+    
+  </div>
+
+</article>
+<div class="article-footer">
+    <section id="references">
+      <div class="header"><span>参考资料</span></div>
+      <div class="body">
+        <ul>
+        <li class="post-title">
+          <p>回答基于AI生成并修改</p>
+
+        </li>
+        
+        <li class="post-title">
+          <p>问题来自 <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/663917237">AI&#x2F;HPC面试问题整理</a></p>
+
+        </li>
+        </ul>
+      </div>
+    </section>
+    
+
+
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://zane-jiang.github.io/notebooks/AI_interview/ai_hpc_cuda" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://zane-jiang.github.io/notebooks/AI_interview/ai_hpc_cuda&title=ai_hpc_cuda - Zane Jiang&summary=Nvidia&#x2F;GPU&#x2F;CUDA相关：1.描述一下SM的结构，在写kernel的时候共享内存大小和寄存器文件数量需要注意吗？
+SM是NVIDIA GPU的核心计算单元,包含
+CUDA core，最核心的基本计算单元，..."><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=ai_hpc_cuda - Zane Jiang&amp;body=https://zane-jiang.github.io/notebooks/AI_interview/ai_hpc_cuda"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://zane-jiang.github.io/notebooks/AI_interview/ai_hpc_cuda"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+
+
+  <div class="related-wrap md-text" id="comments">
+    <section class='header cmt-title cap theme'>
+      <p>快来参与讨论吧~</p>
+
+    </section>
+    <section class='body cmt-body giscus'>
+      
+
+<svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg>
+
+<div id="giscus" src="https://giscus.app/client.js" data-repo="Zane-Jiang/hexo_blog_comments_repo" data-repo-id="R_kgDOPOKoVA" data-category="Announcements" data-category-id="DIC_kwDOPOKoVM4CtFQv" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous"></div>
+
+    </section>
+  </div>
 
 
 
@@ -266,7 +403,8 @@
 </div></footer>
 <div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
 <div class="widgets">
-<widget class="widget-wrapper recent post-list"><div class="widget-header dis-select"><span class="name">最近更新</span></div><div class="widget-body fs14"><a class="item title" href="/notebooks/AI_interview/ai_hpc_cuda/"><span class="title">ai_hpc_cuda</span></a><a class="item title" href="/notebooks/AI_interview/nk01(tx-network)/"><span class="title">nk01(tx-network)</span></a></div></widget>
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Nvidia-GPU-CUDA%E7%9B%B8%E5%85%B3%EF%BC%9A"><span class="toc-text">Nvidia&#x2F;GPU&#x2F;CUDA相关：</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%8F%8F%E8%BF%B0%E4%B8%80%E4%B8%8BSM%E7%9A%84%E7%BB%93%E6%9E%84%EF%BC%8C%E5%9C%A8%E5%86%99kernel%E7%9A%84%E6%97%B6%E5%80%99%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98%E5%A4%A7%E5%B0%8F%E5%92%8C%E5%AF%84%E5%AD%98%E5%99%A8%E6%96%87%E4%BB%B6%E6%95%B0%E9%87%8F%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E5%90%97%EF%BC%9F"><span class="toc-text">1.描述一下SM的结构，在写kernel的时候共享内存大小和寄存器文件数量需要注意吗？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98%E5%92%8C%E5%AF%84%E5%AD%98%E5%99%A8%E5%88%86%E5%88%AB%E5%BA%94%E8%AF%A5%E5%AD%98%E6%94%BE%E5%93%AA%E4%BA%9B%E6%95%B0%E6%8D%AE%EF%BC%8C%E5%85%B6%E7%94%A8%E9%87%8F%E4%B8%8ESM%E4%B8%8A%E6%B4%BB%E8%B7%83%E7%9A%84%E7%BA%BF%E7%A8%8B%E5%9D%97%E7%9A%84%E5%85%B3%E7%B3%BB%E3%80%82"><span class="toc-text">2.共享内存和寄存器分别应该存放哪些数据，其用量与SM上活跃的线程块的关系。</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-bank%E5%86%B2%E7%AA%81%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F%E6%8F%8F%E8%BF%B0%E5%85%B7%E4%BD%93%E7%BB%93%E6%9E%84%EF%BC%8C%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%EF%BC%9F"><span class="toc-text">3.bank冲突是什么？描述具体结构，如何解决？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Bank%E5%86%B2%E7%AA%81"><span class="toc-text">Bank冲突</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Bank%E7%BC%96%E5%8F%B7"><span class="toc-text">Bank编号</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3"><span class="toc-text">解决</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E4%B8%80%EF%BC%9A%E5%86%85%E5%AD%98%E5%A1%AB%E5%85%85%EF%BC%88Memory-Padding%EF%BC%89"><span class="toc-text">方法一：内存填充（Memory Padding）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E4%BA%8C%EF%BC%9A%E6%94%B9%E5%8F%98%E8%AE%BF%E9%97%AE%E6%A8%A1%E5%BC%8F%E6%88%96%E7%AE%97%E6%B3%95"><span class="toc-text">方法二：改变访问模式或算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E4%B8%89%EF%BC%9A%E4%BD%BF%E7%94%A8%E4%B8%8D%E5%90%8C%E7%9A%84%E5%B9%BF%E6%92%AD%E6%9C%BA%E5%88%B6"><span class="toc-text">方法三：使用不同的广播机制</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E8%AF%B4%E4%B8%80%E4%B8%8B%E5%88%86%E6%94%AF%E5%86%B2%E7%AA%81%EF%BC%88%E7%BA%BF%E7%A8%8B%E6%9D%9F%E5%88%86%E5%8C%96%EF%BC%89%EF%BC%8C%E5%A6%82%E6%9E%9Cwarp%E5%86%85%E6%9C%89%E5%86%B2%E7%AA%81%EF%BC%8C%E9%83%A8%E5%88%86%E7%AC%A6%E5%90%88if%E6%9D%A1%E4%BB%B6%EF%BC%8C%E9%83%A8%E5%88%86%E7%AC%A6%E5%90%88else%E6%9D%A1%E4%BB%B6%EF%BC%8C%E6%98%AF%E5%90%A6%E9%9C%80%E8%A6%81%E7%AD%89%E5%BE%85%EF%BC%9F"><span class="toc-text">4.说一下分支冲突（线程束分化），如果warp内有冲突，部分符合if条件，部分符合else条件，是否需要等待？</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%AD%E7%BB%83%E6%8E%A8%E7%90%86"><span class="toc-text">训练推理</span></a></li></ol></div><div class="widget-footer"><a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/><path d="M7 3.338A9.95 9.95 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5"/></g></svg><span>回到顶部</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M8 10.5h8M8 14h5.5M17 3.338A9.95 9.95 0 0 0 12 2C6.477 2 2 6.477 2 12c0 1.6.376 3.112 1.043 4.453c.178.356.237.763.134 1.148l-.595 2.226a1.3 1.3 0 0 0 1.591 1.592l2.226-.596a1.63 1.63 0 0 1 1.149.133A9.96 9.96 0 0 0 12 22c5.523 0 10-4.477 10-10c0-1.821-.487-3.53-1.338-5"/></svg><span>参与讨论</span></a></div></widget>
 </div></aside><div class='float-panel'>
   <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
@@ -761,6 +899,30 @@
 
 
 <!-- optional -->
+
+  <script type="module">
+  const el = document.querySelector('#comments #giscus');
+  util.viewportLazyload(el, load_discus, false);
+
+  function load_discus() {
+    if (!el) return;
+    try {
+        el.innerHTML = '';
+      } catch (error) {
+        console.error(error);
+      }
+      const script = document.createElement('script');
+      script.async = true;
+      for (const key of Object.keys(el.attributes)) {
+        const attr = el.attributes[key];
+        if (['class', 'id'].includes(attr.name) === false) {
+          script.setAttribute(attr.name, attr.value);
+        }
+      }
+      el.appendChild(script);
+  }
+</script>
+
 
 
 
