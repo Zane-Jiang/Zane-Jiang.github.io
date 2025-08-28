@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.33.1" theme-name="Stellar" theme-version="1.33.1">
-  <link rel="canonical" href="https://zane-jiang.github.io/notebooks/compiler_kernel/Linux%20kernel/Neoperf-study/">
+  <link rel="canonical" href="https://zane-jiang.github.io/notebooks/Interview/tags/cpp/">
   
   <meta name="generator" content="Hexo 7.3.0">
   <meta http-equiv='x-dns-prefetch-control' content='on' />
@@ -17,31 +17,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
   <meta name="theme-color" content="#f9fafb">
-  <title>Neoperf_study - Zane Jiang</title>
+  <title>Zane Jiang</title>
 
   
-    <meta name="description" content="NeoPerf study 本文主要为学习论文《NeoMem: Hardware&#x2F;Software Co-Design for CXL-Native Memory Tiering》的工作，分为三个部分，用户态、内核以及FPGA部分，内核开源仓库地址为：  PKUZHOU&#x2F;linux  代码基于linux内核代码6.0开始修改。 由于初步探索linux内核代码，所以没有按照自顶向">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Neoperf_study">
-<meta property="og:url" content="https://zane-jiang.github.io/notebooks/compiler_kernel/Linux%20kernel/Neoperf-study/">
+    <meta property="og:type" content="website">
+<meta property="og:title" content="Zane Jiang">
+<meta property="og:url" content="https://zane-jiang.github.io/notebooks/Interview/tags/cpp/">
 <meta property="og:site_name" content="Zane Jiang">
-<meta property="og:description" content="NeoPerf study 本文主要为学习论文《NeoMem: Hardware&#x2F;Software Co-Design for CXL-Native Memory Tiering》的工作，分为三个部分，用户态、内核以及FPGA部分，内核开源仓库地址为：  PKUZHOU&#x2F;linux  代码基于linux内核代码6.0开始修改。 由于初步探索linux内核代码，所以没有按照自顶向">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://zane-jiang.github.io/images/avatar.jpg">
-<meta property="article:published_time" content="2024-11-28T11:55:34.000Z">
-<meta property="article:modified_time" content="2025-07-18T12:01:22.791Z">
 <meta property="article:author" content="Zane Jiang">
-<meta property="article:tag" content="CXL">
-<meta property="article:tag" content="kernel">
-<meta property="article:tag" content="neoprof">
-<meta property="article:tag" content="Sofrware hardware co-design">
-<meta property="article:tag" content="driver">
+<meta property="article:tag" content="OS">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://zane-jiang.github.io/images/avatar.jpg">
   
   
   
-  <meta name="keywords" content=",,,,">
+  <meta name="keywords" content="OS">
 
   <!-- feed -->
   
@@ -53,12 +45,12 @@
 
   
 
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Website","@id":"https://zane-jiang.github.io/notebooks/compiler_kernel/Linux%20kernel/Neoperf-study/","author":{"@type":"Person","name":"Zane Jiang","sameAs":[],"image":"/images/avatar.jpg"},"name":"Neoperf_study","description":"NeoPerf study\n本文主要为学习论文《NeoMem: Hardware&#x2F;Software Co-Design for CXL-Native Memory Tiering》的工作，分为三个部分，用户态、内核以及FPGA部分，内核开源仓库地址为：  PKUZHOU&#x2F;linux\n\n代码基于linux内核代码6.0开始修改。\n由于初步探索linux内核代码，所以没有按照...","url":"https://zane-jiang.github.io/notebooks/compiler_kernel/Linux%20kernel/Neoperf-study/","keywords":"OS"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Website","@id":"https://zane-jiang.github.io","author":{"@type":"Person","name":"Zane Jiang","sameAs":[],"image":"/images/avatar.jpg"},"name":"Zane Jiang","description":"","url":"https://zane-jiang.github.io"}</script>
   
 </head>
 <body>
 
-<div class="l_body content" id="start" layout="page" type="tech" ><aside class="l_left"><div class="sidebg"></div><div class="leftbar-container">
+<div class="l_body index" id="start" layout="notes" type="undefined" ><aside class="l_left"><div class="sidebg"></div><div class="leftbar-container">
 
 
 <header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/images/avatar.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main">Zane Jiang</div><div class="sub cap">My notebooks & blog</div></a></div></header>
@@ -68,7 +60,7 @@
 <nav class="menu dis-select"><a class="nav-item" title="Blog" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item active" title="notebooks" href="/notebooks/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.25 4.48v3.057c0 .111 0 .27.02.406a.936.936 0 0 0 .445.683a.96.96 0 0 0 .783.072c.13-.04.272-.108.378-.159L17 8.005l1.124.534c.106.05.248.119.378.16a.958.958 0 0 0 .783-.073a.936.936 0 0 0 .444-.683c.021-.136.021-.295.021-.406V3.031c.113-.005.224-.01.332-.013C21.154 2.98 22 3.86 22 4.933v11.21c0 1.112-.906 2.01-2.015 2.08c-.97.06-2.108.179-2.985.41c-1.082.286-1.99 1.068-3.373 1.436c-.626.167-1.324.257-1.627.323V5.174c.32-.079 1.382-.203 1.674-.371c.184-.107.377-.216.576-.323m5.478 8.338a.75.75 0 0 1-.546.91l-4 1a.75.75 0 0 1-.364-1.456l4-1a.75.75 0 0 1 .91.546" clip-rule="evenodd"/><path fill="currentColor" d="M18.25 3.151c-.62.073-1.23.18-1.75.336a8.2 8.2 0 0 0-.75.27v3.182l.75-.356l.008-.005a1.13 1.13 0 0 1 .492-.13c.047 0 .094.004.138.01c.175.029.315.1.354.12l.009.005l.749.356V3.647z"/><path fill="currentColor" d="M12 5.214c-.334-.064-1.057-.161-1.718-.339C8.938 4.515 8.05 3.765 7 3.487c-.887-.234-2.041-.352-3.018-.412C2.886 3.007 2 3.9 2 4.998v11.146c0 1.11.906 2.01 2.015 2.079c.97.06 2.108.179 2.985.41c.486.129 1.216.431 1.873.726c1.005.451 2.052.797 3.127 1.034z" opacity=".5"/><path fill="currentColor" d="M4.273 12.818a.75.75 0 0 1 .91-.545l4 1a.75.75 0 1 1-.365 1.455l-4-1a.75.75 0 0 1-.545-.91m.909-4.545a.75.75 0 1 0-.364 1.455l4 1a.75.75 0 0 0 .364-1.455z"/></svg></a><a class="nav-item" title="Project" href="/project/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none"><path stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M19.647 15.536V8c0-1.886 0-2.828-.586-3.414C18.476 4 17.533 4 15.647 4H12m7.647 11.536l1.744 1.8l.088.092a2 2 0 0 1 .52 1.284l.001.127c0 .15 0 .224-.004.287a2 2 0 0 1-1.87 1.87a5 5 0 0 1-.287.004H4.161c-.15 0-.224 0-.287-.004a2 2 0 0 1-1.87-1.87C2 19.063 2 18.988 2 18.84l.001-.127a2 2 0 0 1 .52-1.284l.088-.092l1.744-1.8m15.294 0h-2.611m-12.683 0V8c0-1.886 0-2.828.586-3.414S6.467 4 8.353 4m-4 11.536H13M9.5 18.5h5"/><path fill="currentColor" d="M12.75 6.75a.75.75 0 1 1-1.5 0a.75.75 0 0 1 1.5 0"/></g></svg></a></nav>
 </div>
 <div class="widgets">
-<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" data-filter="/notebooks/compiler_kernel" placeholder="在 compiler_kernel 中搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" data-filter="/notebooks/Interview" placeholder="在 Interview 中搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
 
 
 
@@ -95,7 +87,7 @@
   <div class="tag-subtree leaf-tag expanded" data-tag="">
     
   
-  <a class="link" href="/notebooks/compiler_kernel/">
+  <a class="link" href="/notebooks/Interview/">
     <span class="toc-text">
       
         所有笔记
@@ -115,90 +107,15 @@
   
   
   
-  <div class="tag-subtree leaf-tag expanded" data-tag="cxl">
+  <div class="tag-subtree parent-tag expanded" data-tag="c++">
     
   
-  <a class="link" href="/notebooks/compiler_kernel/tags/cxl/">
+  <a class="link" href="/notebooks/Interview/tags/c++/">
     <span class="toc-text">
       
         
         <span class="tagcon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" d="m14.092 10.75l-.75 2.5H9.908l.75-2.5z"/><path fill="currentColor" fill-rule="evenodd" d="M3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465C22 19.072 22 16.714 22 12s0-7.071-1.465-8.536C19.072 2 16.714 2 12 2S4.929 2 3.464 3.464m7.752 2.818a.75.75 0 0 1 .502.934l-.61 2.034h3.434l.74-2.465a.75.75 0 0 1 1.436.43l-.61 2.035H18a.75.75 0 0 1 0 1.5h-2.342l-.75 2.5H17a.75.75 0 0 1 0 1.5h-2.542l-.74 2.465a.75.75 0 0 1-1.436-.43l.61-2.035H9.458l-.74 2.465a.75.75 0 1 1-1.436-.43l.61-2.035H6a.75.75 0 0 1 0-1.5h2.342l.75-2.5H7a.75.75 0 0 1 0-1.5h2.542l.74-2.465a.75.75 0 0 1 .934-.503" clip-rule="evenodd"/></svg></span>
-        CXL
-      
-    </span>
-    <span class="toc-text tag-switcher-wrapper">
-      <span class="tag-switcher" />
-    </span>
-  </a>
-
-    
-  </div>
-
-      
-        
-  
-  
-  
-  
-  <div class="tag-subtree leaf-tag expanded" data-tag="driver">
-    
-  
-  <a class="link" href="/notebooks/compiler_kernel/tags/driver/">
-    <span class="toc-text">
-      
-        
-        <span class="tagcon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" d="m14.092 10.75l-.75 2.5H9.908l.75-2.5z"/><path fill="currentColor" fill-rule="evenodd" d="M3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465C22 19.072 22 16.714 22 12s0-7.071-1.465-8.536C19.072 2 16.714 2 12 2S4.929 2 3.464 3.464m7.752 2.818a.75.75 0 0 1 .502.934l-.61 2.034h3.434l.74-2.465a.75.75 0 0 1 1.436.43l-.61 2.035H18a.75.75 0 0 1 0 1.5h-2.342l-.75 2.5H17a.75.75 0 0 1 0 1.5h-2.542l-.74 2.465a.75.75 0 0 1-1.436-.43l.61-2.035H9.458l-.74 2.465a.75.75 0 1 1-1.436-.43l.61-2.035H6a.75.75 0 0 1 0-1.5h2.342l.75-2.5H7a.75.75 0 0 1 0-1.5h2.542l.74-2.465a.75.75 0 0 1 .934-.503" clip-rule="evenodd"/></svg></span>
-        driver
-      
-    </span>
-    <span class="toc-text tag-switcher-wrapper">
-      <span class="tag-switcher" />
-    </span>
-  </a>
-
-    
-  </div>
-
-      
-        
-  
-  
-  
-  
-  <div class="tag-subtree leaf-tag expanded" data-tag="kernel">
-    
-  
-  <a class="link" href="/notebooks/compiler_kernel/tags/kernel/">
-    <span class="toc-text">
-      
-        
-        <span class="tagcon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" d="m14.092 10.75l-.75 2.5H9.908l.75-2.5z"/><path fill="currentColor" fill-rule="evenodd" d="M3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465C22 19.072 22 16.714 22 12s0-7.071-1.465-8.536C19.072 2 16.714 2 12 2S4.929 2 3.464 3.464m7.752 2.818a.75.75 0 0 1 .502.934l-.61 2.034h3.434l.74-2.465a.75.75 0 0 1 1.436.43l-.61 2.035H18a.75.75 0 0 1 0 1.5h-2.342l-.75 2.5H17a.75.75 0 0 1 0 1.5h-2.542l-.74 2.465a.75.75 0 0 1-1.436-.43l.61-2.035H9.458l-.74 2.465a.75.75 0 1 1-1.436-.43l.61-2.035H6a.75.75 0 0 1 0-1.5h2.342l.75-2.5H7a.75.75 0 0 1 0-1.5h2.542l.74-2.465a.75.75 0 0 1 .934-.503" clip-rule="evenodd"/></svg></span>
-        kernel
-      
-    </span>
-    <span class="toc-text tag-switcher-wrapper">
-      <span class="tag-switcher" />
-    </span>
-  </a>
-
-    
-  </div>
-
-      
-        
-  
-  
-  
-  
-  <div class="tag-subtree parent-tag expanded" data-tag="linux">
-    
-  
-  <a class="link" href="/notebooks/compiler_kernel/tags/linux/">
-    <span class="toc-text">
-      
-        
-        <span class="tagcon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" d="m14.092 10.75l-.75 2.5H9.908l.75-2.5z"/><path fill="currentColor" fill-rule="evenodd" d="M3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465C22 19.072 22 16.714 22 12s0-7.071-1.465-8.536C19.072 2 16.714 2 12 2S4.929 2 3.464 3.464m7.752 2.818a.75.75 0 0 1 .502.934l-.61 2.034h3.434l.74-2.465a.75.75 0 0 1 1.436.43l-.61 2.035H18a.75.75 0 0 1 0 1.5h-2.342l-.75 2.5H17a.75.75 0 0 1 0 1.5h-2.542l-.74 2.465a.75.75 0 0 1-1.436-.43l.61-2.035H9.458l-.74 2.465a.75.75 0 1 1-1.436-.43l.61-2.035H6a.75.75 0 0 1 0-1.5h2.342l.75-2.5H7a.75.75 0 0 1 0-1.5h2.542l.74-2.465a.75.75 0 0 1 .934-.503" clip-rule="evenodd"/></svg></span>
-        Linux
+        C++
       
     </span>
     <span class="toc-text tag-switcher-wrapper">
@@ -214,40 +131,15 @@
   
   
   
-  <div class="tag-subtree leaf-tag expanded" data-tag="linux/proxmox-boot-tool">
+  <div class="tag-subtree leaf-tag expanded" data-tag="c++/qt，iset">
     
   
-  <a class="link" href="/notebooks/compiler_kernel/tags/linux/proxmox-boot-tool/">
+  <a class="link" href="/notebooks/Interview/tags/c++/qt%EF%BC%8Ciset/">
     <span class="toc-text" style="padding-left: 0.875rem;">
       
         
         <span class="tagcon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" d="m14.092 10.75l-.75 2.5H9.908l.75-2.5z"/><path fill="currentColor" fill-rule="evenodd" d="M3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465C22 19.072 22 16.714 22 12s0-7.071-1.465-8.536C19.072 2 16.714 2 12 2S4.929 2 3.464 3.464m7.752 2.818a.75.75 0 0 1 .502.934l-.61 2.034h3.434l.74-2.465a.75.75 0 0 1 1.436.43l-.61 2.035H18a.75.75 0 0 1 0 1.5h-2.342l-.75 2.5H17a.75.75 0 0 1 0 1.5h-2.542l-.74 2.465a.75.75 0 0 1-1.436-.43l.61-2.035H9.458l-.74 2.465a.75.75 0 1 1-1.436-.43l.61-2.035H6a.75.75 0 0 1 0-1.5h2.342l.75-2.5H7a.75.75 0 0 1 0-1.5h2.542l.74-2.465a.75.75 0 0 1 .934-.503" clip-rule="evenodd"/></svg></span>
-        proxmox-boot-tool
-      
-    </span>
-    <span class="toc-text tag-switcher-wrapper">
-      <span class="tag-switcher" />
-    </span>
-  </a>
-
-    
-  </div>
-
-  
-    
-  
-  
-  
-  
-  <div class="tag-subtree leaf-tag expanded" data-tag="linux/script">
-    
-  
-  <a class="link" href="/notebooks/compiler_kernel/tags/linux/script/">
-    <span class="toc-text" style="padding-left: 0.875rem;">
-      
-        
-        <span class="tagcon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" d="m14.092 10.75l-.75 2.5H9.908l.75-2.5z"/><path fill="currentColor" fill-rule="evenodd" d="M3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465C22 19.072 22 16.714 22 12s0-7.071-1.465-8.536C19.072 2 16.714 2 12 2S4.929 2 3.464 3.464m7.752 2.818a.75.75 0 0 1 .502.934l-.61 2.034h3.434l.74-2.465a.75.75 0 0 1 1.436.43l-.61 2.035H18a.75.75 0 0 1 0 1.5h-2.342l-.75 2.5H17a.75.75 0 0 1 0 1.5h-2.542l-.74 2.465a.75.75 0 0 1-1.436-.43l.61-2.035H9.458l-.74 2.465a.75.75 0 1 1-1.436-.43l.61-2.035H6a.75.75 0 0 1 0-1.5h2.342l.75-2.5H7a.75.75 0 0 1 0-1.5h2.542l.74-2.465a.75.75 0 0 1 .934-.503" clip-rule="evenodd"/></svg></span>
-        script
+        Qt，iSet
       
     </span>
     <span class="toc-text tag-switcher-wrapper">
@@ -269,15 +161,15 @@
   
   
   
-  <div class="tag-subtree leaf-tag expanded" data-tag="llvm">
+  <div class="tag-subtree leaf-tag expanded" data-tag="cpp">
     
   
-  <a class="link" href="/notebooks/compiler_kernel/tags/llvm/">
+  <a class="link active" href="/notebooks/Interview/tags/cpp/">
     <span class="toc-text">
       
         
         <span class="tagcon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" d="m14.092 10.75l-.75 2.5H9.908l.75-2.5z"/><path fill="currentColor" fill-rule="evenodd" d="M3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465C22 19.072 22 16.714 22 12s0-7.071-1.465-8.536C19.072 2 16.714 2 12 2S4.929 2 3.464 3.464m7.752 2.818a.75.75 0 0 1 .502.934l-.61 2.034h3.434l.74-2.465a.75.75 0 0 1 1.436.43l-.61 2.035H18a.75.75 0 0 1 0 1.5h-2.342l-.75 2.5H17a.75.75 0 0 1 0 1.5h-2.542l-.74 2.465a.75.75 0 0 1-1.436-.43l.61-2.035H9.458l-.74 2.465a.75.75 0 1 1-1.436-.43l.61-2.035H6a.75.75 0 0 1 0-1.5h2.342l.75-2.5H7a.75.75 0 0 1 0-1.5h2.542l.74-2.465a.75.75 0 0 1 .934-.503" clip-rule="evenodd"/></svg></span>
-        LLVM
+        cpp
       
     </span>
     <span class="toc-text tag-switcher-wrapper">
@@ -294,15 +186,15 @@
   
   
   
-  <div class="tag-subtree leaf-tag expanded" data-tag="neoprof">
+  <div class="tag-subtree leaf-tag expanded" data-tag="cuda">
     
   
-  <a class="link" href="/notebooks/compiler_kernel/tags/neoprof/">
+  <a class="link" href="/notebooks/Interview/tags/cuda/">
     <span class="toc-text">
       
         
         <span class="tagcon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" d="m14.092 10.75l-.75 2.5H9.908l.75-2.5z"/><path fill="currentColor" fill-rule="evenodd" d="M3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465C22 19.072 22 16.714 22 12s0-7.071-1.465-8.536C19.072 2 16.714 2 12 2S4.929 2 3.464 3.464m7.752 2.818a.75.75 0 0 1 .502.934l-.61 2.034h3.434l.74-2.465a.75.75 0 0 1 1.436.43l-.61 2.035H18a.75.75 0 0 1 0 1.5h-2.342l-.75 2.5H17a.75.75 0 0 1 0 1.5h-2.542l-.74 2.465a.75.75 0 0 1-1.436-.43l.61-2.035H9.458l-.74 2.465a.75.75 0 1 1-1.436-.43l.61-2.035H6a.75.75 0 0 1 0-1.5h2.342l.75-2.5H7a.75.75 0 0 1 0-1.5h2.542l.74-2.465a.75.75 0 0 1 .934-.503" clip-rule="evenodd"/></svg></span>
-        neoprof
+        cuda
       
     </span>
     <span class="toc-text tag-switcher-wrapper">
@@ -319,15 +211,65 @@
   
   
   
-  <div class="tag-subtree leaf-tag expanded" data-tag="sofrware hardware co-design">
+  <div class="tag-subtree leaf-tag expanded" data-tag="hpc">
     
   
-  <a class="link" href="/notebooks/compiler_kernel/tags/sofrware%20hardware%20co-design/">
+  <a class="link" href="/notebooks/Interview/tags/hpc/">
     <span class="toc-text">
       
         
         <span class="tagcon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" d="m14.092 10.75l-.75 2.5H9.908l.75-2.5z"/><path fill="currentColor" fill-rule="evenodd" d="M3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465C22 19.072 22 16.714 22 12s0-7.071-1.465-8.536C19.072 2 16.714 2 12 2S4.929 2 3.464 3.464m7.752 2.818a.75.75 0 0 1 .502.934l-.61 2.034h3.434l.74-2.465a.75.75 0 0 1 1.436.43l-.61 2.035H18a.75.75 0 0 1 0 1.5h-2.342l-.75 2.5H17a.75.75 0 0 1 0 1.5h-2.542l-.74 2.465a.75.75 0 0 1-1.436-.43l.61-2.035H9.458l-.74 2.465a.75.75 0 1 1-1.436-.43l.61-2.035H6a.75.75 0 0 1 0-1.5h2.342l.75-2.5H7a.75.75 0 0 1 0-1.5h2.542l.74-2.465a.75.75 0 0 1 .934-.503" clip-rule="evenodd"/></svg></span>
-        Sofrware hardware co-design
+        hpc
+      
+    </span>
+    <span class="toc-text tag-switcher-wrapper">
+      <span class="tag-switcher" />
+    </span>
+  </a>
+
+    
+  </div>
+
+      
+        
+  
+  
+  
+  
+  <div class="tag-subtree leaf-tag expanded" data-tag="network">
+    
+  
+  <a class="link" href="/notebooks/Interview/tags/network/">
+    <span class="toc-text">
+      
+        
+        <span class="tagcon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" d="m14.092 10.75l-.75 2.5H9.908l.75-2.5z"/><path fill="currentColor" fill-rule="evenodd" d="M3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465C22 19.072 22 16.714 22 12s0-7.071-1.465-8.536C19.072 2 16.714 2 12 2S4.929 2 3.464 3.464m7.752 2.818a.75.75 0 0 1 .502.934l-.61 2.034h3.434l.74-2.465a.75.75 0 0 1 1.436.43l-.61 2.035H18a.75.75 0 0 1 0 1.5h-2.342l-.75 2.5H17a.75.75 0 0 1 0 1.5h-2.542l-.74 2.465a.75.75 0 0 1-1.436-.43l.61-2.035H9.458l-.74 2.465a.75.75 0 1 1-1.436-.43l.61-2.035H6a.75.75 0 0 1 0-1.5h2.342l.75-2.5H7a.75.75 0 0 1 0-1.5h2.542l.74-2.465a.75.75 0 0 1 .934-.503" clip-rule="evenodd"/></svg></span>
+        network
+      
+    </span>
+    <span class="toc-text tag-switcher-wrapper">
+      <span class="tag-switcher" />
+    </span>
+  </a>
+
+    
+  </div>
+
+      
+        
+  
+  
+  
+  
+  <div class="tag-subtree leaf-tag expanded" data-tag="tencent">
+    
+  
+  <a class="link" href="/notebooks/Interview/tags/tencent/">
+    <span class="toc-text">
+      
+        
+        <span class="tagcon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" d="m14.092 10.75l-.75 2.5H9.908l.75-2.5z"/><path fill="currentColor" fill-rule="evenodd" d="M3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465C22 19.072 22 16.714 22 12s0-7.071-1.465-8.536C19.072 2 16.714 2 12 2S4.929 2 3.464 3.464m7.752 2.818a.75.75 0 0 1 .502.934l-.61 2.034h3.434l.74-2.465a.75.75 0 0 1 1.436.43l-.61 2.035H18a.75.75 0 0 1 0 1.5h-2.342l-.75 2.5H17a.75.75 0 0 1 0 1.5h-2.542l-.74 2.465a.75.75 0 0 1-1.436-.43l.61-2.035H9.458l-.74 2.465a.75.75 0 1 1-1.436-.43l.61-2.035H6a.75.75 0 0 1 0-1.5h2.342l.75-2.5H7a.75.75 0 0 1 0-1.5h2.542l.74-2.465a.75.75 0 0 1 .934-.503" clip-rule="evenodd"/></svg></span>
+        tencent
       
     </span>
     <span class="toc-text tag-switcher-wrapper">
@@ -346,151 +288,87 @@
 <footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/Zane-Jiang" target="_blank" rel="external nofollow noopener noreferrer"><img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/08a41b181ce68.svg"/></a></div></footer>
 </div></aside><div class="l_main" id="main">
 
+<header class="header mobile-only"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/images/avatar.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main">Zane Jiang</div><div class="sub cap">My notebooks & blog</div></a></div></header>
 
-
-
-
-<div class="article banner top">
-  <div class="content">
-    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
-<span class="sep"></span>
-<a class="cap breadcrumb" href="/notebooks/">笔记本</a>
-
-
-  <span class="sep"></span>
-  <a class="cap breadcrumb" href="/notebooks/compiler_kernel/">compiler_kernel</a>
-
-</div>
-<div class="flex-row" id="post-meta"><span class="text created">更新于：<time datetime="2025-07-18T12:01:22.791Z">2025-07-18</time></span><span class="sep updated"></span><span class="text updated">发布于：<time datetime="2024-11-28T11:55:34.000Z">2024-11-28</time></span></div></div></div>
-    
-    <div class="bottom only-title">
+<div class="post-list post">
+  
+    <a
+      class="post-card post"
+      href="/notebooks/Interview/%E4%BE%AF%E6%8D%B7C++%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E6%9C%BA%E5%88%B6/?tag=cpp"
+    >
       
-      <div class="text-area">
-        <h1 class="text title"><span>Neoperf_study</span></h1>
-        
-      </div>
-    </div>
+<article class="md-text">
+  
+  <h2 class="post-title">侯捷C++内存管理机制</h2>
+  <div class="excerpt">
+    <p>
+      
+        C++内存调用
+
+第一节 C++ primitives
+
+
+      
+    </p>
+  </div>
+  <div class="meta cap">
+    
+    <span class="cap" id="post-meta">
+      <svg style="margin-bottom:2px" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M6.94 2c.416 0 .753.324.753.724v1.46c.668-.012 1.417-.012 2.26-.012h4.015c.842 0 1.591 0 2.259.013v-1.46c0-.4.337-.725.753-.725s.753.324.753.724V4.25c1.445.111 2.394.384 3.09 1.055c.698.67.982 1.582 1.097 2.972L22 9H2v-.724c.116-1.39.4-2.302 1.097-2.972c.697-.67 1.645-.944 3.09-1.055V2.724c0-.4.337-.724.753-.724"/><path fill="currentColor" d="M22 14v-2c0-.839-.004-2.335-.017-3H2.01c-.013.665-.01 2.161-.01 3v2c0 3.771 0 5.657 1.172 6.828C4.343 22 6.228 22 10 22h4c3.77 0 5.656 0 6.828-1.172C22 19.658 22 17.772 22 14" opacity=".5"/><path fill="currentColor" d="M18 17a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m-5 4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m-5 4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0"/></svg>
+      <time datetime="2025-08-28T14:40:32.196Z">2025-08-28</time>
+    </span>
+    
+      
+        <span class="cap breadcrumb" >
+          <span class="tag">cpp</span>
+        </span>
+      
     
   </div>
-  </div><article class="md-text content"><h1 id="NeoPerf-study"><a href="#NeoPerf-study" class="headerlink" title="NeoPerf study"></a>NeoPerf study</h1><blockquote>
-<p>本文主要为学习论文《NeoMem: Hardware&#x2F;Software Co-Design for CXL-Native Memory Tiering》的工作，分为三个部分，用户态、内核以及FPGA部分，内核开源仓库地址为：  <a target="_blank" rel="noopener" href="https://github.com/PKUZHOU/linux">PKUZHOU&#x2F;linux</a></p>
-</blockquote>
-<p>代码基于linux内核代码6.0开始修改。</p>
-<p>由于初步探索linux内核代码，所以没有按照自顶向下的视角分析代码，而是基于git提交记录，借助AI与互联网搜索，平铺遇到的相关知识。版本不断更新……</p>
-<h2 id="a-naive-neoprof-driver"><a href="#a-naive-neoprof-driver" class="headerlink" title="a naive neoprof driver"></a>a naive neoprof driver</h2><p>commit ID <code>9bd35383</code></p>
-<p>本次主要在driver目录下提交了一个驱动neoperf:</p>
-<p>主要是实现了一些对外设的IO操作</p>
-<h3 id="Linux内核配置文件Kconfig"><a href="#Linux内核配置文件Kconfig" class="headerlink" title="Linux内核配置文件Kconfig"></a>Linux内核配置文件<code>Kconfig</code></h3><p><code>Kconfig</code>文件用于定义内核配置菜单，这些菜单可以在编译内核时启用或禁用特定的功能。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#Kconfig文件</span></span><br><span class="line">config NEOPROF#定义了一个名为`NEOPROF`的内核配置选项，将在内核配置菜单中创建选项</span><br><span class="line">	bool <span class="string">&quot;Enable Neoprofiler&quot;</span> <span class="comment">#bool类型，是否启用</span></span><br><span class="line">    default n <span class="comment">#默认不启用</span></span><br></pre></td></tr></table></figure>
-
-<p>在内核编译过程中可以在Drivers下查找到</p>
-<p><img src="neoperf-study/image-20241128201430600.png" alt="aba"></p>
-<p>Kconfig有其独特的语法，也是可以一层一层包裹下去：<code>menu</code>、<code>source</code>、<code>endmenu</code>等组成了编译选项配置过程中的树状菜单</p>
-<p>Kconfig设置对应的编译变量后，makefile指导构建编译的过程中会利用这些变量，从而实现选择性的编译</p>
-<h3 id="neoperf-h"><a href="#neoperf-h" class="headerlink" title="neoperf.h"></a>neoperf.h</h3><p>主要新增了四个接口，对neoprof设备（此处指Type2-CXL设备）进行访问：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    * The following functions are used to access the neoprof device</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">u64 <span class="title function_">get_nr_hotpages</span><span class="params">(<span class="type">void</span>)</span>;<span class="comment">//获取当前系统中的热页数量</span></span><br><span class="line"></span><br><span class="line">u64*  <span class="title function_">get_hotpages</span><span class="params">(<span class="type">void</span>)</span>;<span class="comment">//获取热页</span></span><br><span class="line"></span><br><span class="line">u64 <span class="title function_">get_hotness_threshold</span><span class="params">(<span class="type">void</span>)</span>;<span class="comment">//获取热度阈值</span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">set_hotness_threshold</span><span class="params">(u64 threshold)</span>;<span class="comment">//设置热度阈值</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="neoperf-c"><a href="#neoperf-c" class="headerlink" title="neoperf.c"></a>neoperf.c</h3><h4 id="驱动开发hello-world"><a href="#驱动开发hello-world" class="headerlink" title="驱动开发hello world"></a>驱动开发hello world</h4><p>neoperf.c 以下部分参考驱动开发知识：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/downey-blog/p/10500828.html">https://www.cnblogs.com/downey-blog/p/10500828.html</a></p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">module_init(neoprof_init);</span><br><span class="line">module_exit(neoprof_exit);</span><br><span class="line"></span><br><span class="line">MODULE_LICENSE(<span class="string">&quot;GPL v2&quot;</span>);</span><br><span class="line">MODULE_AUTHOR(<span class="string">&quot;PKUZHOU&quot;</span>);</span><br><span class="line">MODULE_DESCRIPTION(<span class="string">&quot;Neoprofiler Linux driver&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="io地址映射相关知识"><a href="#io地址映射相关知识" class="headerlink" title="io地址映射相关知识"></a>io地址映射相关知识</h4><p>需要理解</p>
-<ol>
-<li><p>IO端口的编址方式：</p>
-<p>包括IO指令的端口映射方式、MMIO的统一内存映射方式</p>
-</li>
-<li><p>一些常见的IO操作函数</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> * <span class="title function_">ioremap</span><span class="params">(<span class="type">unsigned</span> <span class="type">long</span> phys_addr, <span class="type">unsigned</span> <span class="type">long</span> size, <span class="type">unsigned</span> <span class="type">long</span> flags)</span>;</span><br><span class="line"> <span class="comment">//memset_io\memcpy_fromio\readb</span></span><br></pre></td></tr></table></figure></li>
-</ol>
-<p>参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/do2jiang/article/details/5450839">https://blog.csdn.net/do2jiang/article/details/5450839</a></p>
-<h2 id="neomem-migration-skeleton"><a href="#neomem-migration-skeleton" class="headerlink" title="neomem migration skeleton"></a>neomem migration skeleton</h2><p>commit ID <code>26cabad18</code></p>
-<p>新增 NeoMem模块:</p>
-<h3 id="migrate-c"><a href="#migrate-c" class="headerlink" title="migrate.c"></a>migrate.c</h3><p>主要是提供接口<code>migrate_misplaced_page_no_vma</code></p>
-<p>调用一些mm中的内存操作函数，进行页面隔离、迁移</p>
-<h3 id="neomem-h-neomem-c"><a href="#neomem-h-neomem-c" class="headerlink" title="neomem.h \neomem.c"></a>neomem.h \neomem.c</h3><p>主要就是启动 neomem模块（调用core文件中启动守护进程）</p>
-<h4 id="late-initcall"><a href="#late-initcall" class="headerlink" title="late_initcall()"></a>late_initcall()</h4><p>在内核启动后期适当时间执行，理解module_init等init宏的顺序，在<code>include/linux/init.h</code>中</p>
-<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/linhaostudy/p/9112264.html">linux设备驱动加载的先后顺序</a></p>
-<h3 id="neomem-core-c"><a href="#neomem-core-c" class="headerlink" title="neomem_core.c"></a>neomem_core.c</h3><ol>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/liangzc1124/article/details/120837260">内存中的各种分配函数</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/huofeng_2008/article/details/21177459">kthread_run内核线程</a></li>
-</ol>
-<h2 id="FPGA端侧"><a href="#FPGA端侧" class="headerlink" title="FPGA端侧"></a>FPGA端侧</h2><h3 id="模块结构"><a href="#模块结构" class="headerlink" title="模块结构"></a>模块结构</h3><p>顶层模块：</p>
-<p><code>cxltyp3_memexp_ddr4_top</code>-&gt;<code>ed_top_wrapper_typ3</code></p>
-<h4 id="ddr内存参数调整"><a href="#ddr内存参数调整" class="headerlink" title="ddr内存参数调整"></a>ddr内存参数调整</h4><p>cxl ip考虑了不同ddr的，包括是否支持DBI、内存通道数量等。采用宏的方式区分，设置不同的方式时，需要对ip内通过宏定义来确定相关的内存参数，同时也需要在顶层模块对相关参数进行修改。</p>
-<style>.owjufjasbowh{zoom:50%;}</style>
-
-<style>.pcilkjplovcc{zoom:50%;}</style>
-
-<style>.hhjnlovfgxle{zoom:50%;}</style>
-
-<p>或者通过更改ip文件，重新生成新的IP文件夹</p>
-<style>.liyaqgbqtxxz{zoom:50%;}</style>
-
-<h3 id="quartus"><a href="#quartus" class="headerlink" title="quartus"></a>quartus</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set_global_assignment -name OPTIMIZATION_MODE <span class="string">&quot;AGGRESSIVE COMPILE TIME&quot;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="烧录模式"><a href="#烧录模式" class="headerlink" title="烧录模式"></a>烧录模式</h3><p>AS Jtag ps <a target="_blank" rel="noopener" href="https://blog.csdn.net/dongdongnihao_/article/details/80258573">三种烧录模式</a></p>
-<h1 id="Neomem-todo"><a href="#Neomem-todo" class="headerlink" title="Neomem todo"></a>Neomem todo</h1><p>代码存在一些可以完善的地方：</p>
-<ol>
-<li>CXL地址采用硬编码，可以引入设备树或者其他检测CXL物理地址的工具进行优化，<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_44814825/article/details/129107911">参考</a></li>
-</ol>
-
-
-  <div class="tag-list">
-    
-      
-      <a class="tag" href="/notebooks/compiler_kernel/tags/cxl/">CXL</a>
-    
-      
-      <a class="tag" href="/notebooks/compiler_kernel/tags/kernel/">kernel</a>
-    
-      
-      <a class="tag" href="/notebooks/compiler_kernel/tags/neoprof/">neoprof</a>
-    
-      
-      <a class="tag" href="/notebooks/compiler_kernel/tags/sofrware%20hardware%20co-design/">Sofrware hardware co-design</a>
-    
-      
-      <a class="tag" href="/notebooks/compiler_kernel/tags/driver/">driver</a>
-    
-  </div>
-
 </article>
-<div class="article-footer">
 
-
-    <section id="share">
-      <div class="header"><span>分享文章</span></div>
-      <div class="body">
-        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://zane-jiang.github.io/notebooks/compiler_kernel/Linux%20kernel/Neoperf-study" /></div>
-        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://zane-jiang.github.io/notebooks/compiler_kernel/Linux%20kernel/Neoperf-study&title=Neoperf_study - Zane Jiang&summary=NeoPerf study
-本文主要为学习论文《NeoMem: Hardware&#x2F;Software Co-Design for CXL-Native Memory Tiering》的工作，分为三个部分，用户态、内核以及FPG..."><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=Neoperf_study - Zane Jiang&amp;body=https://zane-jiang.github.io/notebooks/compiler_kernel/Linux%20kernel/Neoperf-study"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
-        
-        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://zane-jiang.github.io/notebooks/compiler_kernel/Linux%20kernel/Neoperf-study"/>
-        </div>
-        
-      </div>
-    </section>
-    </div>
-
-
-  <div class="related-wrap md-text" id="comments">
-    <section class='header cmt-title cap theme'>
-      <p>快来参与讨论吧~</p>
-
-    </section>
-    <section class='body cmt-body giscus'>
+    </a>
+  
+    <a
+      class="post-card post"
+      href="/notebooks/Interview/C++11%E6%96%B0%E7%89%B9%E6%80%A7/?tag=cpp"
+    >
       
+<article class="md-text">
+  
+  <h2 class="post-title">C++11新特性</h2>
+  <div class="excerpt">
+    <p>
+      
+        
+ 很好的面试资料： 整理了一年的Linux C++武林秘籍，你早晚用得到（C++进阶必看） - 知乎
 
-<svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg>
-
-<div id="giscus" src="https://giscus.app/client.js" data-repo="Zane-Jiang/hexo_blog_comments_repo" data-repo-id="R_kgDOPOKoVA" data-category="Announcements" data-category-id="DIC_kwDOPOKoVM4CtFQv" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous"></div>
-
-    </section>
+转载并简单整理自知乎 程序喵大人
+1.左值引用与完美转发等基本概念:
+左值、右值 ：放在等号左边，取地址并且有名字 的就叫左值，反之叫右值
+12...
+      
+    </p>
   </div>
+  <div class="meta cap">
+    
+    <span class="cap" id="post-meta">
+      <svg style="margin-bottom:2px" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M6.94 2c.416 0 .753.324.753.724v1.46c.668-.012 1.417-.012 2.26-.012h4.015c.842 0 1.591 0 2.259.013v-1.46c0-.4.337-.725.753-.725s.753.324.753.724V4.25c1.445.111 2.394.384 3.09 1.055c.698.67.982 1.582 1.097 2.972L22 9H2v-.724c.116-1.39.4-2.302 1.097-2.972c.697-.67 1.645-.944 3.09-1.055V2.724c0-.4.337-.724.753-.724"/><path fill="currentColor" d="M22 14v-2c0-.839-.004-2.335-.017-3H2.01c-.013.665-.01 2.161-.01 3v2c0 3.771 0 5.657 1.172 6.828C4.343 22 6.228 22 10 22h4c3.77 0 5.656 0 6.828-1.172C22 19.658 22 17.772 22 14" opacity=".5"/><path fill="currentColor" d="M18 17a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m-5 4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m-5 4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0"/></svg>
+      <time datetime="2025-08-28T14:40:27.775Z">2025-08-28</time>
+    </span>
+    
+      
+        <span class="cap breadcrumb" >
+          <span class="tag">cpp</span>
+        </span>
+      
+    
+  </div>
+</article>
+
+    </a>
+  
+</div>
 
 
 
@@ -504,8 +382,7 @@
 </div></footer>
 <div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
 <div class="widgets">
-
-<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#NeoPerf-study"><span class="toc-text">NeoPerf study</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#a-naive-neoprof-driver"><span class="toc-text">a naive neoprof driver</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux%E5%86%85%E6%A0%B8%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6Kconfig"><span class="toc-text">Linux内核配置文件Kconfig</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#neoperf-h"><span class="toc-text">neoperf.h</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#neoperf-c"><span class="toc-text">neoperf.c</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91hello-world"><span class="toc-text">驱动开发hello world</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#io%E5%9C%B0%E5%9D%80%E6%98%A0%E5%B0%84%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86"><span class="toc-text">io地址映射相关知识</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#neomem-migration-skeleton"><span class="toc-text">neomem migration skeleton</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#migrate-c"><span class="toc-text">migrate.c</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#neomem-h-neomem-c"><span class="toc-text">neomem.h \neomem.c</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#late-initcall"><span class="toc-text">late_initcall()</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#neomem-core-c"><span class="toc-text">neomem_core.c</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#FPGA%E7%AB%AF%E4%BE%A7"><span class="toc-text">FPGA端侧</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97%E7%BB%93%E6%9E%84"><span class="toc-text">模块结构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#ddr%E5%86%85%E5%AD%98%E5%8F%82%E6%95%B0%E8%B0%83%E6%95%B4"><span class="toc-text">ddr内存参数调整</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#quartus"><span class="toc-text">quartus</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%83%A7%E5%BD%95%E6%A8%A1%E5%BC%8F"><span class="toc-text">烧录模式</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Neomem-todo"><span class="toc-text">Neomem todo</span></a></li></ol></div><div class="widget-footer"><a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/><path d="M7 3.338A9.95 9.95 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5"/></g></svg><span>回到顶部</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M8 10.5h8M8 14h5.5M17 3.338A9.95 9.95 0 0 0 12 2C6.477 2 2 6.477 2 12c0 1.6.376 3.112 1.043 4.453c.178.356.237.763.134 1.148l-.595 2.226a1.3 1.3 0 0 0 1.591 1.592l2.226-.596a1.63 1.63 0 0 1 1.149.133A9.96 9.96 0 0 0 12 22c5.523 0 10-4.477 10-10c0-1.821-.487-3.53-1.338-5"/></svg><span>参与讨论</span></a></div></widget>
+<widget class="widget-wrapper recent post-list"><div class="widget-header dis-select"><span class="name">最近更新</span></div><div class="widget-body fs14"><a class="item title" href="/notebooks/Interview/ai_hpc_cuda/"><span class="title">ai_hpc_cuda</span></a><a class="item title" href="/notebooks/Interview/CPP%E6%9D%82%E8%AE%B0/"><span class="title">CPP杂记</span></a><a class="item title" href="/notebooks/Interview/%E4%BE%AF%E6%8D%B7C++%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E6%9C%BA%E5%88%B6/"><span class="title">侯捷C++内存管理机制</span></a><a class="item title" href="/notebooks/Interview/nk01(tx-network)/"><span class="title">nk01(tx-network)</span></a><a class="item title" href="/notebooks/Interview/C++11%E6%96%B0%E7%89%B9%E6%80%A7/"><span class="title">C++11新特性</span></a><a class="item title" href="/notebooks/Interview/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/"><span class="title">控台项目与iSet项目已使用Qt技能点整理</span></a></div></widget>
 </div></aside><div class='float-panel'>
   <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
@@ -1000,30 +877,6 @@
 
 
 <!-- optional -->
-
-  <script type="module">
-  const el = document.querySelector('#comments #giscus');
-  util.viewportLazyload(el, load_discus, false);
-
-  function load_discus() {
-    if (!el) return;
-    try {
-        el.innerHTML = '';
-      } catch (error) {
-        console.error(error);
-      }
-      const script = document.createElement('script');
-      script.async = true;
-      for (const key of Object.keys(el.attributes)) {
-        const attr = el.attributes[key];
-        if (['class', 'id'].includes(attr.name) === false) {
-          script.setAttribute(attr.name, attr.value);
-        }
-      }
-      el.appendChild(script);
-  }
-</script>
-
 
 
 
