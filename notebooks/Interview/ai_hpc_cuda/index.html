@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.33.1" theme-name="Stellar" theme-version="1.33.1">
-  <link rel="canonical" href="https://zane-jiang.github.io/notebooks/cpp/tags/cpp/">
+  <link rel="canonical" href="https://zane-jiang.github.io/notebooks/Interview/ai_hpc_cuda/">
   
   <meta name="generator" content="Hexo 7.3.0">
   <meta http-equiv='x-dns-prefetch-control' content='on' />
@@ -17,23 +17,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
   <meta name="theme-color" content="#f9fafb">
-  <title>Zane Jiang</title>
+  <title>ai_hpc_cuda - Zane Jiang</title>
 
   
-    <meta property="og:type" content="website">
-<meta property="og:title" content="Zane Jiang">
-<meta property="og:url" content="https://zane-jiang.github.io/notebooks/cpp/tags/cpp/">
+    <meta name="description" content="Nvidia&#x2F;GPU&#x2F;CUDA相关：1.描述一下SM的结构，在写kernel的时候共享内存大小和寄存器文件数量需要注意吗？ SM是NVIDIA GPU的核心计算单元,包含 CUDA core，最核心的基本计算单元，处理整形和单精度浮点运算。 寄存器文件、 Warp Scheduler线程数调度器， 共享内存 L1cache 等   写kernel时共享内存大小和寄存器文件数量直">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ai_hpc_cuda">
+<meta property="og:url" content="https://zane-jiang.github.io/notebooks/Interview/ai_hpc_cuda/">
 <meta property="og:site_name" content="Zane Jiang">
+<meta property="og:description" content="Nvidia&#x2F;GPU&#x2F;CUDA相关：1.描述一下SM的结构，在写kernel的时候共享内存大小和寄存器文件数量需要注意吗？ SM是NVIDIA GPU的核心计算单元,包含 CUDA core，最核心的基本计算单元，处理整形和单精度浮点运算。 寄存器文件、 Warp Scheduler线程数调度器， 共享内存 L1cache 等   写kernel时共享内存大小和寄存器文件数量直">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://zane-jiang.github.io/images/avatar.jpg">
+<meta property="article:published_time" content="2025-08-23T08:38:26.000Z">
+<meta property="article:modified_time" content="2025-08-23T10:41:58.237Z">
 <meta property="article:author" content="Zane Jiang">
-<meta property="article:tag" content="OS">
+<meta property="article:tag" content="hpc">
+<meta property="article:tag" content="cuda">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://zane-jiang.github.io/images/avatar.jpg">
   
   
   
-  <meta name="keywords" content="OS">
+  <meta name="keywords" content=",">
 
   <!-- feed -->
   
@@ -45,12 +50,12 @@
 
   
 
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Website","@id":"https://zane-jiang.github.io","author":{"@type":"Person","name":"Zane Jiang","sameAs":[],"image":"/images/avatar.jpg"},"name":"Zane Jiang","description":"","url":"https://zane-jiang.github.io"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Website","@id":"https://zane-jiang.github.io/notebooks/Interview/ai_hpc_cuda/","author":{"@type":"Person","name":"Zane Jiang","sameAs":[],"image":"/images/avatar.jpg"},"name":"ai_hpc_cuda","description":"Nvidia&#x2F;GPU&#x2F;CUDA相关：1.描述一下SM的结构，在写kernel的时候共享内存大小和寄存器文件数量需要注意吗？\nSM是NVIDIA GPU的核心计算单元,包含\nCUDA core，最核心的基本计算单元，处理整形和单精度浮点运算。\n寄存器文件、\nWarp Scheduler线程数调度器，\n共享内存\nL1cache\n等\n\n\n写kernel时共享内存大小和寄存器文件...","url":"https://zane-jiang.github.io/notebooks/Interview/ai_hpc_cuda/","keywords":"OS"}</script>
   
 </head>
 <body>
 
-<div class="l_body index" id="start" layout="notes" type="undefined" ><aside class="l_left"><div class="sidebg"></div><div class="leftbar-container">
+<div class="l_body content" id="start" layout="page" type="tech" ><aside class="l_left"><div class="sidebg"></div><div class="leftbar-container">
 
 
 <header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/images/avatar.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main">Zane Jiang</div><div class="sub cap">My notebooks & blog</div></a></div></header>
@@ -60,7 +65,7 @@
 <nav class="menu dis-select"><a class="nav-item" title="Blog" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item active" title="notebooks" href="/notebooks/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.25 4.48v3.057c0 .111 0 .27.02.406a.936.936 0 0 0 .445.683a.96.96 0 0 0 .783.072c.13-.04.272-.108.378-.159L17 8.005l1.124.534c.106.05.248.119.378.16a.958.958 0 0 0 .783-.073a.936.936 0 0 0 .444-.683c.021-.136.021-.295.021-.406V3.031c.113-.005.224-.01.332-.013C21.154 2.98 22 3.86 22 4.933v11.21c0 1.112-.906 2.01-2.015 2.08c-.97.06-2.108.179-2.985.41c-1.082.286-1.99 1.068-3.373 1.436c-.626.167-1.324.257-1.627.323V5.174c.32-.079 1.382-.203 1.674-.371c.184-.107.377-.216.576-.323m5.478 8.338a.75.75 0 0 1-.546.91l-4 1a.75.75 0 0 1-.364-1.456l4-1a.75.75 0 0 1 .91.546" clip-rule="evenodd"/><path fill="currentColor" d="M18.25 3.151c-.62.073-1.23.18-1.75.336a8.2 8.2 0 0 0-.75.27v3.182l.75-.356l.008-.005a1.13 1.13 0 0 1 .492-.13c.047 0 .094.004.138.01c.175.029.315.1.354.12l.009.005l.749.356V3.647z"/><path fill="currentColor" d="M12 5.214c-.334-.064-1.057-.161-1.718-.339C8.938 4.515 8.05 3.765 7 3.487c-.887-.234-2.041-.352-3.018-.412C2.886 3.007 2 3.9 2 4.998v11.146c0 1.11.906 2.01 2.015 2.079c.97.06 2.108.179 2.985.41c.486.129 1.216.431 1.873.726c1.005.451 2.052.797 3.127 1.034z" opacity=".5"/><path fill="currentColor" d="M4.273 12.818a.75.75 0 0 1 .91-.545l4 1a.75.75 0 1 1-.365 1.455l-4-1a.75.75 0 0 1-.545-.91m.909-4.545a.75.75 0 1 0-.364 1.455l4 1a.75.75 0 0 0 .364-1.455z"/></svg></a><a class="nav-item" title="Project" href="/project/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none"><path stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M19.647 15.536V8c0-1.886 0-2.828-.586-3.414C18.476 4 17.533 4 15.647 4H12m7.647 11.536l1.744 1.8l.088.092a2 2 0 0 1 .52 1.284l.001.127c0 .15 0 .224-.004.287a2 2 0 0 1-1.87 1.87a5 5 0 0 1-.287.004H4.161c-.15 0-.224 0-.287-.004a2 2 0 0 1-1.87-1.87C2 19.063 2 18.988 2 18.84l.001-.127a2 2 0 0 1 .52-1.284l.088-.092l1.744-1.8m15.294 0h-2.611m-12.683 0V8c0-1.886 0-2.828.586-3.414S6.467 4 8.353 4m-4 11.536H13M9.5 18.5h5"/><path fill="currentColor" d="M12.75 6.75a.75.75 0 1 1-1.5 0a.75.75 0 0 1 1.5 0"/></g></svg></a></nav>
 </div>
 <div class="widgets">
-<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" data-filter="/notebooks/cpp" placeholder="在 cpp 中搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" data-filter="/notebooks/Interview" placeholder="在 Interview 中搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
 
 
 
@@ -87,7 +92,7 @@
   <div class="tag-subtree leaf-tag expanded" data-tag="">
     
   
-  <a class="link" href="/notebooks/cpp/">
+  <a class="link" href="/notebooks/Interview/">
     <span class="toc-text">
       
         所有笔记
@@ -107,39 +112,15 @@
   
   
   
-  <div class="tag-subtree parent-tag expanded" data-tag="c++">
+  <div class="tag-subtree leaf-tag expanded" data-tag="cuda">
     
   
-  <a class="link" href="/notebooks/cpp/tags/c++/">
+  <a class="link" href="/notebooks/Interview/tags/cuda/">
     <span class="toc-text">
       
         
         <span class="tagcon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" d="m14.092 10.75l-.75 2.5H9.908l.75-2.5z"/><path fill="currentColor" fill-rule="evenodd" d="M3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465C22 19.072 22 16.714 22 12s0-7.071-1.465-8.536C19.072 2 16.714 2 12 2S4.929 2 3.464 3.464m7.752 2.818a.75.75 0 0 1 .502.934l-.61 2.034h3.434l.74-2.465a.75.75 0 0 1 1.436.43l-.61 2.035H18a.75.75 0 0 1 0 1.5h-2.342l-.75 2.5H17a.75.75 0 0 1 0 1.5h-2.542l-.74 2.465a.75.75 0 0 1-1.436-.43l.61-2.035H9.458l-.74 2.465a.75.75 0 1 1-1.436-.43l.61-2.035H6a.75.75 0 0 1 0-1.5h2.342l.75-2.5H7a.75.75 0 0 1 0-1.5h2.542l.74-2.465a.75.75 0 0 1 .934-.503" clip-rule="evenodd"/></svg></span>
-        C++
-      
-    </span>
-    <span class="toc-text tag-switcher-wrapper">
-      <span class="tag-switcher" />
-    </span>
-  </a>
-
-    
-      
-  
-    
-  
-  
-  
-  
-  <div class="tag-subtree leaf-tag expanded" data-tag="c++/qt，iset">
-    
-  
-  <a class="link" href="/notebooks/cpp/tags/c++/qt%EF%BC%8Ciset/">
-    <span class="toc-text" style="padding-left: 0.875rem;">
-      
-        
-        <span class="tagcon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" d="m14.092 10.75l-.75 2.5H9.908l.75-2.5z"/><path fill="currentColor" fill-rule="evenodd" d="M3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465C22 19.072 22 16.714 22 12s0-7.071-1.465-8.536C19.072 2 16.714 2 12 2S4.929 2 3.464 3.464m7.752 2.818a.75.75 0 0 1 .502.934l-.61 2.034h3.434l.74-2.465a.75.75 0 0 1 1.436.43l-.61 2.035H18a.75.75 0 0 1 0 1.5h-2.342l-.75 2.5H17a.75.75 0 0 1 0 1.5h-2.542l-.74 2.465a.75.75 0 0 1-1.436-.43l.61-2.035H9.458l-.74 2.465a.75.75 0 1 1-1.436-.43l.61-2.035H6a.75.75 0 0 1 0-1.5h2.342l.75-2.5H7a.75.75 0 0 1 0-1.5h2.542l.74-2.465a.75.75 0 0 1 .934-.503" clip-rule="evenodd"/></svg></span>
-        Qt，iSet
+        cuda
       
     </span>
     <span class="toc-text tag-switcher-wrapper">
@@ -150,7 +131,27 @@
     
   </div>
 
+      
+        
   
+  
+  
+  
+  <div class="tag-subtree leaf-tag expanded" data-tag="hpc">
+    
+  
+  <a class="link" href="/notebooks/Interview/tags/hpc/">
+    <span class="toc-text">
+      
+        
+        <span class="tagcon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" d="m14.092 10.75l-.75 2.5H9.908l.75-2.5z"/><path fill="currentColor" fill-rule="evenodd" d="M3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465C22 19.072 22 16.714 22 12s0-7.071-1.465-8.536C19.072 2 16.714 2 12 2S4.929 2 3.464 3.464m7.752 2.818a.75.75 0 0 1 .502.934l-.61 2.034h3.434l.74-2.465a.75.75 0 0 1 1.436.43l-.61 2.035H18a.75.75 0 0 1 0 1.5h-2.342l-.75 2.5H17a.75.75 0 0 1 0 1.5h-2.542l-.74 2.465a.75.75 0 0 1-1.436-.43l.61-2.035H9.458l-.74 2.465a.75.75 0 1 1-1.436-.43l.61-2.035H6a.75.75 0 0 1 0-1.5h2.342l.75-2.5H7a.75.75 0 0 1 0-1.5h2.542l.74-2.465a.75.75 0 0 1 .934-.503" clip-rule="evenodd"/></svg></span>
+        hpc
+      
+    </span>
+    <span class="toc-text tag-switcher-wrapper">
+      <span class="tag-switcher" />
+    </span>
+  </a>
 
     
   </div>
@@ -161,15 +162,40 @@
   
   
   
-  <div class="tag-subtree leaf-tag expanded" data-tag="cpp">
+  <div class="tag-subtree leaf-tag expanded" data-tag="network">
     
   
-  <a class="link active" href="/notebooks/cpp/tags/cpp/">
+  <a class="link" href="/notebooks/Interview/tags/network/">
     <span class="toc-text">
       
         
         <span class="tagcon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" d="m14.092 10.75l-.75 2.5H9.908l.75-2.5z"/><path fill="currentColor" fill-rule="evenodd" d="M3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465C22 19.072 22 16.714 22 12s0-7.071-1.465-8.536C19.072 2 16.714 2 12 2S4.929 2 3.464 3.464m7.752 2.818a.75.75 0 0 1 .502.934l-.61 2.034h3.434l.74-2.465a.75.75 0 0 1 1.436.43l-.61 2.035H18a.75.75 0 0 1 0 1.5h-2.342l-.75 2.5H17a.75.75 0 0 1 0 1.5h-2.542l-.74 2.465a.75.75 0 0 1-1.436-.43l.61-2.035H9.458l-.74 2.465a.75.75 0 1 1-1.436-.43l.61-2.035H6a.75.75 0 0 1 0-1.5h2.342l.75-2.5H7a.75.75 0 0 1 0-1.5h2.542l.74-2.465a.75.75 0 0 1 .934-.503" clip-rule="evenodd"/></svg></span>
-        cpp
+        network
+      
+    </span>
+    <span class="toc-text tag-switcher-wrapper">
+      <span class="tag-switcher" />
+    </span>
+  </a>
+
+    
+  </div>
+
+      
+        
+  
+  
+  
+  
+  <div class="tag-subtree leaf-tag expanded" data-tag="tencent">
+    
+  
+  <a class="link" href="/notebooks/Interview/tags/tencent/">
+    <span class="toc-text">
+      
+        
+        <span class="tagcon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" d="m14.092 10.75l-.75 2.5H9.908l.75-2.5z"/><path fill="currentColor" fill-rule="evenodd" d="M3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465C22 19.072 22 16.714 22 12s0-7.071-1.465-8.536C19.072 2 16.714 2 12 2S4.929 2 3.464 3.464m7.752 2.818a.75.75 0 0 1 .502.934l-.61 2.034h3.434l.74-2.465a.75.75 0 0 1 1.436.43l-.61 2.035H18a.75.75 0 0 1 0 1.5h-2.342l-.75 2.5H17a.75.75 0 0 1 0 1.5h-2.542l-.74 2.465a.75.75 0 0 1-1.436-.43l.61-2.035H9.458l-.74 2.465a.75.75 0 1 1-1.436-.43l.61-2.035H6a.75.75 0 0 1 0-1.5h2.342l.75-2.5H7a.75.75 0 0 1 0-1.5h2.542l.74-2.465a.75.75 0 0 1 .934-.503" clip-rule="evenodd"/></svg></span>
+        tencent
       
     </span>
     <span class="toc-text tag-switcher-wrapper">
@@ -188,87 +214,194 @@
 <footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/Zane-Jiang" target="_blank" rel="external nofollow noopener noreferrer"><img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/08a41b181ce68.svg"/></a></div></footer>
 </div></aside><div class="l_main" id="main">
 
-<header class="header mobile-only"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/images/avatar.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main">Zane Jiang</div><div class="sub cap">My notebooks & blog</div></a></div></header>
-
-<div class="post-list post">
-  
-    <a
-      class="post-card post"
-      href="/notebooks/cpp/C++11%E6%96%B0%E7%89%B9%E6%80%A7/?tag=cpp"
-    >
-      
-<article class="md-text">
-  
-  <h2 class="post-title">C++11新特性</h2>
-  <div class="excerpt">
-    <p>
-      
-        
- 很好的面试资料： 整理了一年的Linux C++武林秘籍，你早晚用得到（C++进阶必看） - 知乎
-
-转载并简单整理自知乎 程序喵大人
-1.左值引用与完美转发等基本概念:
-左值、右值 ：放在等号左边，取地址并且有名字 的就叫左值，反之叫右值
-12...
-      
-    </p>
-  </div>
-  <div class="meta cap">
-    
-    <span class="cap" id="post-meta">
-      <svg style="margin-bottom:2px" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M6.94 2c.416 0 .753.324.753.724v1.46c.668-.012 1.417-.012 2.26-.012h4.015c.842 0 1.591 0 2.259.013v-1.46c0-.4.337-.725.753-.725s.753.324.753.724V4.25c1.445.111 2.394.384 3.09 1.055c.698.67.982 1.582 1.097 2.972L22 9H2v-.724c.116-1.39.4-2.302 1.097-2.972c.697-.67 1.645-.944 3.09-1.055V2.724c0-.4.337-.724.753-.724"/><path fill="currentColor" d="M22 14v-2c0-.839-.004-2.335-.017-3H2.01c-.013.665-.01 2.161-.01 3v2c0 3.771 0 5.657 1.172 6.828C4.343 22 6.228 22 10 22h4c3.77 0 5.656 0 6.828-1.172C22 19.658 22 17.772 22 14" opacity=".5"/><path fill="currentColor" d="M18 17a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m-5 4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m-5 4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0"/></svg>
-      <time datetime="2025-08-28T08:08:14.259Z">2025-08-28</time>
-    </span>
-    
-      
-        <span class="cap breadcrumb" >
-          <span class="tag">cpp</span>
-        </span>
-      
-    
-  </div>
-</article>
-
-    </a>
-  
-    <a
-      class="post-card post"
-      href="/notebooks/cpp/%E4%BE%AF%E6%8D%B7C++%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E6%9C%BA%E5%88%B6/?tag=cpp"
-    >
-      
-<article class="md-text">
-  
-  <h2 class="post-title">侯捷C++内存管理机制</h2>
-  <div class="excerpt">
-    <p>
-      
-        C++内存调用
-
-第一节 C++ primitives
 
 
-      
-    </p>
-  </div>
-  <div class="meta cap">
-    
-    <span class="cap" id="post-meta">
-      <svg style="margin-bottom:2px" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M6.94 2c.416 0 .753.324.753.724v1.46c.668-.012 1.417-.012 2.26-.012h4.015c.842 0 1.591 0 2.259.013v-1.46c0-.4.337-.725.753-.725s.753.324.753.724V4.25c1.445.111 2.394.384 3.09 1.055c.698.67.982 1.582 1.097 2.972L22 9H2v-.724c.116-1.39.4-2.302 1.097-2.972c.697-.67 1.645-.944 3.09-1.055V2.724c0-.4.337-.724.753-.724"/><path fill="currentColor" d="M22 14v-2c0-.839-.004-2.335-.017-3H2.01c-.013.665-.01 2.161-.01 3v2c0 3.771 0 5.657 1.172 6.828C4.343 22 6.228 22 10 22h4c3.77 0 5.656 0 6.828-1.172C22 19.658 22 17.772 22 14" opacity=".5"/><path fill="currentColor" d="M18 17a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m-5 4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m-5 4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0"/></svg>
-      <time datetime="2025-08-16T15:39:24.608Z">2025-08-16</time>
-    </span>
-    
-      
-        <span class="cap breadcrumb" >
-          <span class="tag">cpp</span>
-        </span>
-      
-    
-  </div>
-</article>
 
-    </a>
-  
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span>
+<a class="cap breadcrumb" href="/notebooks/">笔记本</a>
+
+
+  <span class="sep"></span>
+  <a class="cap breadcrumb" href="/notebooks/Interview/">Interview</a>
+
 </div>
+<div class="flex-row" id="post-meta"><span class="text created">更新于：<time datetime="2025-08-23T10:41:58.237Z">2025-08-23</time></span><span class="sep updated"></span><span class="text updated">发布于：<time datetime="2025-08-23T08:38:26.000Z">2025-08-23</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>ai_hpc_cuda</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><h1 id="Nvidia-GPU-CUDA相关："><a href="#Nvidia-GPU-CUDA相关：" class="headerlink" title="Nvidia&#x2F;GPU&#x2F;CUDA相关："></a>Nvidia&#x2F;GPU&#x2F;CUDA相关：</h1><h2 id="1-描述一下SM的结构，在写kernel的时候共享内存大小和寄存器文件数量需要注意吗？"><a href="#1-描述一下SM的结构，在写kernel的时候共享内存大小和寄存器文件数量需要注意吗？" class="headerlink" title="1.描述一下SM的结构，在写kernel的时候共享内存大小和寄存器文件数量需要注意吗？"></a>1.描述一下SM的结构，在写kernel的时候共享内存大小和寄存器文件数量需要注意吗？</h2><blockquote>
+<p>SM是NVIDIA GPU的核心计算单元,包含</p>
+<p>CUDA core，最核心的基本计算单元，处理整形和单精度浮点运算。</p>
+<p>寄存器文件、</p>
+<p>Warp Scheduler线程数调度器，</p>
+<p>共享内存</p>
+<p>L1cache</p>
+<p>等</p>
+<p><img src="a7f859bdbba3e7492d28d18cd48d0761.png" alt="img"></p>
+</blockquote>
+<p>写kernel时共享内存大小和寄存器文件数量直接影响SM的<strong>活跃线程束数量（Occupancy）</strong>—-即SM上同时可执行的线程束数与最大可支持线程束数的比率。</p>
+<p><strong>共享内存大小</strong>：</p>
+<ul>
+<li><p><strong>注意</strong>：必须注意。共享内存是<strong>按块分配</strong>的有限资源。</p>
+</li>
+<li><p><strong>影响</strong>：每个块申请的共享内存越大，一个SM上能同时驻留的线程块就越少，会降低<strong>占用率（Occupancy）</strong>，可能影响性能。</p>
+</li>
+<li><p><strong>寄存器数量</strong>：</p>
+<ul>
+<li><strong>注意</strong>：必须注意。寄存器是<strong>按线程分配</strong>的有限资源。</li>
+<li><strong>影响</strong>：<ul>
+<li>每个线程使用的寄存器越多，一个SM上能同时驻留的线程就越少，同样会降低占用率。</li>
+<li>寄存器使用过多会导致<strong>寄存器溢出（Register Spilling）</strong>，编译器被迫将变量存储到慢速的全局内存中，严重损害性能。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="2-共享内存和寄存器分别应该存放哪些数据，其用量与SM上活跃的线程块的关系。"><a href="#2-共享内存和寄存器分别应该存放哪些数据，其用量与SM上活跃的线程块的关系。" class="headerlink" title="2.共享内存和寄存器分别应该存放哪些数据，其用量与SM上活跃的线程块的关系。"></a>2.共享内存和寄存器分别应该存放哪些数据，其用量与SM上活跃的线程块的关系。</h2><p><strong>共享内存</strong></p>
+<p>从全局内存预加载的数据块、中间计算结果（如规约运算的局部和）</p>
+<p>作用：协作、缓存、通信</p>
+<p><strong>寄存器</strong></p>
+<p>线程私有的局部数据</p>
+<p>作用：私有性、高性能</p>
+<p><strong>关系</strong></p>
+<p>SM上的活跃线程块数量同时受<strong>共享内存总量</strong>和<strong>寄存器总量</strong>的<strong>硬性约束</strong>，最终的实际数量是以下三个计算结果中的<strong>最小值</strong>：</p>
+<ol>
+<li>SM支持的最大线程块数（架构限制）。</li>
+<li><code>SM共享内存总量 / 每块申请的共享内存大小</code>。</li>
+<li><code>SM寄存器总量 / (每线程寄存器数量 * 每块线程数)</code>。</li>
+</ol>
+<h2 id="3-bank冲突是什么？描述具体结构，如何解决？"><a href="#3-bank冲突是什么？描述具体结构，如何解决？" class="headerlink" title="3.bank冲突是什么？描述具体结构，如何解决？"></a>3.bank冲突是什么？描述具体结构，如何解决？</h2><h3 id="Bank冲突"><a href="#Bank冲突" class="headerlink" title="Bank冲突"></a>Bank冲突</h3><p>为了提供高带宽，共享内存被物理上划分为若干个（通常是<strong>32个</strong>，与Warp大小对应）同样大小的、能同时被访问的内存模块，这些模块称为 <strong>Bank</strong>。</p>
+<ul>
+<li><p><strong>理想情况（无冲突）</strong>： 如果一个Warp中的32个线程分别访问32个<strong>不同Bank</strong>中的地址（或者访问<strong>同一个Bank中的完全相同的一个地址</strong>，即广播），那么所有这些访问都可以在一个时钟周期内一次性完成。</p>
+</li>
+<li><p><strong>冲突情况</strong>： 如果一个Warp中的多个线程访问了<strong>同一个Bank</strong>中的<strong>不同地址</strong>，就会发生Bank冲突。硬件必须将这些冲突的访问拆分成多个没有冲突的周期依次执行。有<code>n</code>个线程访问同一个Bank的不同地址，就需要<code>n</code>个时钟周期来完成原本一个周期就能完成的工作。</p>
+</li>
+</ul>
+<h4 id="Bank编号"><a href="#Bank编号" class="headerlink" title="Bank编号"></a>Bank编号</h4><p>Bank编号 &#x3D; (地址字节偏移量 &#x2F; 4字节) % 32</p>
+<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p>核心思路是：<strong>改变数据在共享内存中的布局或访问模式，确保一个Warp内的线程访问不同的Bank。</strong></p>
+<h4 id="方法一：内存填充（Memory-Padding）"><a href="#方法一：内存填充（Memory-Padding）" class="headerlink" title="方法一：内存填充（Memory Padding）"></a>方法一：内存填充（Memory Padding）</h4><ul>
+<li><strong>问题</strong>： 在操作二维数组（例如矩阵）的Tile时，如果数组的宽度是Bank数量（32）的整数倍，那么同一行中相邻的元素会位于不同的Bank，但<strong>同一列中相邻的元素</strong>会因为固定的步长而落在<strong>同一个Bank</strong>里。当线程按列读取时，就会导致严重的Bank冲突。</li>
+<li><strong>解决方案</strong>： 在声明共享内存数组时，<strong>人为地给每一行增加一些多余的“填充”元素</strong>，使实际的行长（Pitch）不再是32的整数倍。</li>
+</ul>
+<p><strong>示例：一个32x32的Tile</strong></p>
+<p>cpp</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 可能产生Bank冲突的声明</span><br><span class="line">__shared__ float tile[32][32];</span><br><span class="line"></span><br><span class="line">// 使用填充避免Bank冲突的声明（例如，多加1个元素）</span><br><span class="line">__shared__ float tile_padded[32][33]; // 33不再是32的因数</span><br></pre></td></tr></table></figure>
+
+<p>这样，原来在同一列上的元素 <code>tile[0][0]</code>, <code>tile[1][0]</code>, <code>tile[2][0]</code>… 现在变成了 <code>tile_padded[0][0]</code>, <code>tile_padded[1][0]</code>, <code>tile_padded[2][0]</code>…。<br>计算它们的Bank编号：</p>
+<ul>
+<li><code>(0 / 4) % 32 = 0</code></li>
+<li><code>( (1 * 33 * 4) / 4 ) % 32 = (33) % 32 = 1</code></li>
+<li><code>( (2 * 33 * 4) / 4 ) % 32 = (66) % 32 = 2</code><br>它们被巧妙地分散到了不同的Bank中，从而避免了冲突。</li>
+</ul>
+<h4 id="方法二：改变访问模式或算法"><a href="#方法二：改变访问模式或算法" class="headerlink" title="方法二：改变访问模式或算法"></a>方法二：改变访问模式或算法</h4><p>设计核函数时，尽量让一个Warp内的线程访问<strong>连续</strong>的共享内存地址。因为连续地址通常映射到不同的Bank，这是最友好的访问模式。</p>
+<h4 id="方法三：使用不同的广播机制"><a href="#方法三：使用不同的广播机制" class="headerlink" title="方法三：使用不同的广播机制"></a>方法三：使用不同的广播机制</h4><p>如果确实需要让多个线程读取同一个值，应尽量确保它们访问的是<strong>完全相同的地址</strong>，这会触发广播机制，在一个周期内完成操作，而不是产生冲突。</p>
+<h2 id="4-说一下分支冲突（线程束分化），如果warp内有冲突，部分符合if条件，部分符合else条件，是否需要等待？"><a href="#4-说一下分支冲突（线程束分化），如果warp内有冲突，部分符合if条件，部分符合else条件，是否需要等待？" class="headerlink" title="4.说一下分支冲突（线程束分化），如果warp内有冲突，部分符合if条件，部分符合else条件，是否需要等待？"></a>4.说一下分支冲突（线程束分化），如果warp内有冲突，部分符合if条件，部分符合else条件，是否需要等待？</h2><p>分支冲突发生在<strong>同一个Warp内部</strong>的线程执行了<strong>不同的控制流路径</strong>时。例如，部分线程满足<code>if</code>条件，而另一部分线程满足<code>else</code>条件。</p>
+<ol>
+<li><strong>串行化执行</strong>： GPU的Warp调度器会让Warp<strong>先执行所有走<code>if</code>路径的线程</strong>。此时，那些本该走<code>else</code>路径的线程在这个阶段是<strong>被禁用（masked out）</strong> 的，它们不会执行任何操作，但必须<strong>等待</strong>。</li>
+<li><strong>再次执行</strong>： 当<code>if</code>路径执行完毕后，调度器会再让Warp<strong>执行所有走<code>else</code>路径的线程</strong>。同样，此时走<code>if</code>路径的线程被禁用并等待。</li>
+<li><strong>汇合后继续</strong>： 当所有不同的控制流路径都执行完毕后，Warp内的所有线程才会在<strong>汇合点（reconvergence point）</strong> 重新同步，并继续一起执行后续的相同指令。</li>
+</ol>
+<p><strong>因此，分支冲突的性能代价是：执行时间变成了所有不同路径执行时间的总和，而不是其中最长路径的时间。</strong></p>
+<p>怎样避免线程束分化</p>
+<p>核心思想：<strong>同一个Warp内的数据具有相同的特性，从而执行相同的指令路径。</strong></p>
+<p> 预处理数据，使同一Warp数据特征一致</p>
+<p>谓词执行   用条件赋值 <code>?:</code> 替代短小的 <code>if-else</code></p>
+<h2 id="5-用过TensorCore吗？了解TensorCore的原理吗？"><a href="#5-用过TensorCore吗？了解TensorCore的原理吗？" class="headerlink" title="5.用过TensorCore吗？了解TensorCore的原理吗？"></a>5.用过TensorCore吗？了解TensorCore的原理吗？</h2><p>Tensor Core是一种专为执行<strong>矩阵乘累加运算</strong>而设计的专用硬件单元，从Volta架构开始引入。其核心原理可以概括为：</p>
+<p><strong>1. 计算模式：D &#x3D; A * B + C</strong><br>它的核心是执行一个固定的计算操作：接收两个小矩阵<code>A</code>和<code>B</code>，与一个累加矩阵<code>C</code>相乘后相加，得到结果矩阵<code>D</code>。</p>
+<ul>
+<li><code>A, B, C, D</code> 都是特定维度的小矩阵（如 <code>16x16</code>, <code>8x32</code>, <code>32x8</code> 等）。</li>
+<li>计算<code>A * B</code>是<strong>完整精度的</strong>，其结果与<code>C</code>相加后，再以目标精度（如FP32&#x2F;FP16&#x2F;INT8）存储到<code>D</code>。</li>
+</ul>
+<p><strong>2. 混合精度计算：</strong><br>这是其实现性能突破的关键。它使用<strong>低精度输入</strong>来实现高吞吐量和低功耗，但使用<strong>高精度进行累加</strong>以保持数值稳定性。</p>
+<ul>
+<li><strong>常见模式</strong>： <code>FP16</code> 输入 (A, B) + <code>FP16</code> 或 <code>FP32</code> 的累加器 (C) -&gt; <code>FP16</code> 或 <code>FP32</code> 输出 (D)。</li>
+<li><strong>其他模式</strong>： 也支持INT8、INT4、BF16等输入精度，以及TF32（在Ampere及以后架构中）。</li>
+</ul>
+<p><strong>3. 极高的吞吐量：</strong><br>每个Tensor Core每个时钟周期可以执行<strong>大量</strong>的乘加运算（FMA operations）。例如，一个V100的SM中的每个Tensor Core每周期可以执行一个 <code>8x4 * 4x8 -&gt; 8x8</code> 的MMA操作，这相当于 <strong>64 次乘加运算（128 FLOPS）</strong> 每周期。这与传统的CUDA Core（每周期1次乘加）相比，吞吐量提升了两个数量级。</p>
+<p><strong>4. 编程模型：Warp-Level Operation</strong><br>Tensor Core的操作是在<strong>线程束级别</strong>进行的。一个Warp内的线程需要<strong>协作</strong>来共同加载一个大的输入矩阵的各个小块（Tile）到寄存器中，然后调用一条指令（如<code>wmma::mma_sync</code>）来让Tensor Core硬件执行整个小矩阵的运算。</p>
+<p>为什么用float4向量来存取数据？有什么好处？</p>
+<p>为什么用双缓冲优化？了解cuda流和cuda graph吗？</p>
+<p>除了MPI，有知道现在用的更多的GPU通信库吗？</p>
+<p>在Nsight Computing中，经常关注的与内存相关的指标。有关注L1 Cache命中率吗？</p>
+<p>GPU指令集优化方面了解吗？有做过PTX相关的优化吗？</p>
+<p>GEMM是计算密集型还是访存密集型算子？</p>
+<p>知道cutlass中如何对GEMM进行优化的吗？</p>
+<h1 id="训练推理"><a href="#训练推理" class="headerlink" title="训练推理"></a>训练推理</h1><p>了解Transformer吗？底层是什么结构？cuda中如何优化？<br>说一下你对大模型的理解。<br>cuda中如何写Softmax？某个参数过大如何解决？<br>Dropout和BatchNorm在训练和推理时有什么区别？<br>说一下你了解的无监督学习算法。<br>知道Faster Transformer吗？有了解如何实现的吗？<br>Paged Attention有了解吗？<br>知道TensorRT吗？部署过推理模型吗？</p>
+
+
+  <div class="tag-list">
+    
+      
+      <a class="tag" href="/notebooks/Interview/tags/hpc/">hpc</a>
+    
+      
+      <a class="tag" href="/notebooks/Interview/tags/cuda/">cuda</a>
+    
+  </div>
+
+</article>
+<div class="article-footer">
+    <section id="references">
+      <div class="header"><span>参考资料</span></div>
+      <div class="body">
+        <ul>
+        <li class="post-title">
+          <p>回答基于AI生成并修改</p>
+
+        </li>
+        
+        <li class="post-title">
+          <p>问题来自 <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/663917237">AI&#x2F;HPC面试问题整理</a></p>
+
+        </li>
+        </ul>
+      </div>
+    </section>
+    
+
+
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://zane-jiang.github.io/notebooks/Interview/ai_hpc_cuda" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://zane-jiang.github.io/notebooks/Interview/ai_hpc_cuda&title=ai_hpc_cuda - Zane Jiang&summary=Nvidia&#x2F;GPU&#x2F;CUDA相关：1.描述一下SM的结构，在写kernel的时候共享内存大小和寄存器文件数量需要注意吗？
+SM是NVIDIA GPU的核心计算单元,包含
+CUDA core，最核心的基本计算单元，..."><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=ai_hpc_cuda - Zane Jiang&amp;body=https://zane-jiang.github.io/notebooks/Interview/ai_hpc_cuda"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://zane-jiang.github.io/notebooks/Interview/ai_hpc_cuda"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+
+
+  <div class="related-wrap md-text" id="comments">
+    <section class='header cmt-title cap theme'>
+      <p>快来参与讨论吧~</p>
+
+    </section>
+    <section class='body cmt-body giscus'>
+      
+
+<svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg>
+
+<div id="giscus" src="https://giscus.app/client.js" data-repo="Zane-Jiang/hexo_blog_comments_repo" data-repo-id="R_kgDOPOKoVA" data-category="Announcements" data-category-id="DIC_kwDOPOKoVM4CtFQv" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous"></div>
+
+    </section>
+  </div>
 
 
 
@@ -282,7 +415,8 @@
 </div></footer>
 <div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
 <div class="widgets">
-<widget class="widget-wrapper recent post-list"><div class="widget-header dis-select"><span class="name">最近更新</span></div><div class="widget-body fs14"><a class="item title" href="/notebooks/cpp/C++11%E6%96%B0%E7%89%B9%E6%80%A7/"><span class="title">C++11新特性</span></a><a class="item title" href="/notebooks/cpp/CPP%E6%9D%82%E8%AE%B0/"><span class="title">CPP杂记</span></a><a class="item title" href="/notebooks/cpp/%E4%BE%AF%E6%8D%B7C++%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E6%9C%BA%E5%88%B6/"><span class="title">侯捷C++内存管理机制</span></a><a class="item title" href="/notebooks/cpp/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/"><span class="title">控台项目与iSet项目已使用Qt技能点整理</span></a></div></widget>
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Nvidia-GPU-CUDA%E7%9B%B8%E5%85%B3%EF%BC%9A"><span class="toc-text">Nvidia&#x2F;GPU&#x2F;CUDA相关：</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%8F%8F%E8%BF%B0%E4%B8%80%E4%B8%8BSM%E7%9A%84%E7%BB%93%E6%9E%84%EF%BC%8C%E5%9C%A8%E5%86%99kernel%E7%9A%84%E6%97%B6%E5%80%99%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98%E5%A4%A7%E5%B0%8F%E5%92%8C%E5%AF%84%E5%AD%98%E5%99%A8%E6%96%87%E4%BB%B6%E6%95%B0%E9%87%8F%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E5%90%97%EF%BC%9F"><span class="toc-text">1.描述一下SM的结构，在写kernel的时候共享内存大小和寄存器文件数量需要注意吗？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98%E5%92%8C%E5%AF%84%E5%AD%98%E5%99%A8%E5%88%86%E5%88%AB%E5%BA%94%E8%AF%A5%E5%AD%98%E6%94%BE%E5%93%AA%E4%BA%9B%E6%95%B0%E6%8D%AE%EF%BC%8C%E5%85%B6%E7%94%A8%E9%87%8F%E4%B8%8ESM%E4%B8%8A%E6%B4%BB%E8%B7%83%E7%9A%84%E7%BA%BF%E7%A8%8B%E5%9D%97%E7%9A%84%E5%85%B3%E7%B3%BB%E3%80%82"><span class="toc-text">2.共享内存和寄存器分别应该存放哪些数据，其用量与SM上活跃的线程块的关系。</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-bank%E5%86%B2%E7%AA%81%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F%E6%8F%8F%E8%BF%B0%E5%85%B7%E4%BD%93%E7%BB%93%E6%9E%84%EF%BC%8C%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%EF%BC%9F"><span class="toc-text">3.bank冲突是什么？描述具体结构，如何解决？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Bank%E5%86%B2%E7%AA%81"><span class="toc-text">Bank冲突</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Bank%E7%BC%96%E5%8F%B7"><span class="toc-text">Bank编号</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3"><span class="toc-text">解决</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E4%B8%80%EF%BC%9A%E5%86%85%E5%AD%98%E5%A1%AB%E5%85%85%EF%BC%88Memory-Padding%EF%BC%89"><span class="toc-text">方法一：内存填充（Memory Padding）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E4%BA%8C%EF%BC%9A%E6%94%B9%E5%8F%98%E8%AE%BF%E9%97%AE%E6%A8%A1%E5%BC%8F%E6%88%96%E7%AE%97%E6%B3%95"><span class="toc-text">方法二：改变访问模式或算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E4%B8%89%EF%BC%9A%E4%BD%BF%E7%94%A8%E4%B8%8D%E5%90%8C%E7%9A%84%E5%B9%BF%E6%92%AD%E6%9C%BA%E5%88%B6"><span class="toc-text">方法三：使用不同的广播机制</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E8%AF%B4%E4%B8%80%E4%B8%8B%E5%88%86%E6%94%AF%E5%86%B2%E7%AA%81%EF%BC%88%E7%BA%BF%E7%A8%8B%E6%9D%9F%E5%88%86%E5%8C%96%EF%BC%89%EF%BC%8C%E5%A6%82%E6%9E%9Cwarp%E5%86%85%E6%9C%89%E5%86%B2%E7%AA%81%EF%BC%8C%E9%83%A8%E5%88%86%E7%AC%A6%E5%90%88if%E6%9D%A1%E4%BB%B6%EF%BC%8C%E9%83%A8%E5%88%86%E7%AC%A6%E5%90%88else%E6%9D%A1%E4%BB%B6%EF%BC%8C%E6%98%AF%E5%90%A6%E9%9C%80%E8%A6%81%E7%AD%89%E5%BE%85%EF%BC%9F"><span class="toc-text">4.说一下分支冲突（线程束分化），如果warp内有冲突，部分符合if条件，部分符合else条件，是否需要等待？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E7%94%A8%E8%BF%87TensorCore%E5%90%97%EF%BC%9F%E4%BA%86%E8%A7%A3TensorCore%E7%9A%84%E5%8E%9F%E7%90%86%E5%90%97%EF%BC%9F"><span class="toc-text">5.用过TensorCore吗？了解TensorCore的原理吗？</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%AD%E7%BB%83%E6%8E%A8%E7%90%86"><span class="toc-text">训练推理</span></a></li></ol></div><div class="widget-footer"><a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/><path d="M7 3.338A9.95 9.95 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5"/></g></svg><span>回到顶部</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M8 10.5h8M8 14h5.5M17 3.338A9.95 9.95 0 0 0 12 2C6.477 2 2 6.477 2 12c0 1.6.376 3.112 1.043 4.453c.178.356.237.763.134 1.148l-.595 2.226a1.3 1.3 0 0 0 1.591 1.592l2.226-.596a1.63 1.63 0 0 1 1.149.133A9.96 9.96 0 0 0 12 22c5.523 0 10-4.477 10-10c0-1.821-.487-3.53-1.338-5"/></svg><span>参与讨论</span></a></div></widget>
 </div></aside><div class='float-panel'>
   <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
@@ -777,6 +911,30 @@
 
 
 <!-- optional -->
+
+  <script type="module">
+  const el = document.querySelector('#comments #giscus');
+  util.viewportLazyload(el, load_discus, false);
+
+  function load_discus() {
+    if (!el) return;
+    try {
+        el.innerHTML = '';
+      } catch (error) {
+        console.error(error);
+      }
+      const script = document.createElement('script');
+      script.async = true;
+      for (const key of Object.keys(el.attributes)) {
+        const attr = el.attributes[key];
+        if (['class', 'id'].includes(attr.name) === false) {
+          script.setAttribute(attr.name, attr.value);
+        }
+      }
+      el.appendChild(script);
+  }
+</script>
+
 
 
 
