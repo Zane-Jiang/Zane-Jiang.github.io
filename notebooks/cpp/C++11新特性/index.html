@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.33.1" theme-name="Stellar" theme-version="1.33.1">
-  <link rel="canonical" href="https://zane-jiang.github.io/notebooks/cpp/tags/c++/">
+  <link rel="canonical" href="https://zane-jiang.github.io/notebooks/cpp/C++11%E6%96%B0%E7%89%B9%E6%80%A7/">
   
   <meta name="generator" content="Hexo 7.3.0">
   <meta http-equiv='x-dns-prefetch-control' content='on' />
@@ -17,23 +17,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
   <meta name="theme-color" content="#f9fafb">
-  <title>Zane Jiang</title>
+  <title>C++11新特性 - Zane Jiang</title>
 
   
-    <meta property="og:type" content="website">
-<meta property="og:title" content="Zane Jiang">
-<meta property="og:url" content="https://zane-jiang.github.io/notebooks/cpp/tags/c++/">
+    <meta name="description" content="很好的面试资料： 整理了一年的Linux C++武林秘籍，你早晚用得到（C++进阶必看） - 知乎  转载并简单整理自知乎 程序喵大人 1.左值引用与完美转发等基本概念: 左值、右值 ：放在等号左边，取地址并且有名字 的就叫左值，反之叫右值 12int a &#x3D; b + c ;int a &#x3D; 4;  纯右值:用于初始化一个对象。 运算表达式产生的临时变量、不和对象关联的原始字面量、返回非引用的函">
+<meta property="og:type" content="website">
+<meta property="og:title" content="C++11新特性">
+<meta property="og:url" content="https://zane-jiang.github.io/notebooks/cpp/C++11%E6%96%B0%E7%89%B9%E6%80%A7/">
 <meta property="og:site_name" content="Zane Jiang">
+<meta property="og:description" content="很好的面试资料： 整理了一年的Linux C++武林秘籍，你早晚用得到（C++进阶必看） - 知乎  转载并简单整理自知乎 程序喵大人 1.左值引用与完美转发等基本概念: 左值、右值 ：放在等号左边，取地址并且有名字 的就叫左值，反之叫右值 12int a &#x3D; b + c ;int a &#x3D; 4;  纯右值:用于初始化一个对象。 运算表达式产生的临时变量、不和对象关联的原始字面量、返回非引用的函">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://zane-jiang.github.io/images/avatar.jpg">
+<meta property="article:published_time" content="2025-08-27T07:42:41.000Z">
+<meta property="article:modified_time" content="2025-08-28T07:34:07.583Z">
 <meta property="article:author" content="Zane Jiang">
-<meta property="article:tag" content="OS">
+<meta property="article:tag" content="cpp">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://zane-jiang.github.io/images/avatar.jpg">
   
   
   
-  <meta name="keywords" content="OS">
+  <meta name="keywords" content="">
 
   <!-- feed -->
   
@@ -45,12 +49,12 @@
 
   
 
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Website","@id":"https://zane-jiang.github.io","author":{"@type":"Person","name":"Zane Jiang","sameAs":[],"image":"/images/avatar.jpg"},"name":"Zane Jiang","description":"","url":"https://zane-jiang.github.io"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Website","@id":"https://zane-jiang.github.io/notebooks/cpp/C++11%E6%96%B0%E7%89%B9%E6%80%A7/","author":{"@type":"Person","name":"Zane Jiang","sameAs":[],"image":"/images/avatar.jpg"},"name":"C++11新特性","description":"\n 很好的面试资料： 整理了一年的Linux C++武林秘籍，你早晚用得到（C++进阶必看） - 知乎\n\n转载并简单整理自知乎 程序喵大人\n1.左值引用与完美转发等基本概念:\n左值、右值 ：放在等号左边，取地址并且有名字 的就叫左值，反之叫右值\n12int a = b + c ;int a = 4;\n\n纯右值:用于初始化一个对象。 运算表达式产生的临时变量、不和对象关联的原始字面量、返回非引...","url":"https://zane-jiang.github.io/notebooks/cpp/C++11%E6%96%B0%E7%89%B9%E6%80%A7/","keywords":"OS"}</script>
   
 </head>
 <body>
 
-<div class="l_body index" id="start" layout="notes" type="undefined" ><aside class="l_left"><div class="sidebg"></div><div class="leftbar-container">
+<div class="l_body content" id="start" layout="page" type="tech" ><aside class="l_left"><div class="sidebg"></div><div class="leftbar-container">
 
 
 <header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/images/avatar.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main">Zane Jiang</div><div class="sub cap">My notebooks & blog</div></a></div></header>
@@ -110,7 +114,7 @@
   <div class="tag-subtree parent-tag expanded" data-tag="c++">
     
   
-  <a class="link active" href="/notebooks/cpp/tags/c++/">
+  <a class="link" href="/notebooks/cpp/tags/c++/">
     <span class="toc-text">
       
         
@@ -188,84 +192,125 @@
 <footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/Zane-Jiang" target="_blank" rel="external nofollow noopener noreferrer"><img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/08a41b181ce68.svg"/></a></div></footer>
 </div></aside><div class="l_main" id="main">
 
-<header class="header mobile-only"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/images/avatar.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main">Zane Jiang</div><div class="sub cap">My notebooks & blog</div></a></div></header>
 
-<div class="post-list post">
-  
-    <a
-      class="post-card post"
-      href="/notebooks/cpp/CPP%E6%9D%82%E8%AE%B0/?tag=c++"
-    >
-      
-<article class="md-text">
-  
-  <h2 class="post-title">CPP杂记</h2>
-  <div class="excerpt">
-    <p>
-      
-        全局静态变量、函数内静态变量、attribute((destructor))析构顺序构造析构顺序的不确定性
-以及静态函数获取的单例。
 
-C++ 标准规定：同一个编译单元（同一个 cpp 文件）内，静态&amp;#x2F;全局对象的析构顺序与构造顺序相反。
 
-...
-      
-    </p>
-  </div>
-  <div class="meta cap">
-    
-    <span class="cap" id="post-meta">
-      <svg style="margin-bottom:2px" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M6.94 2c.416 0 .753.324.753.724v1.46c.668-.012 1.417-.012 2.26-.012h4.015c.842 0 1.591 0 2.259.013v-1.46c0-.4.337-.725.753-.725s.753.324.753.724V4.25c1.445.111 2.394.384 3.09 1.055c.698.67.982 1.582 1.097 2.972L22 9H2v-.724c.116-1.39.4-2.302 1.097-2.972c.697-.67 1.645-.944 3.09-1.055V2.724c0-.4.337-.724.753-.724"/><path fill="currentColor" d="M22 14v-2c0-.839-.004-2.335-.017-3H2.01c-.013.665-.01 2.161-.01 3v2c0 3.771 0 5.657 1.172 6.828C4.343 22 6.228 22 10 22h4c3.77 0 5.656 0 6.828-1.172C22 19.658 22 17.772 22 14" opacity=".5"/><path fill="currentColor" d="M18 17a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m-5 4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m-5 4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0"/></svg>
-      <time datetime="2025-08-28T07:32:09.087Z">2025-08-28</time>
-    </span>
-    
-      
-        <span class="cap breadcrumb" >
-          <span class="tag">C++/Qt，iSet</span>
-        </span>
-      
-    
-  </div>
-</article>
 
-    </a>
-  
-    <a
-      class="post-card post"
-      href="/notebooks/cpp/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/?tag=c++"
-    >
-      
-<article class="md-text">
-  
-  <h2 class="post-title">控台项目与iSet项目已使用Qt技能点整理</h2>
-  <div class="excerpt">
-    <p>
-      
-        Qt与QML知识总结Qt中的设计模式中间滑动的slider
-2. doubleSpinBox3. iSet新建项目的两种模式ListWidget、选中状态设置为图标模式4.QTreeWidget 框架、表头、样式表、代理
-Qt QTreeWidget...
-      
-    </p>
-  </div>
-  <div class="meta cap">
-    
-    <span class="cap" id="post-meta">
-      <svg style="margin-bottom:2px" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M6.94 2c.416 0 .753.324.753.724v1.46c.668-.012 1.417-.012 2.26-.012h4.015c.842 0 1.591 0 2.259.013v-1.46c0-.4.337-.725.753-.725s.753.324.753.724V4.25c1.445.111 2.394.384 3.09 1.055c.698.67.982 1.582 1.097 2.972L22 9H2v-.724c.116-1.39.4-2.302 1.097-2.972c.697-.67 1.645-.944 3.09-1.055V2.724c0-.4.337-.724.753-.724"/><path fill="currentColor" d="M22 14v-2c0-.839-.004-2.335-.017-3H2.01c-.013.665-.01 2.161-.01 3v2c0 3.771 0 5.657 1.172 6.828C4.343 22 6.228 22 10 22h4c3.77 0 5.656 0 6.828-1.172C22 19.658 22 17.772 22 14" opacity=".5"/><path fill="currentColor" d="M18 17a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m-5 4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m-5 4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0"/></svg>
-      <time datetime="2025-07-18T11:53:41.744Z">2025-07-18</time>
-    </span>
-    
-      
-        <span class="cap breadcrumb" >
-          <span class="tag">C++/Qt，iSet</span>
-        </span>
-      
-    
-  </div>
-</article>
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span>
+<a class="cap breadcrumb" href="/notebooks/">笔记本</a>
 
-    </a>
-  
+
+  <span class="sep"></span>
+  <a class="cap breadcrumb" href="/notebooks/cpp/">cpp</a>
+
 </div>
+<div class="flex-row" id="post-meta"><span class="text created">更新于：<time datetime="2025-08-28T07:34:07.583Z">2025-08-28</time></span><span class="sep updated"></span><span class="text updated">发布于：<time datetime="2025-08-27T07:42:41.000Z">2025-08-27</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>C++11新特性</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><blockquote>
+<p> 很好的面试资料：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/351840523"> 整理了一年的Linux C++武林秘籍，你早晚用得到（C++进阶必看） - 知乎</a></p>
+</blockquote>
+<p>转载并简单整理自<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/139515439">知乎 程序喵大人</a></p>
+<h3 id="1-左值引用与完美转发等"><a href="#1-左值引用与完美转发等" class="headerlink" title="1.左值引用与完美转发等"></a>1.左值引用与完美转发等</h3><h4 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念:"></a>基本概念:</h4><blockquote>
+<p><strong>左值、右值</strong> ：放在等号左边，取地址并且有名字 的就叫左值，反之叫右值</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> a = b + c ;</span><br><span class="line"><span class="type">int</span> a = <span class="number">4</span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>纯右值</strong>:用于初始化一个对象。 运算表达式产生的临时变量、不和对象关联的原始字面量、返回非引用的函数调用、lambda表达式、this指针</p>
+<p><strong>将亡值</strong>：代表一个“即将结束生命周期”的对象，</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::string str = <span class="string">&quot;Hello World&quot;</span>; <span class="comment">// str 是一个左值</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// std::move(str) 将左值 str 转换为一个将亡值</span></span><br><span class="line">    <span class="comment">// 它在告诉编译器：“str 即将消亡，请移动它而不是拷贝它”</span></span><br><span class="line">    std::string new_str = std::<span class="built_in">move</span>(str); </span><br><span class="line"></span><br><span class="line">    <span class="comment">// 此时，str 的资源（动态分配的字符数组）被“移动”到了 new_str 中</span></span><br><span class="line">    <span class="comment">// str 本身仍然存在（是一个合法的对象），但处于“有效但未指定状态”</span></span><br><span class="line">    <span class="comment">// 通常是一个空字符串，但你不能依赖这一点，只能对它进行重新赋值或销毁</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;str after move: \&quot;&quot;</span> &lt;&lt; str &lt;&lt; <span class="string">&quot;\&quot;&quot;</span> &lt;&lt; std::endl; <span class="comment">// 可能是 &quot;&quot;</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;new_str: \&quot;&quot;</span> &lt;&lt; new_str &lt;&lt; <span class="string">&quot;\&quot;&quot;</span> &lt;&lt; std::endl; <span class="comment">// &quot;Hello World&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//std::move(str) 就是一个将亡值。它不是一个新创建的值（不是纯右值），而是即将失效的现有对象 str 的另一种表现形式</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//主要产生方法：</span></span><br><span class="line"><span class="comment">//1. std::move(a);</span></span><br><span class="line">A a;</span><br><span class="line"><span class="keyword">auto</span> c = std::<span class="built_in">move</span>(a); <span class="comment">// std::move(a) 是一个将亡值</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//2.static_cast&lt;A&amp;&amp;&gt;(a)</span></span><br><span class="line">A a;</span><br><span class="line"><span class="keyword">auto</span> d = <span class="built_in">static_cast</span>&lt;A&amp;&amp;&gt;(a); <span class="comment">// static_cast&lt;A&amp;&amp;&gt;(a) 是一个将亡值</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>左值、右值引用</strong>: </p>
+<p><strong>右值引用</strong>。是一种特殊的引用类型，主要设计用来<strong>绑定到右值（特别是将亡值）</strong>，并表明所引用的对象资源可以被安全地”移动”或”窃取”。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> a=<span class="number">5</span>;</span><br><span class="line"><span class="type">int</span>&amp; b=a;<span class="comment">//b是左值引用</span></span><br><span class="line">b=<span class="number">4</span>;</span><br><span class="line"><span class="type">int</span>&amp; c = <span class="number">10</span>;<span class="comment">//error，10无法取地址，无法进行引用</span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> &amp;d = <span class="number">10</span>;<span class="comment">//ok，因为是常引用，引用常量数字，这个常量数字会存储在内存中，可以取地址</span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> a=<span class="number">4</span>;</span><br><span class="line"><span class="type">int</span>&amp;&amp; b=a;<span class="comment">//error,a是左值</span></span><br><span class="line"><span class="type">int</span>&amp;&amp; c=std::<span class="built_in">move</span>(a);<span class="comment">//ok</span></span><br></pre></td></tr></table></figure></blockquote>
+<h4 id="移动语义"><a href="#移动语义" class="headerlink" title="移动语义"></a>移动语义</h4><p>浅拷贝容易导致资源重复释放等问题，深拷贝会导致额外的开销。</p>
+<p>因此引入了移动语义，也就是实现了所有权管理，偷掉一些将亡值的资源</p>
+<p>C++中所有的STL都实现了移动语义，方便使用。</p>
+<p><strong>实现移动语义的关键组件</strong></p>
+<p>1.右值引用（T&amp;&amp;)</p>
+<p>2.移动构造函数</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MyString</span> &#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">char</span>* m_data;</span><br><span class="line">    <span class="type">size_t</span> m_size;</span><br><span class="line">    </span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 移动构造函数</span></span><br><span class="line">    <span class="built_in">MyString</span>(MyString&amp;&amp; other) <span class="keyword">noexcept</span> </span><br><span class="line">        : <span class="built_in">m_data</span>(other.m_data), <span class="built_in">m_size</span>(other.m_size) <span class="comment">// &quot;偷&quot;资源</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 将源对象置于有效但空的状态</span></span><br><span class="line">        other.m_data = <span class="literal">nullptr</span>;</span><br><span class="line">        other.m_size = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>3.移动赋值运算符</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MyString</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 移动赋值运算符</span></span><br><span class="line">    MyString&amp; <span class="keyword">operator</span>=(MyString&amp;&amp; other) <span class="keyword">noexcept</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span> != &amp;other) &#123;</span><br><span class="line">            <span class="keyword">delete</span>[] m_data; <span class="comment">// 释放当前资源</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment">// &quot;偷&quot;资源</span></span><br><span class="line">            m_data = other.m_data;</span><br><span class="line">            m_size = other.m_size;</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 置空源对象</span></span><br><span class="line">            other.m_data = <span class="literal">nullptr</span>;</span><br><span class="line">            other.m_size = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//赋值和构造的区别：赋值是替换，构造是创建加赋值</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="编译器优化：RVO-NRVO"><a href="#编译器优化：RVO-NRVO" class="headerlink" title="编译器优化：RVO&#x2F;NRVO"></a>编译器优化：RVO&#x2F;NRVO</h4><p>现代编译器会进行<strong>返回值优化（RVO）<strong>和</strong>命名返回值优化（NRVO）</strong>，有时甚至比移动语义更高效</p>
+<p>返回值优化的时机：</p>
+<ul>
+<li>return的值类型与函数的返回值类型相同</li>
+<li>return的是一个局部对象</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function">MyString <span class="title">create_string</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">MyString</span>(<span class="string">&quot;Hello&quot;</span>); <span class="comment">// RVO：直接在目标位置构造，无拷贝无移动</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">MyString <span class="title">create_string_nrvo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">MyString <span class="title">result</span><span class="params">(<span class="string">&quot;Hello&quot;</span>)</span></span>;</span><br><span class="line">    <span class="keyword">return</span> result; <span class="comment">// NRVO：直接在目标位置构造result</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="完美转发"><a href="#完美转发" class="headerlink" title="完美转发"></a>完美转发</h3>
+
+  <div class="tag-list">
+    
+      
+      <a class="tag" href="/notebooks/cpp/tags/cpp/">cpp</a>
+    
+  </div>
+
+</article>
+<div class="article-footer">
+    <section id="references">
+      <div class="header"><span>参考资料</span></div>
+      <div class="body">
+        <ul>
+        <li class="post-title">
+          <p>知乎&#x2F;c++11新特性(<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/139515439">https://zhuanlan.zhihu.com/p/139515439</a>)</p>
+
+        </li>
+        </ul>
+      </div>
+    </section>
+    
+
+
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://zane-jiang.github.io/notebooks/cpp/C++11%E6%96%B0%E7%89%B9%E6%80%A7" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://zane-jiang.github.io/notebooks/cpp/C++11%E6%96%B0%E7%89%B9%E6%80%A7&title=C++11新特性 - Zane Jiang&summary=
+ 很好的面试资料： 整理了一年的Linux C++武林秘籍，你早晚用得到（C++进阶必看） - 知乎
+
+转载并简单整理自知乎 程序喵大人
+1.左值引用与完美转发等基本概念:
+左值、右值 ：放在等号左边，取地址并且有名字 的就叫左值，..."><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=C++11新特性 - Zane Jiang&amp;body=https://zane-jiang.github.io/notebooks/cpp/C++11%E6%96%B0%E7%89%B9%E6%80%A7"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://zane-jiang.github.io/notebooks/cpp/C++11%E6%96%B0%E7%89%B9%E6%80%A7"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+
+
+  <div class="related-wrap md-text" id="comments">
+    <section class='header cmt-title cap theme'>
+      <p>快来参与讨论吧~</p>
+
+    </section>
+    <section class='body cmt-body giscus'>
+      
+
+<svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg>
+
+<div id="giscus" src="https://giscus.app/client.js" data-repo="Zane-Jiang/hexo_blog_comments_repo" data-repo-id="R_kgDOPOKoVA" data-category="Announcements" data-category-id="DIC_kwDOPOKoVM4CtFQv" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous"></div>
+
+    </section>
+  </div>
 
 
 
@@ -279,7 +324,8 @@ Qt QTreeWidget...
 </div></footer>
 <div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
 <div class="widgets">
-<widget class="widget-wrapper recent post-list"><div class="widget-header dis-select"><span class="name">最近更新</span></div><div class="widget-body fs14"><a class="item title" href="/notebooks/cpp/C++11%E6%96%B0%E7%89%B9%E6%80%A7/"><span class="title">C++11新特性</span></a><a class="item title" href="/notebooks/cpp/CPP%E6%9D%82%E8%AE%B0/"><span class="title">CPP杂记</span></a><a class="item title" href="/notebooks/cpp/%E4%BE%AF%E6%8D%B7C++%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E6%9C%BA%E5%88%B6/"><span class="title">侯捷C++内存管理机制</span></a><a class="item title" href="/notebooks/cpp/%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/"><span class="title">控台项目与iSet项目已使用Qt技能点整理</span></a></div></widget>
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%B7%A6%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91%E7%AD%89"><span class="toc-text">1.左值引用与完美转发等</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-text">基本概念:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89"><span class="toc-text">移动语义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E5%99%A8%E4%BC%98%E5%8C%96%EF%BC%9ARVO-NRVO"><span class="toc-text">编译器优化：RVO&#x2F;NRVO</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91"><span class="toc-text">完美转发</span></a></li></ol></div><div class="widget-footer"><a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/><path d="M7 3.338A9.95 9.95 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5"/></g></svg><span>回到顶部</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M8 10.5h8M8 14h5.5M17 3.338A9.95 9.95 0 0 0 12 2C6.477 2 2 6.477 2 12c0 1.6.376 3.112 1.043 4.453c.178.356.237.763.134 1.148l-.595 2.226a1.3 1.3 0 0 0 1.591 1.592l2.226-.596a1.63 1.63 0 0 1 1.149.133A9.96 9.96 0 0 0 12 22c5.523 0 10-4.477 10-10c0-1.821-.487-3.53-1.338-5"/></svg><span>参与讨论</span></a></div></widget>
 </div></aside><div class='float-panel'>
   <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
@@ -774,6 +820,30 @@ Qt QTreeWidget...
 
 
 <!-- optional -->
+
+  <script type="module">
+  const el = document.querySelector('#comments #giscus');
+  util.viewportLazyload(el, load_discus, false);
+
+  function load_discus() {
+    if (!el) return;
+    try {
+        el.innerHTML = '';
+      } catch (error) {
+        console.error(error);
+      }
+      const script = document.createElement('script');
+      script.async = true;
+      for (const key of Object.keys(el.attributes)) {
+        const attr = el.attributes[key];
+        if (['class', 'id'].includes(attr.name) === false) {
+          script.setAttribute(attr.name, attr.value);
+        }
+      }
+      el.appendChild(script);
+  }
+</script>
+
 
 
 
