@@ -29,7 +29,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://zane-jiang.github.io/images/avatar.jpg">
 <meta property="article:published_time" content="2025-08-01T09:33:53.000Z">
-<meta property="article:modified_time" content="2025-08-05T08:43:21.241Z">
+<meta property="article:modified_time" content="2025-09-01T13:58:37.124Z">
 <meta property="article:author" content="Zane Jiang">
 <meta property="article:tag" content="LLM&#x2F;ggml">
 <meta name="twitter:card" content="summary">
@@ -49,7 +49,7 @@
 
   
 
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Zane Jiang","sameAs":[],"image":"/images/avatar.jpg"},"dateCreated":"2025-08-01T17:33:53+08:00","dateModified":"2025-08-05T16:43:21+08:00","datePublished":"2025-08-01T17:33:53+08:00","description":"","headline":"GGML源码浅析","mainEntityOfPage":{"@type":"WebPage","@id":"https://zane-jiang.github.io/2025/08/01/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90/"},"publisher":{"@type":"Organization","name":"Zane Jiang","sameAs":[],"image":"/images/avatar.jpg","logo":{"@type":"ImageObject","url":"/images/avatar.jpg"}},"url":"https://zane-jiang.github.io/2025/08/01/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90/","keywords":"LLM/ggml","image":[]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Zane Jiang","sameAs":[],"image":"/images/avatar.jpg"},"dateCreated":"2025-08-01T17:33:53+08:00","dateModified":"2025-09-01T21:58:37+08:00","datePublished":"2025-08-01T17:33:53+08:00","description":"","headline":"GGML源码浅析","mainEntityOfPage":{"@type":"WebPage","@id":"https://zane-jiang.github.io/2025/08/01/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90/"},"publisher":{"@type":"Organization","name":"Zane Jiang","sameAs":[],"image":"/images/avatar.jpg","logo":{"@type":"ImageObject","url":"/images/avatar.jpg"}},"url":"https://zane-jiang.github.io/2025/08/01/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90/","keywords":"LLM/ggml","image":[]}</script>
   
 </head>
 <body>
@@ -81,7 +81,7 @@
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
 <span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-%E5%A4%A7%E6%A8%A1%E5%9E%8B/">源码解析/大模型</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2025-08-01T09:33:53.000Z">2025-08-01</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2025-08-05T08:43:21.241Z">2025-08-05</time></span></div></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2025-08-01T09:33:53.000Z">2025-08-01</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2025-09-01T13:58:37.124Z">2025-09-01</time></span></div></div></div>
     
     <div class="bottom only-title">
       
@@ -100,6 +100,7 @@
 <p>​	2.通过输出结果反推构建计算图</p>
 <p>​	3.后端设计中，一定用面向对象的方式来思考相关后端实现，其实就是用c实现了C++的面向对象，自己实现了虚函数表，私有成员变量（void*)	</p>
 <p>​	4.一次操作的逻辑</p>
+<p><strong>大佬教程</strong> <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/818059523">深入理解GGML（一）模型和计算图 - 知乎</a></p>
 <h2 id="1-核心数据结构"><a href="#1-核心数据结构" class="headerlink" title="1.核心数据结构"></a>1.核心数据结构</h2><h3 id="1-1ggml-context"><a href="#1-1ggml-context" class="headerlink" title="1.1ggml_context"></a>1.1<strong>ggml_context</strong></h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ggml_context</span> &#123;</span></span><br><span class="line">    <span class="type">size_t</span> mem_size;</span><br><span class="line">    <span class="type">void</span>* mem_buffer; <span class="comment">//cpu采用由poxsi_align分配的内存对齐内存，对于不同的后端，分配不同的内存</span></span><br><span class="line">    <span class="type">bool</span>   mem_buffer_owned;<span class="comment">//外部分配还是属于本处，决定内存分配权？</span></span><br><span class="line">    <span class="type">bool</span>   no_alloc;</span><br><span class="line">    <span class="type">bool</span>   no_alloc_save; <span class="comment">// this is used to save the no_alloc state when using scratch buffers</span></span><br><span class="line"></span><br><span class="line">    <span class="type">int</span>    n_objects;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">ggml_object</span> * <span class="title">objects_begin</span>;</span><span class="comment">//ggml_object维护的是一个链表</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">ggml_object</span> * <span class="title">objects_end</span>;</span></span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">ggml_scratch</span> <span class="title">scratch</span>;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">ggml_scratch</span> <span class="title">scratch_save</span>;</span></span><br><span class="line">&#125;;</span><br><span class="line"> <span class="class"><span class="keyword">struct</span> <span class="title">ggml_object</span> &#123;</span></span><br><span class="line">        <span class="type">size_t</span> offs;</span><br><span class="line">        <span class="type">size_t</span> size;</span><br><span class="line"></span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">ggml_object</span> * <span class="title">next</span>;</span></span><br><span class="line"></span><br><span class="line">        <span class="class"><span class="keyword">enum</span> <span class="title">ggml_object_type</span> <span class="title">type</span>;</span></span><br><span class="line"></span><br><span class="line">        <span class="type">char</span> padding[<span class="number">4</span>];</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p><code>ggml_context</code>是最核心的数据结构，所有的张量、计算图都依赖于这个数据结构:</p>
@@ -136,11 +137,11 @@
 
 
 <p>下边小红书博主**<a target="_blank" rel="noopener" href="https://www.xiaohongshu.com/explore/68428c20000000002202f5ed?xsec_token=ABf90k6lmJoCaqvN2246b6ncEjAfuaRYtQVFSvncJAaZ4=&xsec_source=pc_user">TransormerX</a>**绘制的这几张图 <strong>清晰 美观</strong>的展示了内存分配情况：</p>
-<style>.psiyipwkucrq{zoom:80%;}</style><img src="/2025/08/01/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90/image-20250804160456419.png" class="psiyipwkucrq" alt="image-20250804160456419">
+<style>.vojammiumtye{zoom:80%;}</style><img src="/2025/08/01/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90/image-20250804160456419.png" class="vojammiumtye" alt="image-20250804160456419">
 
-<style>.fruvjeeurxrd{zoom:67%;}</style><img src="/2025/08/01/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90/image-20250804160520957.png" class="fruvjeeurxrd" alt="image-20250804160520957">
+<style>.igrbyyylucpg{zoom:67%;}</style><img src="/2025/08/01/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90/image-20250804160520957.png" class="igrbyyylucpg" alt="image-20250804160520957">
 
-<style>.quntgkmqzcde{zoom:50%;}</style><img src="/2025/08/01/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90/image-20250804160533369.png" class="quntgkmqzcde" alt="image-20250804160533369">
+<style>.fpvrxwdnditn{zoom:50%;}</style><img src="/2025/08/01/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90/image-20250804160533369.png" class="fpvrxwdnditn" alt="image-20250804160533369">
 
 <p>除了图中绘制的tensor是按照这样的内存分布以外，其他类型graph、workbuffer等类型的object都是采用这样的内存排布，即：object结构体-&gt;对应类型结构体（tensor\graph)-&gt;相应data</p>
 <p>比如图的存储就是object-&gt;ggml_cgraph(结构体本身)-&gt;节点叶子等指针数组</p>
@@ -209,7 +210,7 @@
 
 
 <p>这里结构体比较多，看起来比较复杂，用<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_40672115/article/details/147055093">这篇博客</a>中的图片描述是这样的</p>
-<style>.rqmsougakqfu{zoom: 80%;}</style><img src="/2025/08/01/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90/311c21120e874c0a8bbde051206861b6.png" class="rqmsougakqfu" alt="在这里插入图片描述">
+<style>.xtktuvcswyky{zoom: 80%;}</style><img src="/2025/08/01/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90/311c21120e874c0a8bbde051206861b6.png" class="xtktuvcswyky" alt="在这里插入图片描述">
 
 
 
