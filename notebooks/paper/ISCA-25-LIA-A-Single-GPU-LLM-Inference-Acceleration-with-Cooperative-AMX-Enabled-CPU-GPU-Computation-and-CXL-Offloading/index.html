@@ -20,14 +20,16 @@
   <title>ISCA`25 LIA A Single-GPU LLM Inference Acceleration with Cooperative AMX-Enabled CPU-GPU Computation and CXL Offloading - Zane Jiang</title>
 
   
-    <meta property="og:type" content="website">
+    <meta name="description" content="Abstract​	单GPU的内存容量限制了大模型推理，使得使用成本高昂的多GPU部署或者在慢速PCIE传输导致性能受限的CPU-GPU部署十分必要。在这个工作中，我们首先benchmark了最新的带有AMX的Intel CPU，包括4th SPR架构和 6th GNR架构的至强处理器，证明矩阵乘法的带宽达到了20TFLOPS和40TFLOPS，都比得上一些最新的GPU.	这些发现解锁了更加广泛">
+<meta property="og:type" content="website">
 <meta property="og:title" content="ISCA&#96;25 LIA A Single-GPU LLM Inference Acceleration with Cooperative AMX-Enabled CPU-GPU Computation and CXL Offloading">
 <meta property="og:url" content="https://zane-jiang.github.io/notebooks/paper/ISCA-25-LIA-A-Single-GPU-LLM-Inference-Acceleration-with-Cooperative-AMX-Enabled-CPU-GPU-Computation-and-CXL-Offloading/">
 <meta property="og:site_name" content="Zane Jiang">
+<meta property="og:description" content="Abstract​	单GPU的内存容量限制了大模型推理，使得使用成本高昂的多GPU部署或者在慢速PCIE传输导致性能受限的CPU-GPU部署十分必要。在这个工作中，我们首先benchmark了最新的带有AMX的Intel CPU，包括4th SPR架构和 6th GNR架构的至强处理器，证明矩阵乘法的带宽达到了20TFLOPS和40TFLOPS，都比得上一些最新的GPU.	这些发现解锁了更加广泛">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://zane-jiang.github.io/images/avatar.jpg">
 <meta property="article:published_time" content="2025-07-16T13:49:53.000Z">
-<meta property="article:modified_time" content="2025-07-26T10:27:03.634Z">
+<meta property="article:modified_time" content="2025-09-10T08:55:01.704Z">
 <meta property="article:author" content="Zane Jiang">
 <meta property="article:tag" content="Paper&#x2F;CXL">
 <meta property="article:tag" content="Paper&#x2F;LLM">
@@ -48,7 +50,7 @@
 
   
 
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Website","@id":"https://zane-jiang.github.io/notebooks/paper/ISCA-25-LIA-A-Single-GPU-LLM-Inference-Acceleration-with-Cooperative-AMX-Enabled-CPU-GPU-Computation-and-CXL-Offloading/","author":{"@type":"Person","name":"Zane Jiang","sameAs":[],"image":"/images/avatar.jpg"},"name":"ISCA`25 LIA A Single-GPU LLM Inference Acceleration with Cooperative AMX-Enabled CPU-GPU Computation and CXL Offloading","description":"","url":"https://zane-jiang.github.io/notebooks/paper/ISCA-25-LIA-A-Single-GPU-LLM-Inference-Acceleration-with-Cooperative-AMX-Enabled-CPU-GPU-Computation-and-CXL-Offloading/","keywords":"OS"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Website","@id":"https://zane-jiang.github.io/notebooks/paper/ISCA-25-LIA-A-Single-GPU-LLM-Inference-Acceleration-with-Cooperative-AMX-Enabled-CPU-GPU-Computation-and-CXL-Offloading/","author":{"@type":"Person","name":"Zane Jiang","sameAs":[],"image":"/images/avatar.jpg"},"name":"ISCA`25 LIA A Single-GPU LLM Inference Acceleration with Cooperative AMX-Enabled CPU-GPU Computation and CXL Offloading","description":"\nAbstract​\t单GPU的内存容量限制了大模型推理，使得使用成本高昂的多GPU部署或者在慢速PCIE传输导致性能受限的CPU-GPU部署十分必要。在这个工作中，我们首先benchmark了最新的带有AMX的Intel CPU，包括4th SPR架构和 6th GNR架构的至强处理器，证明矩阵乘法的带宽达到了20TFLOPS和40TFLOPS，都比得上一些最新的GPU.\t这些发现解锁了更...","url":"https://zane-jiang.github.io/notebooks/paper/ISCA-25-LIA-A-Single-GPU-LLM-Inference-Acceleration-with-Cooperative-AMX-Enabled-CPU-GPU-Computation-and-CXL-Offloading/","keywords":"OS"}</script>
   
 </head>
 <body>
@@ -339,7 +341,7 @@
   <a class="cap breadcrumb" href="/notebooks/paper/">paper</a>
 
 </div>
-<div class="flex-row" id="post-meta"><span class="text created">更新于：<time datetime="2025-07-26T10:27:03.634Z">2025-07-26</time></span><span class="sep updated"></span><span class="text updated">发布于：<time datetime="2025-07-16T13:49:53.000Z">2025-07-16</time></span></div></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">更新于：<time datetime="2025-09-10T08:55:01.704Z">2025-09-10</time></span><span class="sep updated"></span><span class="text updated">发布于：<time datetime="2025-07-16T13:49:53.000Z">2025-07-16</time></span></div></div></div>
     
     <div class="bottom only-title">
       
@@ -350,7 +352,31 @@
     </div>
     
   </div>
-  </div><article class="md-text content">
+  </div><article class="md-text content"><p><img src="image-20250910104627774.png" alt="image-20250910104627774"></p>
+<h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><p>​	单GPU的内存容量限制了大模型推理，使得使用成本高昂的多GPU部署或者在慢速PCIE传输导致性能受限的CPU-GPU部署十分必要。在这个工作中，我们首先benchmark了最新的带有AMX的Intel CPU，包括4th SPR架构和 6th GNR架构的至强处理器，证明矩阵乘法的带宽达到了20TFLOPS和40TFLOPS，都比得上一些最新的GPU.	这些发现解锁了更加广泛的CPU计算卸载，减少CPU-GPU传输，与之前代际的CPU相比缓解了带宽瓶颈。</p>
+<blockquote>
+<p>补充：算力分析<br>1.TFLOPS(Trillions of Floating-Point Operations Per Second):每秒万亿次浮点数运算 20~40TFLOPS为中等算力水平</p>
+<p>2.算力场景中，更常使用吞吐量(Throughput)TFLOPS而非理论峰值算力，Throughput 更贴近实际任务的性能表现，Throughput 也是优化 LLM 推理性能的核心目标</p>
+<p>3.常见GPU 算力： 4090 83TFLOPS  | A100 312 FLOPS</p>
+</blockquote>
+<p>基于以上发现，我们设计了LIA，一个单GPU大模型推理加速框架，协同AMX使能的CPU-GPU计算以及CXL卸载，LIA系统的卸载了计算到CPU上，优化了延迟和带宽。这个框架同样介绍了一个内存卸载策略，这个策略无缝的集成了便宜的CXL-DDR内存增强了带宽驱动型任务的性能表现。在有一张H100的SPR系统上，LIA对比之前的单GPU推理框架，达到了5.1到19倍的延迟降低以及3.7到5.1倍的带宽。并且，LIA部署了CXL卸载，产生了一个额外的1.5倍带宽提升（对比纯DDR方案）和1.8倍的最大batch size 提升。</p>
+<h2 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1 Introduction"></a>1 Introduction</h2><p>​	LLM在许多领域释放巨大的潜力，然而，这种前所未有的能力伴随着巨大的花费（指不断扩大的参数规模）。最近的大模型都设计了巨大的参数量，并且 似乎举例参数上限稳定线还十分遥远。这些参数量的增加引发了一个巨大的技术挑战：在一张GPU内保存模型参数和中间值（比如KV-cache和激活值）变得infeasible。即使最新的GPU例如H100达到了94GB的板载HBM内存，但是依旧难以面对推理时的内存需求。针对单GPU的能力限制，最近的一些工作已经转向了多GPU部署，这利用了模型的并行性。然而这些方法在非常昂贵的，同时操作起来十分复杂。例如，部署一个175bilion的参数的OPT模型至少需要5张H100GPU，总花费超过150000刀。因此，通过增加GPU的数量是一种在一些高性价比的经济场景中不是一个可行的方案。许多压缩技术，例如量化、剪枝、以及模型蒸馏（distillation)已经被提出来减轻大模型可拓展性的负担，尽管这些方法减轻了内存需求，然而他们通常以损失模型精度为代价，并且仍然需要多GPU。<strong>一个可选择的方向是系统级别的卸载，将模型参数存储在更大的CPU内存中然后按需传输到GPU中。然而，这些方法面临他自己的内存瓶颈，原因是PCIE的带宽有限（H100 的PCIE带宽是64GB，PCIe5.0),这见满了CPU-GPU的传输，导致了大量的推理延迟</strong>。</p>
+<p>​	<strong>为了减轻大量数据的传输开销，一些方法已经提出选择一些层在CPU上进行计算，然而，这些CPU、GPU协同的框架的效率被CPU计算带宽限制，FlexGen和FastDecode这两个工作卸载了计算最不敏感的子层到CPU，然而PowerInfoer卸载冷神经元到CPU，这显著降低了模型的精度</strong>。除了复杂性以外，大模型需要根据应用的需求运行不同batch size的推理操作。虚拟助手、搜索引擎这这类面向用户接口的请求具有小batch 低延迟的特点，快速响应影响了用户的使用体验。相反，benchmark、信息提取之类的任务具有延迟不敏感性的任务，大batch、高带宽是非常重要的。</p>
+<p>​	为了处理这些挑战，我们推出了LIA框架，一个单GPU推理加速框架，使用了AMX和CXL技术适配了小batch和大batch场景。LIA主要有3点贡献：</p>
+<p><strong>AMX矩阵乘法的综合性能分析</strong>。</p>
+<p><strong>AMX驱动的CPU-GPU协同大模型推理激素</strong></p>
+<p><strong>使用CXL内存来拓展带宽</strong></p>
+<p>LIA主要有两个组件组成：C1:前端算法，决定了那些子层卸载到CPU；C2：后端执行，无缝的集成了AMX CPU 、GPU。LIA允许所有的子层卸载到AMX使能的CPU上。</p>
+<p><strong>前端组件考虑了一些历史因素来决策最优的卸载策略，这些因素包括每个给定了batch size 和token length子层的每字节操作量、CPU-GPU传输数据量、CPU与GPU的计算吞吐量和内存带宽。将这些变量考虑在内，LIA最大化了资源利用率，最小化了端到端延迟</strong>LIA利用了大模型的一个特性：也就是每字节操作比会随着批次大小和输入长度动态波动。这使得在以后系统中，利用所给的批大小和输入长度决定卸载策略，能够得到最小的卸载延迟。</p>
+<p>后端拓展了IPEX(这个拓展原本是用来给GPU或者单一的CPU进行加速)来无缝的集成CPU和GPU。后端拓展同样引入了进一步增强GPU内存和CPU-GPU计算资源的优化。</p>
+<p>使用CXL内存时主要将模型参数卸载 到CXL内存，而DDR内存则存储中间值。</p>
+<h2 id="2-Background"><a href="#2-Background" class="headerlink" title="2.Background"></a>2.Background</h2><h3 id="2-1-LLM-inference"><a href="#2-1-LLM-inference" class="headerlink" title="2.1 LLM inference"></a>2.1 LLM inference</h3><p><img src="image-20250910153213480.png" alt="image-20250910153213480"></p>
+<p>大模型由embedding&#x2F;encoding layer组成，N个decoder layers ,LM head(linear 和 softmax). </p>
+<p>decoder layers主导了推理时间和内存消耗</p>
+<p>一个decoder layer由多个子层组成，包括矩阵乘法、 层归一化、残差和sotfmax。</p>
+<p>N个decoder 有一样的结构，不一样的参数。</p>
+<p>模型接受了输入token序列，然后生成输出token，而后又把新输出的token作为输入，直到结束。</p>
+<h2 id="3-Performance-Bottlenecks-of-Offloading-Frameworks-for-LLM-Inference"><a href="#3-Performance-Bottlenecks-of-Offloading-Frameworks-for-LLM-Inference" class="headerlink" title="3 Performance Bottlenecks of Offloading  Frameworks for LLM Inference"></a>3 Performance Bottlenecks of Offloading  Frameworks for LLM Inference</h2>
 
   <div class="tag-list">
     
@@ -370,7 +396,8 @@
       <div class="header"><span>分享文章</span></div>
       <div class="body">
         <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://zane-jiang.github.io/notebooks/paper/ISCA-25-LIA-A-Single-GPU-LLM-Inference-Acceleration-with-Cooperative-AMX-Enabled-CPU-GPU-Computation-and-CXL-Offloading" /></div>
-        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://zane-jiang.github.io/notebooks/paper/ISCA-25-LIA-A-Single-GPU-LLM-Inference-Acceleration-with-Cooperative-AMX-Enabled-CPU-GPU-Computation-and-CXL-Offloading&title=ISCA`25 LIA A Single-GPU LLM Inference Acceleration with Cooperative AMX-Enabled CPU-GPU Computation and CXL Offloading - Zane Jiang&summary="><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=ISCA`25 LIA A Single-GPU LLM Inference Acceleration with Cooperative AMX-Enabled CPU-GPU Computation and CXL Offloading - Zane Jiang&amp;body=https://zane-jiang.github.io/notebooks/paper/ISCA-25-LIA-A-Single-GPU-LLM-Inference-Acceleration-with-Cooperative-AMX-Enabled-CPU-GPU-Computation-and-CXL-Offloading"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://zane-jiang.github.io/notebooks/paper/ISCA-25-LIA-A-Single-GPU-LLM-Inference-Acceleration-with-Cooperative-AMX-Enabled-CPU-GPU-Computation-and-CXL-Offloading&title=ISCA`25 LIA A Single-GPU LLM Inference Acceleration with Cooperative AMX-Enabled CPU-GPU Computation and CXL Offloading - Zane Jiang&summary=
+Abstract​	单GPU的内存容量限制了大模型推理，使得使用成本高昂的多GPU部署或者在慢速PCIE传输导致性能受限的CPU-GPU部署十分必要。在这个工作中，我们首先benchmark了最新的带有AMX的Intel CPU，包..."><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=ISCA`25 LIA A Single-GPU LLM Inference Acceleration with Cooperative AMX-Enabled CPU-GPU Computation and CXL Offloading - Zane Jiang&amp;body=https://zane-jiang.github.io/notebooks/paper/ISCA-25-LIA-A-Single-GPU-LLM-Inference-Acceleration-with-Cooperative-AMX-Enabled-CPU-GPU-Computation-and-CXL-Offloading"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
         
         <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
           <img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://zane-jiang.github.io/notebooks/paper/ISCA-25-LIA-A-Single-GPU-LLM-Inference-Acceleration-with-Cooperative-AMX-Enabled-CPU-GPU-Computation-and-CXL-Offloading"/>
@@ -407,7 +434,10 @@
 </div>
 </div></footer>
 <div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
-</aside><div class='float-panel'>
+<div class="widgets">
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Abstract"><span class="toc-text">Abstract</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Introduction"><span class="toc-text">1 Introduction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Background"><span class="toc-text">2.Background</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-LLM-inference"><span class="toc-text">2.1 LLM inference</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Performance-Bottlenecks-of-Offloading-Frameworks-for-LLM-Inference"><span class="toc-text">3 Performance Bottlenecks of Offloading  Frameworks for LLM Inference</span></a></li></ol></div><div class="widget-footer"><a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/><path d="M7 3.338A9.95 9.95 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5"/></g></svg><span>回到顶部</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M8 10.5h8M8 14h5.5M17 3.338A9.95 9.95 0 0 0 12 2C6.477 2 2 6.477 2 12c0 1.6.376 3.112 1.043 4.453c.178.356.237.763.134 1.148l-.595 2.226a1.3 1.3 0 0 0 1.591 1.592l2.226-.596a1.63 1.63 0 0 1 1.149.133A9.96 9.96 0 0 0 12 22c5.523 0 10-4.477 10-10c0-1.821-.487-3.53-1.338-5"/></svg><span>参与讨论</span></a></div></widget>
+</div></aside><div class='float-panel'>
   <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
   </button>
