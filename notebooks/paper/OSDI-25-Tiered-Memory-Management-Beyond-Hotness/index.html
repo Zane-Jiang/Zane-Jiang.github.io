@@ -29,7 +29,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://zane-jiang.github.io/images/avatar.jpg">
 <meta property="article:published_time" content="2025-07-08T07:56:58.000Z">
-<meta property="article:modified_time" content="2025-07-26T12:08:48.094Z">
+<meta property="article:modified_time" content="2025-09-30T07:36:43.920Z">
 <meta property="article:author" content="Zane Jiang">
 <meta property="article:tag" content="Paper&#x2F;CXL&#x2F;tiering-memory">
 <meta name="twitter:card" content="summary">
@@ -340,7 +340,7 @@
   <a class="cap breadcrumb" href="/notebooks/paper/">paper</a>
 
 </div>
-<div class="flex-row" id="post-meta"><span class="text created">更新于：<time datetime="2025-07-26T12:08:48.094Z">2025-07-26</time></span><span class="sep updated"></span><span class="text updated">发布于：<time datetime="2025-07-08T07:56:58.000Z">2025-07-08</time></span></div></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">更新于：<time datetime="2025-09-30T07:36:43.920Z">2025-09-30</time></span><span class="sep updated"></span><span class="text updated">发布于：<time datetime="2025-07-08T07:56:58.000Z">2025-07-08</time></span></div></div></div>
     
     <div class="bottom only-title">
       
@@ -373,7 +373,7 @@
 <h2 id="3-Memory-Performance-Prediction"><a href="#3-Memory-Performance-Prediction" class="headerlink" title="3.Memory Performance Prediction"></a>3.Memory Performance Prediction</h2><h3 id="Relating-Slow-tier-Performance-to-CPU-Stalls"><a href="#Relating-Slow-tier-Performance-to-CPU-Stalls" class="headerlink" title="Relating Slow-tier Performance to CPU Stalls"></a>Relating Slow-tier Performance to CPU Stalls</h3><p>离线分析</p>
 <p>Performance degradation on the slow-tier is predominantly caused by increased CPU stalls due to LLC misses, which we refer to as LLC-Stalls</p>
 <p><img src="image-20250708173833417.png" alt="image-20250708173833417"></p>
-<p>强调区分<code>LLC-miss</code>和<code>LLC-Stall</code> 慢速层单次miss造成的延迟更长，假设相同的miss,慢速层也会有更长的LLS-Stall.</p>
+<p>强调区分<code>LLC-miss</code>和<code>LLC-Stall</code> 慢速层单次miss造成的延迟更长，假设相同的miss,慢速层也会有更长的LLC-Stall.</p>
 <p><img src="image-20250708174338745.png" alt="image-20250708174338745"></p>
 <p>论文中讲到基于LLC-Stall来预测减速的误差低于4%，开源以后可以预测一下基于LLC-Miss的（考虑预取器的影响）。</p>
 <h3 id="LLC-Stalls-for-Performance-Prediction"><a href="#LLC-Stalls-for-Performance-Prediction" class="headerlink" title="LLC-Stalls for Performance Prediction"></a>LLC-Stalls for Performance Prediction</h3><p>在线预测</p>
