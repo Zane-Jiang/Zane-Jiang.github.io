@@ -20,16 +20,16 @@
   <title>C++11新特性 - Zane Jiang</title>
 
   
-    <meta name="description" content="很好的面试资料： 整理了一年的Linux C++武林秘籍，你早晚用得到（C++进阶必看） - 知乎  转载并简单整理自知乎 程序喵大人 1.左值引用与完美转发等基本概念: 左值、右值 ：放在等号左边，取地址并且有名字 的就叫左值，反之叫右值 12int a &#x3D; b + c ;int a &#x3D; 4;  纯右值:用于初始化一个对象。 运算表达式产生的临时变量、不和对象关联的原始字面量、返回非引用的函">
+    <meta name="description" content="很好的面试资料： 整理了一年的Linux C++武林秘籍，你早晚用得到（C++进阶必看） - 知乎  转载并简单整理自知乎 程序喵大人 1.左值引用与完美转发等基本概念: 左值、右值 ：放在等号左边，可以取地址并且有名字 的就叫左值，反之叫右值 12int a &#x3D; b + c ;int a &#x3D; 4;  纯右值:用于初始化一个对象。 运算表达式产生的临时变量、不和对象关联的原始字面量、返回非引用">
 <meta property="og:type" content="website">
 <meta property="og:title" content="C++11新特性">
 <meta property="og:url" content="https://zane-jiang.github.io/notebooks/Interview/C++11%E6%96%B0%E7%89%B9%E6%80%A7/">
 <meta property="og:site_name" content="Zane Jiang">
-<meta property="og:description" content="很好的面试资料： 整理了一年的Linux C++武林秘籍，你早晚用得到（C++进阶必看） - 知乎  转载并简单整理自知乎 程序喵大人 1.左值引用与完美转发等基本概念: 左值、右值 ：放在等号左边，取地址并且有名字 的就叫左值，反之叫右值 12int a &#x3D; b + c ;int a &#x3D; 4;  纯右值:用于初始化一个对象。 运算表达式产生的临时变量、不和对象关联的原始字面量、返回非引用的函">
+<meta property="og:description" content="很好的面试资料： 整理了一年的Linux C++武林秘籍，你早晚用得到（C++进阶必看） - 知乎  转载并简单整理自知乎 程序喵大人 1.左值引用与完美转发等基本概念: 左值、右值 ：放在等号左边，可以取地址并且有名字 的就叫左值，反之叫右值 12int a &#x3D; b + c ;int a &#x3D; 4;  纯右值:用于初始化一个对象。 运算表达式产生的临时变量、不和对象关联的原始字面量、返回非引用">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://zane-jiang.github.io/images/avatar.jpg">
 <meta property="article:published_time" content="2025-08-27T07:42:41.000Z">
-<meta property="article:modified_time" content="2025-09-01T13:39:57.125Z">
+<meta property="article:modified_time" content="2025-10-12T09:30:21.525Z">
 <meta property="article:author" content="Zane Jiang">
 <meta property="article:tag" content="cpp">
 <meta name="twitter:card" content="summary">
@@ -49,7 +49,7 @@
 
   
 
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Website","@id":"https://zane-jiang.github.io/notebooks/Interview/C++11%E6%96%B0%E7%89%B9%E6%80%A7/","author":{"@type":"Person","name":"Zane Jiang","sameAs":[],"image":"/images/avatar.jpg"},"name":"C++11新特性","description":"\n 很好的面试资料： 整理了一年的Linux C++武林秘籍，你早晚用得到（C++进阶必看） - 知乎\n\n转载并简单整理自知乎 程序喵大人\n1.左值引用与完美转发等基本概念:\n左值、右值 ：放在等号左边，取地址并且有名字 的就叫左值，反之叫右值\n12int a = b + c ;int a = 4;\n\n纯右值:用于初始化一个对象。 运算表达式产生的临时变量、不和对象关联的原始字面量、返回非引...","url":"https://zane-jiang.github.io/notebooks/Interview/C++11%E6%96%B0%E7%89%B9%E6%80%A7/","keywords":"OS"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Website","@id":"https://zane-jiang.github.io/notebooks/Interview/C++11%E6%96%B0%E7%89%B9%E6%80%A7/","author":{"@type":"Person","name":"Zane Jiang","sameAs":[],"image":"/images/avatar.jpg"},"name":"C++11新特性","description":"\n 很好的面试资料： 整理了一年的Linux C++武林秘籍，你早晚用得到（C++进阶必看） - 知乎\n\n转载并简单整理自知乎 程序喵大人\n1.左值引用与完美转发等基本概念:\n左值、右值 ：放在等号左边，可以取地址并且有名字 的就叫左值，反之叫右值\n12int a = b + c ;int a = 4;\n\n纯右值:用于初始化一个对象。 运算表达式产生的临时变量、不和对象关联的原始字面量、返回...","url":"https://zane-jiang.github.io/notebooks/Interview/C++11%E6%96%B0%E7%89%B9%E6%80%A7/","keywords":"OS"}</script>
   
 </head>
 <body>
@@ -332,7 +332,7 @@
   <a class="cap breadcrumb" href="/notebooks/Interview/">Interview</a>
 
 </div>
-<div class="flex-row" id="post-meta"><span class="text created">更新于：<time datetime="2025-09-01T13:39:57.125Z">2025-09-01</time></span><span class="sep updated"></span><span class="text updated">发布于：<time datetime="2025-08-27T07:42:41.000Z">2025-08-27</time></span></div></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">更新于：<time datetime="2025-10-12T09:30:21.525Z">2025-10-12</time></span><span class="sep updated"></span><span class="text updated">发布于：<time datetime="2025-08-27T07:42:41.000Z">2025-08-27</time></span></div></div></div>
     
     <div class="bottom only-title">
       
@@ -348,7 +348,7 @@
 </blockquote>
 <p>转载并简单整理自<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/139515439">知乎 程序喵大人</a></p>
 <h3 id="1-左值引用与完美转发等"><a href="#1-左值引用与完美转发等" class="headerlink" title="1.左值引用与完美转发等"></a>1.左值引用与完美转发等</h3><h4 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念:"></a>基本概念:</h4><blockquote>
-<p><strong>左值、右值</strong> ：放在等号左边，取地址并且有名字 的就叫左值，反之叫右值</p>
+<p><strong>左值、右值</strong> ：放在等号左边，可以取地址并且有名字 的就叫左值，反之叫右值</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> a = b + c ;</span><br><span class="line"><span class="type">int</span> a = <span class="number">4</span>;</span><br></pre></td></tr></table></figure>
 
 <p><strong>纯右值</strong>:用于初始化一个对象。 运算表达式产生的临时变量、不和对象关联的原始字面量、返回非引用的函数调用、lambda表达式、this指针</p>
@@ -608,7 +608,7 @@
 
 转载并简单整理自知乎 程序喵大人
 1.左值引用与完美转发等基本概念:
-左值、右值 ：放在等号左边，取地址并且有名字 的就叫左值，..."><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=C++11新特性 - Zane Jiang&amp;body=https://zane-jiang.github.io/notebooks/Interview/C++11%E6%96%B0%E7%89%B9%E6%80%A7"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+左值、右值 ：放在等号左边，可以取地址并且有名字 的就叫左..."><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=C++11新特性 - Zane Jiang&amp;body=https://zane-jiang.github.io/notebooks/Interview/C++11%E6%96%B0%E7%89%B9%E6%80%A7"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
         
         <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
           <img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://zane-jiang.github.io/notebooks/Interview/C++11%E6%96%B0%E7%89%B9%E6%80%A7"/>
