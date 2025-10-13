@@ -1,0 +1,1061 @@
+
+<!DOCTYPE html><html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.33.1" theme-name="Stellar" theme-version="1.33.1">
+  <link rel="canonical" href="https://zane-jiang.github.io/notebooks/paper/ASPLOS23%EF%BC%9A%20TPP/">
+  
+  <meta name="generator" content="Hexo 7.3.0">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
+  <meta name="theme-color" content="#f9fafb">
+  <title>Zane Jiang</title>
+
+  
+    <meta name="description" content="TPP：面向 CXL 使能的分层内存透明页放置技术 title: ASPLOS·23 ‘25 TPPdate: 2025-10-13 15:56:58tags: [Paper&#x2F;CXL&#x2F;tiering-memory]notebook: paper摘要超大规模应用对内存需求的持续增长，使得内存成为数据中心总体支出的重要组成部分。CXL（Compute Express Link）等一">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Zane Jiang">
+<meta property="og:url" content="https://zane-jiang.github.io/notebooks/paper/ASPLOS23%EF%BC%9A%20TPP/">
+<meta property="og:site_name" content="Zane Jiang">
+<meta property="og:description" content="TPP：面向 CXL 使能的分层内存透明页放置技术 title: ASPLOS·23 ‘25 TPPdate: 2025-10-13 15:56:58tags: [Paper&#x2F;CXL&#x2F;tiering-memory]notebook: paper摘要超大规模应用对内存需求的持续增长，使得内存成为数据中心总体支出的重要组成部分。CXL（Compute Express Link）等一">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zane-jiang.github.io/images/avatar.jpg">
+<meta property="article:published_time" content="2025-10-13T08:49:54.724Z">
+<meta property="article:modified_time" content="2025-10-13T08:49:54.724Z">
+<meta property="article:author" content="Zane Jiang">
+<meta property="article:tag" content="OS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zane-jiang.github.io/images/avatar.jpg">
+  
+  
+  
+  <meta name="keywords" content="OS">
+
+  <!-- feed -->
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.33.1">
+
+
+  
+
+  
+
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Website","@id":"https://zane-jiang.github.io/notebooks/paper/ASPLOS23%EF%BC%9A%20TPP/","author":{"@type":"Person","name":"Zane Jiang","sameAs":[],"image":"/images/avatar.jpg"},"name":"Zane Jiang","description":"TPP：面向 CXL 使能的分层内存透明页放置技术\ntitle: ASPLOS·23 ‘25 TPPdate: 2025-10-13 15:56:58tags: [Paper&#x2F;CXL&#x2F;tiering-memory]notebook: paper摘要超大规模应用对内存需求的持续增长，使得内存成为数据中心总体支出的重要组成部分。CXL（Compute Express Link...","url":"https://zane-jiang.github.io/notebooks/paper/ASPLOS23%EF%BC%9A%20TPP/","keywords":"OS"}</script>
+  
+</head>
+<body>
+
+<div class="l_body content" id="start" layout="page" type="tech" ><aside class="l_left"><div class="sidebg"></div><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/images/avatar.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main">Zane Jiang</div><div class="sub cap">My notebooks & blog</div></a></div></header>
+
+<div class="nav-area">
+
+<nav class="menu dis-select"><a class="nav-item active" title="Blog" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="notebooks" href="/notebooks/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.25 4.48v3.057c0 .111 0 .27.02.406a.936.936 0 0 0 .445.683a.96.96 0 0 0 .783.072c.13-.04.272-.108.378-.159L17 8.005l1.124.534c.106.05.248.119.378.16a.958.958 0 0 0 .783-.073a.936.936 0 0 0 .444-.683c.021-.136.021-.295.021-.406V3.031c.113-.005.224-.01.332-.013C21.154 2.98 22 3.86 22 4.933v11.21c0 1.112-.906 2.01-2.015 2.08c-.97.06-2.108.179-2.985.41c-1.082.286-1.99 1.068-3.373 1.436c-.626.167-1.324.257-1.627.323V5.174c.32-.079 1.382-.203 1.674-.371c.184-.107.377-.216.576-.323m5.478 8.338a.75.75 0 0 1-.546.91l-4 1a.75.75 0 0 1-.364-1.456l4-1a.75.75 0 0 1 .91.546" clip-rule="evenodd"/><path fill="currentColor" d="M18.25 3.151c-.62.073-1.23.18-1.75.336a8.2 8.2 0 0 0-.75.27v3.182l.75-.356l.008-.005a1.13 1.13 0 0 1 .492-.13c.047 0 .094.004.138.01c.175.029.315.1.354.12l.009.005l.749.356V3.647z"/><path fill="currentColor" d="M12 5.214c-.334-.064-1.057-.161-1.718-.339C8.938 4.515 8.05 3.765 7 3.487c-.887-.234-2.041-.352-3.018-.412C2.886 3.007 2 3.9 2 4.998v11.146c0 1.11.906 2.01 2.015 2.079c.97.06 2.108.179 2.985.41c.486.129 1.216.431 1.873.726c1.005.451 2.052.797 3.127 1.034z" opacity=".5"/><path fill="currentColor" d="M4.273 12.818a.75.75 0 0 1 .91-.545l4 1a.75.75 0 1 1-.365 1.455l-4-1a.75.75 0 0 1-.545-.91m.909-4.545a.75.75 0 1 0-.364 1.455l4 1a.75.75 0 0 0 .364-1.455z"/></svg></a><a class="nav-item" title="Project" href="/project/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none"><path stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M19.647 15.536V8c0-1.886 0-2.828-.586-3.414C18.476 4 17.533 4 15.647 4H12m7.647 11.536l1.744 1.8l.088.092a2 2 0 0 1 .52 1.284l.001.127c0 .15 0 .224-.004.287a2 2 0 0 1-1.87 1.87a5 5 0 0 1-.287.004H4.161c-.15 0-.224 0-.287-.004a2 2 0 0 1-1.87-1.87C2 19.063 2 18.988 2 18.84l.001-.127a2 2 0 0 1 .52-1.284l.088-.092l1.744-1.8m15.294 0h-2.611m-12.683 0V8c0-1.886 0-2.828.586-3.414S6.467 4 8.353 4m-4 11.536H13M9.5 18.5h5"/><path fill="currentColor" d="M12.75 6.75a.75.75 0 1 1-1.5 0a.75.75 0 0 1 1.5 0"/></g></svg></a></nav>
+</div>
+<div class="widgets">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+<widget class="widget-wrapper recent post-list"><div class="widget-header dis-select"><span class="name">最近更新</span></div><div class="widget-body fs14"><a class="item title" href="/2025/09/06/CUDA%20%E7%AE%97%E5%AD%90%E4%BC%98%E5%8C%96%E7%B3%BB%E5%88%97/CUDA%E7%AE%97%E5%AD%90%E4%BC%98%E5%8C%96-SoftMax/"><span class="title">CUDA算子优化-SoftMax</span></a><a class="item title" href="/2025/09/06/CUDA%20%E7%AE%97%E5%AD%90%E4%BC%98%E5%8C%96%E7%B3%BB%E5%88%97/CUDA%E7%AE%97%E5%AD%90%E4%BC%98%E5%8C%96-GEMM/"><span class="title">CUDA算子优化-GEMM</span></a><a class="item title" href="/2025/08/01/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90/"><span class="title">GGML源码浅析(1) 基础数据结构、内存管理、后端管理</span></a><a class="item title" href="/2025/09/06/CUDA%20%E7%AE%97%E5%AD%90%E4%BC%98%E5%8C%96%E7%B3%BB%E5%88%97/CUDA%E7%AE%97%E5%AD%90%E4%BC%98%E5%8C%96-Reduce/"><span class="title">CUDA算子优化-Reduce</span></a><a class="item title" href="/2025/07/29/%E5%87%A0%E7%A7%8D%E7%A8%8B%E5%BA%8F%E6%8E%A5%E5%8F%A3%E9%87%8D%E5%AE%9A%E5%90%91%E3%80%81%E6%8F%92%E6%A1%A9%E6%96%B9%E5%BC%8F%E6%AF%94%E8%BE%83/"><span class="title">几种程序接口重定向、插桩方式比较</span></a><a class="item title" href="/2025/07/18/Qt%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E4%B8%8E%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"><span class="title">Qt源码阅读与设计模式</span></a><a class="item title" href="/2025/07/27/%E8%AE%BA%E6%96%87%E4%B8%AD%E5%B8%B8%E8%A7%81%E5%86%85%E5%AD%98%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90workloads/"><span class="title">论文中常见内存性能分析workloads</span></a></div></widget>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/Zane-Jiang" target="_blank" rel="external nofollow noopener noreferrer"><img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/08a41b181ce68.svg"/></a></div></footer>
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+
+  <span class="sep"></span>
+  <a class="cap breadcrumb" href="/notebooks/paper/ASPLOS23%EF%BC%9A%20TPP/"></a>
+  </div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2025-10-13T08:49:54.724Z">2025-10-13</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2025-10-13T08:49:54.724Z">2025-10-13</time></span></div></div></div>
+    
+  </div>
+  </div><article class="md-text content"><h1 id="TPP：面向-CXL-使能的分层内存透明页放置技术"><a href="#TPP：面向-CXL-使能的分层内存透明页放置技术" class="headerlink" title="TPP：面向 CXL 使能的分层内存透明页放置技术"></a>TPP：面向 CXL 使能的分层内存透明页放置技术</h1><hr>
+<h2 id="title-ASPLOS·23-‘25-TPPdate-2025-10-13-15-56-58tags-Paper-CXL-tiering-memory-notebook-paper"><a href="#title-ASPLOS·23-‘25-TPPdate-2025-10-13-15-56-58tags-Paper-CXL-tiering-memory-notebook-paper" class="headerlink" title="title: ASPLOS·23 ‘25 TPPdate: 2025-10-13 15:56:58tags: [Paper&#x2F;CXL&#x2F;tiering-memory]notebook: paper"></a>title: ASPLOS·23 ‘25 TPP<br>date: 2025-10-13 15:56:58<br>tags: [Paper&#x2F;CXL&#x2F;tiering-memory]<br>notebook: paper</h2><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>超大规模应用对内存需求的持续增长，使得内存成为数据中心总体支出的重要组成部分。CXL（Compute Express Link）等一致性接口的出现，为内存扩展提供了有效解决方案，使主内存能够整合多种特性各异的内存技术。本文通过分析 Meta 服务器集群中各类数据中心应用的内存使用模式，证实了将冷页卸载到低速内存层的可行性。然而，若缺乏高效的内存管理机制，这类分层内存系统会严重降低性能。</p>
+<p>为此，本文提出一种面向 CXL 内存的操作系统级透明页放置机制（TPP）。TPP 采用轻量级方法识别热页与冷页，并将其放置到合适的内存层，支持主动将本地内存中的页面降级到 CXL 内存，为新页面分配预留空间（新分配页面通常与请求处理相关，具有短生命周期和高热特性）。同时，TPP 能快速将滞留在低速 CXL 内存中的性能关键热页提升到高速本地内存，且最小化采样开销与不必要的页面迁移。TPP 无需应用特定知识，可作为内核版本全局部署。</p>
+<p>在支持 CXL 1.1 的新型 x86 CPU 生产服务器集群中，通过多种内存敏感型工作负载对 TPP 进行评估。结果表明，TPP 使分层内存系统性能接近 “全本地内存” 的理想基准（性能差距 &lt; 1%），相比现有 Linux 系统性能提升 18%，相比 NUMA Balancing、AutoTiering 等现有方案性能提升 5%-17%。目前，大部分 TPP 补丁已整合到 Linux v5.18 版本，剩余补丁正处于讨论阶段。</p>
+<h2 id="1-引言"><a href="#1-引言" class="headerlink" title="1 引言"></a>1 引言</h2><p>数据中心应用对内存需求的激增，叠加 DRAM 成本上升与技术缩放挑战，使得内存成为超大规模数据中心基础设施支出的重要部分。非 DRAM 内存技术为构建分层内存子系统、以更低每 GB 成本扩展内存容量提供了可能，但这类技术通常延迟远高于主内存，若页面在内存层级中放置不当，会严重影响性能。此外，有效利用这些技术需提前掌握应用行为并进行精细调优，这在应用种类繁多且快速迭代的超大规模环境中，资源消耗极高。</p>
+<p>CXL（Compute Express Link）通过提供介于 DRAM 与非 DRAM 之间的延迟水平、类 DRAM 带宽和缓存行粒度访问语义，缓解了上述问题。CXL 协议支持新的内存总线接口将内存连接到 CPU，从软件视角看，CXL 内存表现为无 CPU 的 NUMA 节点，其内存特性（带宽、容量、技术类型等）独立于直接连接 CPU 的本地内存，为内存子系统设计提供灵活性与细粒度控制。同时，CXL 内存的类主内存特性为透明页放置创造了条件。然而，Linux 内存管理机制基于同构 CPU 连接 DRAM 设计，在 CXL 内存系统中表现不佳 —— 由于不同内存层访问延迟存在差异，应用性能高度依赖高速内存服务的内存访问比例。</p>
+<p>为验证分层内存的收益，需先分析现有数据中心应用的内存访问行为，包括特定时间段内内存的热、温、冷状态占比及页面生命周期长短。现有基于空闲页跟踪（IPT）的特性分析工具存在明显缺陷：需修改内核（生产环境中通常不可行）、持续的访问位采样与分析会带来过高 CPU 和内存开销（难以支持大规模工作集），且无法区分应用对不同类型页面（匿名页、文件页缓存、共享内存等）的敏感度差异。为此，本文开发轻量级用户态工具 Chameleon，利用 CPU 的精确事件采样（PEBS）机制分析应用内存访问行为，生成不同页面类型的内存使用热力图，为多内存层应用性能预测提供依据。</p>
+<p>通过 Chameleon 对生产环境中不同服务领域的大规模内存密集型应用进行分析，得出以下关键发现：（1）应用工作集中存在大量可卸载到低速内存层且不影响性能的温页与冷页；（2）匿名页（用于程序栈、堆、mmap 调用）中热页占比显著高于文件备份页；（3）页面访问模式在较长时间内（分钟至小时级）保持稳定，为内核层页放置决策提供充足时间窗口；（4）页面分配与回收会导致物理页热度快速变化，静态页分配策略会严重降低性能。</p>
+<p>基于上述发现，本文设计操作系统级透明页放置机制 TPP，实现热页在高速内存层、冷页在低速内存层的高效放置。TPP 包含三大核心组件：（a）轻量级回收机制，将冷页降级到低速 CXL 节点；（b）解耦多 NUMA 系统的分配与回收逻辑，在高速层预留空闲页空间；（c）反应式页提升机制，识别 CXL 内存中的热页并提升到本地内存。此外，TPP 支持基于页面类型的分配策略 —— 优先将敏感匿名页分配到本地内存，文件缓存分配到 CXL 内存，该策略能为特定访问模式的应用提供更优初始状态，加速性能收敛。</p>
+<p>在支持 CXL 1.1 的系统中，对占服务器集群主要份额的四类生产工作负载进行测试。结果显示，TPP 使分层内存系统性能接近全本地内存水平，即使本地 DRAM 仅为系统总内存的 20%，部分工作负载仍能保持这一性能。TPP 将有效热内存全部迁移到本地内存，相比默认 Linux 系统性能提升最高 18%，相比 NUMA Balancing、AutoTiering 等主流分层内存方案性能提升 5%-17%。</p>
+<p>本文的主要贡献如下：</p>
+<ol>
+<li>开发轻量级用户态内存特性分析工具 Chameleon，用于理解工作负载内存消耗行为并评估超大规模数据中心分层内存的应用前景，已开源；</li>
+<li>提出面向分层内存系统的高效内存管理机制 TPP，已开源，大部分代码已整合到 Linux 内核 v5.18，剩余代码正处于上游讨论阶段；</li>
+<li>在支持 CXL 的分层内存系统中，通过真实生产工作负载对 TPP 进行长期评估，证实 TPP 使分层内存性能接近全本地内存水平，相比默认 Linux 提升最高 18%，相比 NUMA Balancing、AutoTiering 提升 5%-17%；</li>
+<li>首次实现并评估可直接部署于超大规模数据中心的端到端 CXL 内存系统。</li>
+</ol>
+<h2 id="2-研究背景与动机"><a href="#2-研究背景与动机" class="headerlink" title="2 研究背景与动机"></a>2 研究背景与动机</h2><h3 id="2-1-数据中心应用内存需求增长"><a href="#2-1-数据中心应用内存需求增长" class="headerlink" title="2.1 数据中心应用内存需求增长"></a>2.1 数据中心应用内存需求增长</h3><p>为构建低延迟服务，内存计算已成为数据中心应用的常态，导致服务器集群内存需求快速增长。随着 CPU 与 DRAM 技术迭代，内存在机架级功耗与总拥有成本（TCO）中的占比持续上升（如图 3 所示），内存成本与功耗优化成为数据中心降本增效的关键。</p>
+<h3 id="2-2-同构服务器设计的扩展性挑战"><a href="#2-2-同构服务器设计的扩展性挑战" class="headerlink" title="2.2 同构服务器设计的扩展性挑战"></a>2.2 同构服务器设计的扩展性挑战</h3><p>当前服务器架构中，内存子系统设计完全依赖 CPU 支持的内存技术，存在诸多限制：（1）内存控制器仅支持单一代际内存技术，无法混合搭配不同成本、带宽与延迟特性的内存；（2）内存容量需按 2 的幂次扩展，难以实现细粒度容量配置；（3）每代 DRAM 的带宽 - 容量组合有限，为获取更高带宽常需过度配置内存容量。这种 CPU 与内存的强耦合限制了高效内存层级的设计，导致计算、网络、内存资源利用率低下。此外，现有支持内存扩展的总线接口多为厂商专有，跨 CPU 兼容性差，且延迟高、缺乏一致性，难以满足超大规模数据中心需求。</p>
+<h3 id="2-3-CXL-对分层内存系统的支撑作用"><a href="#2-3-CXL-对分层内存系统的支撑作用" class="headerlink" title="2.3 CXL 对分层内存系统的支撑作用"></a>2.3 CXL 对分层内存系统的支撑作用</h3><p>CXL 是基于 PCIe 的开放行业互联标准，支持主机处理器与设备（加速器、内存缓冲器、智能 I&#x2F;O 设备等）之间的高速低延迟通信，同时扩展内存容量与带宽。CXL 提供字节可寻址内存空间，支持通过标准内存分配 API 进行透明分配，实现缓存行粒度访问与硬件维护的一致性。随着 PCIe 5.0 的普及，CPU 与 CXL 互联带宽将接近双路服务器跨插槽互联带宽，CXL 内存访问延迟与 NUMA 远程访问延迟相当（仅比普通 DRAM 高 50-100 纳秒）。这种类 NUMA 特性与类主内存访问语义，使 CXL 内存成为数据中心分层内存系统中低速层的理想选择。</p>
+<p>目前，主流芯片厂商均在开发并集成 CXL 解决方案，支持 CXL 所需的工具、驱动与操作系统修改已开源，避免了对单一供应商的依赖。CXL 突破了传统内存子系统的限制，允许根据工作负载需求灵活设计内存子系统的带宽、容量与成本组合，实现计算与内存资源的独立扩展，提升闲置资源利用率。</p>
+<h3 id="2-4-CXL-分层内存系统的应用前景"><a href="#2-4-CXL-分层内存系统的应用前景" class="headerlink" title="2.4 CXL 分层内存系统的应用前景"></a>2.4 CXL 分层内存系统的应用前景</h3><p>数据中心工作负载极少持续使用全部内存，应用常分配大量内存但访问频率低。本文对 Meta 生产服务器集群中四类典型应用的分析显示，任意两分钟内，应用已分配内存中 55%-80% 处于空闲状态。将这些冷页迁移到低速内存层，可为主内存释放空间以容纳更多热页，提升应用性能，同时通过 “小容量高速本地内存 + 大容量低成本 CXL 内存” 的灵活服务器设计，降低总拥有成本（TCO）。</p>
+<p>为简化表述，本文将直接连接 CPU 的内存称为 “本地内存”，CXL 连接的内存称为 “CXL 内存”（CXL 内存可采用 DRAM、NVM、LPDRAM 等任意技术）。</p>
+<h2 id="3-数据中心应用内存特性分析"><a href="#3-数据中心应用内存特性分析" class="headerlink" title="3 数据中心应用内存特性分析"></a>3 数据中心应用内存特性分析</h2><p>为明确分层内存系统在超大规模应用中的适用场景，本文开发轻量级用户态内存访问行为分析工具 Chameleon。该工具需满足以下需求：可在现有生产服务器上部署，不干扰运行中应用，无需修改内核；性能开销低，不影响生产应用行为；能分析应用内存访问的关键特征（热 &#x2F; 温 &#x2F; 冷页占比、页面在各热度层的停留时间、访问频率等）。实际使用中，仅需在少量服务器上运行数小时，即可完成对某类应用的特性分析。</p>
+<h3 id="3-1-Chameleon-工具设计"><a href="#3-1-Chameleon-工具设计" class="headerlink" title="3.1 Chameleon 工具设计"></a>3.1 Chameleon 工具设计</h3><p><img src="/ASPLOS23%EF%BC%9A%20TPP/file-20251013164106431.png"><br>Chameleon 包含 Collector（收集器）与 Worker（分析器）两个组件，分别运行于独立线程：</p>
+<ul>
+<li><strong>Collector（收集器）</strong>：利用现代 CPU 的 PEBS 机制，采集与内存访问相关的硬件性能事件，包括需求加载的末级缓存（LLC）缺失事件（MEM_LOAD_RETIRED.L3_MISS）与需求存储的 TLB 缺失事件（MEM_INST_RETIRED.STLB_MISS_STORES，受硬件限制，无精确的存储 LLC 缺失事件）。采样记录包含内存访问事件对应的进程 ID（PID）与虚拟内存地址。</li>
+</ul>
+<p>采样率需在准确性与性能开销间权衡：高频采样提升准确性，但会增加应用线程开销与 Worker 线程 CPU 消耗。在 Meta 集群中，默认配置为每 200 个事件采样 1 次，实现开销与准确性的平衡。</p>
+<p>为提升灵活性，Collector 将所有 CPU 核心划分为多个组，每次仅对一个或多个核心组启用采样，每 5 秒（默认 mini_interval）轮换核心组。这种 “轮循采样” 机制可进一步调节开销与准确性，还支持为不同核心组配置不同采样事件（如对延迟敏感应用采样半数核心，对存储密集型应用分核心组分别采样加载与存储事件）。</p>
+<p>Collector 将采样数据写入两个哈希表之一，每 1 分钟（默认 interval）唤醒 Worker 处理当前哈希表数据，并切换到另一个哈希表存储下一时段采样数据。</p>
+<ul>
+<li><strong>Worker（分析器）</strong>：运行于独立线程，读取页面访问信息并生成内存访问行为分析结果。将采样记录中的地址视为虚拟页访问（页面大小由操作系统定义，支持 4KB 普通页、2MB&#x2F;1GB 大页等）。为同时分析虚拟地址空间与物理地址空间的特性，Worker 会将采样虚拟页映射到对应的物理页；若应用工作集极大（如 TB 级），可禁用物理地址转换，仅分析虚拟地址空间访问模式。</li>
+</ul>
+<p>对于每个页面，Worker 用 64 位位图记录其在各时间间隔内的活跃状态（活跃则置位），每个时间间隔结束后位图左移 1 位以记录新间隔状态。若需捕捉页面访问频率，可配置每个时间间隔占用多位，但会缩短历史记录长度。生成统计结果并报告后，Worker 进入休眠状态。</p>
+<p>在生产环境中，Chameleon 仅在 CPU 与内存使用率低于 80% 的服务器上运行，未观察到对服务性能的影响，CPU 开销控制在单个核心的 3%-5% 以内。仅在内存带宽敏感且 CPU 核心饱和的合成工作负载中，因 Chameleon 与应用竞争 CPU 资源，性能损失约 7%。</p>
+<h3 id="3-2-生产工作负载概述"><a href="#3-2-生产工作负载概述" class="headerlink" title="3.2 生产工作负载概述"></a>3.2 生产工作负载概述</h3><p>利用 Chameleon 对 Meta 生产服务器集群中四类长期运行、处理真实流量的内存密集型应用进行分析，这些应用覆盖不同服务领域，占服务器集群份额较大，具有代表性：</p>
+<ul>
+<li><strong>Web 服务</strong>：运行虚拟机处理 Web 请求，包括基于 HHVM 的 Web1 和基于 Python 的 Web2；</li>
+<li><strong>缓存服务（Cache）</strong>：分布式内存对象缓存服务，位于 Web 层与数据库层之间，提供低延迟数据查询；</li>
+<li><strong>数据仓库（Data Warehouse）</strong>：统一计算引擎，在计算集群上并行处理数据，协调执行长时间运行的复杂批处理查询；</li>
+<li><strong>广告服务（Ads）</strong>：计算密集型工作负载，读取内存数据并执行机器学习计算。</li>
+</ul>
+<h3 id="3-3-页面热度特征"><a href="#3-3-页面热度特征" class="headerlink" title="3.3 页面热度特征"></a>3.3 页面热度特征</h3><p>数据中心应用的已分配内存中，大量页面在数分钟内保持冷态（如图 7 所示）。Web、Cache、Ads 服务虽占用系统 95%-98% 的内存容量，但在任意两分钟内，平均仅使用 22%-80% 的已分配内存；数据仓库作为计算密集型工作负载，虽占用服务器几乎全部内存，但两分钟内仅 20% 的被访问内存为热页。</p>
+<p><strong>结论</strong>：数据中心应用的被访问内存中，大量页面在分钟级时间内保持冷态，若页放置机制能将这些冷页迁移到低速内存层，分层内存系统将显著受益。</p>
+<h3 id="3-4-不同页面类型的热度差异"><a href="#3-4-不同页面类型的热度差异" class="headerlink" title="3.4 不同页面类型的热度差异"></a>3.4 不同页面类型的热度差异</h3><p>应用根据逻辑与执行需求使用不同类型页面，但匿名页（anon）的热页占比显著高于文件页（file）（如图 8 所示）。以 Web 服务为例，两分钟内匿名页热页占比为 35%-60%，而文件页热页占比仅为 3%-14%。</p>
+<p>缓存服务使用 tmpfs 实现高速内存查询，匿名页主要用于查询处理，文件页占热内存比例较高，但 Cache1 的匿名页两分钟内访问占比为 40%，文件页仅为 25%；Cache2 在两分钟内匿名页与文件页访问占比接近，但一分钟内匿名页热页占比（43%）仍高于文件页（30%）。</p>
+<p>数据仓库与广告服务的匿名页用于计算，文件页用于存储中间计算结果，因此热内存几乎全部为匿名页，文件页多为冷页。</p>
+<p><strong>结论</strong>：短时间间隔内，匿名页中热页占比显著高于文件页，页放置机制需考虑页面类型差异。</p>
+<h3 id="3-5-页面类型使用的时间稳定性"><a href="#3-5-页面类型使用的时间稳定性" class="headerlink" title="3.5 页面类型使用的时间稳定性"></a>3.5 页面类型使用的时间稳定性</h3><p>Web 服务启动时，需将虚拟机二进制文件与字节码加载到内存，此时文件缓存占内存比例较高；随着运行时间增加，匿名页占比逐渐上升，文件缓存被回收以释放空间（如图 9a 所示）。</p>
+<p>缓存服务主要使用文件缓存进行内存查询，文件页占已分配内存的 70%-82%；若匿名页需求增长，文件页会被回收以容纳新匿名页（如图 9b、9c 所示）。</p>
+<p>数据仓库的匿名页占已分配内存的 85%，文件页占 15%，且两类页面占比在运行期间保持稳定（如图 9d 所示）。</p>
+<p><strong>结论</strong>：尽管匿名页与文件页占比可能随时间变化，但应用的页面类型使用模式总体稳定，页放置机制需结合页面类型动态调整策略。</p>
+<h3 id="3-6-页面类型对性能的影响"><a href="#3-6-页面类型对性能的影响" class="headerlink" title="3.6 页面类型对性能的影响"></a>3.6 页面类型对性能的影响</h3><p>内存密集型应用的吞吐量随内存利用率提升而增加，但不同工作负载对页面类型的敏感度存在差异（如图 10 所示）。例如，Web 服务吞吐量随匿名页利用率提升而显著增长；Cache1 的匿名页使用量在生命周期内固定，因此匿名页与文件页利用率对吞吐量无明显影响；Cache2 的高吞吐量对应较高的匿名页利用率；数据仓库的文件页使用量固定，匿名页利用率达到峰值时吞吐量最高。</p>
+<p><strong>结论</strong>：工作负载对不同页面类型的敏感度存在差异，且随时间变化，页放置机制需动态适配这种敏感度差异。</p>
+<h3 id="3-7-冷页重访问时间特征"><a href="#3-7-冷页重访问时间特征" class="headerlink" title="3.7 冷页重访问时间特征"></a>3.7 冷页重访问时间特征</h3><p>冷页可能在后续时间被重新访问，不同工作负载的冷页重访问时间差异显著（如图 11 所示）。Web 服务的冷页中，80% 在十分钟内被重新访问，表明 Web 服务常复用早期分配的页面；缓存服务的冷页也有大量在十分钟内重访问，随机卸载冷页会影响性能；数据仓库的热文件页中，仅 20% 在十分钟内被重新访问，其余为新分配页面。</p>
+<p><strong>结论</strong>：不同工作负载的冷页重访问时间差异大，页放置机制需主动将重访问的冷页（变为热页）迁移到高速内存层，避免高访问延迟。</p>
+<p>综上，数据中心应用存在大量冷页且访问模式稳定，分层内存系统具有广阔应用前景，而高效的页放置机制是发挥分层内存优势的关键。</p>
+<h2 id="4-TPP-设计原则"><a href="#4-TPP-设计原则" class="headerlink" title="4 TPP 设计原则"></a>4 TPP 设计原则</h2><p>随着 CXL 技术的普及，超大规模数据中心开始采用 CXL 使能的异构分层内存系统，不同内存层性能特性差异显著。为优化这类系统性能，需设计透明页放置机制（TPP），实现不同热度页面在对应内存层的高效放置。设计 TPP 需解决三个核心问题：TPP 的实现层级、页面热度检测方法、CXL 内存的抽象方式。本节将阐述这些设计选择的依据与权衡。</p>
+<h3 id="4-1-实现层级选择"><a href="#4-1-实现层级选择" class="headerlink" title="4.1 实现层级选择"></a>4.1 实现层级选择</h3><p>透明页放置机制可在用户态或内核态实现：</p>
+<ul>
+<li><strong>用户态实现</strong>：可基于 Chameleon 类工具检测页面热度，通过<code>move_pages()</code>等用户态 API 实现 NUMA 迁移。但该方式存在明显缺陷：用户态与内核态上下文切换带来额外开销；需在用户态管理页面历史信息，增加处理开销；页面信息存储的内存开销随工作集规模增长而扩大，难以支持大规模场景。因此，用户态实现仅适用于短时间、小范围的性能分析，无法满足全生产集群的持续运行需求。</li>
+<li><strong>内核态实现</strong>：内核态实现无需上下文切换，可直接利用内核现有内存管理组件（如 LRU 链表），开销更低、复杂度更小、性能更优。因此，TPP 选择在内核态实现。</li>
+</ul>
+<h3 id="4-2-页面热度检测方法"><a href="#4-2-页面热度检测方法" class="headerlink" title="4.2 页面热度检测方法"></a>4.2 页面热度检测方法</h3><p>页面热度检测有多种候选技术，需结合可行性、开销与兼容性综合选择：</p>
+<ul>
+<li><strong>PEBS（精确事件采样）</strong>：PEBS 可在硬件层面采集内存访问事件，但存在明显局限：不同 CPU 厂商的 PEBS 计数器不兼容，难以实现跨硬件平台的通用内核级热度检测；CPU 支持的性能计数器数量有限，且通常需暴露给用户态；即使优化后，PEBS 采样在高压力工作负载中仍存在较高开销，不适合作为 TPP 的常驻组件。</li>
+<li><strong>页面中毒（Page Poisoning）</strong>：通过对内存区域中的部分页面进行采样与 “中毒” 跟踪访问事件，是检测热页 &#x2F; 冷页的常用方法。基于 IPT（空闲页跟踪）的页面中毒技术需频繁清除页面访问位并刷新 TLB，导致严重性能下降；Thermostat 通过 2MB 大页粒度采样优化性能，但仅适用于大页场景，而 TPP 需支持任意页面大小（生产环境中应用常使用 2MB&#x2F;1GB 大页存储代码、静态数据等热数据，需避免其被降级到 CXL 内存）。</li>
+<li><strong>NUMA Balancing（AutoNUMA）</strong>：NUMA Balancing 支持任意页面大小，通过采样页面访问生成次要页错误来判断页面热度。但对高频访问页面频繁触发页错误会带来过高开销。TPP 对该技术进行优化：仅将次要页错误作为 CXL 内存的热度检测机制（CXL 内存主要存储温页与冷页，采样开销低）；本地内存的冷页检测则复用 Linux 现有 LRU 老化机制（轻量级且高效）。</li>
+</ul>
+<p>实验证实，结合 LRU 与 NUMA Balancing 的热度检测方法可有效识别 CXL 内存中的热页，且开销接近零。</p>
+<h3 id="4-3-CXL-内存的抽象方式"><a href="#4-3-CXL-内存的抽象方式" class="headerlink" title="4.3 CXL 内存的抽象方式"></a>4.3 CXL 内存的抽象方式</h3><p>CXL 内存可通过现有内存交换机制（如 zswap）作为交换空间存储冷页，但该方式存在关键缺陷：会丧失 CXL 的核心优势 —— 缓存行粒度的加载 &#x2F; 存储访问语义。交换空间抽象下，访问交换页面需触发主要页错误并读取整个页面，导致有效延迟远超 200 纳秒，使 CXL 内存失去竞争力。</p>
+<p>因此，TPP 选择将 CXL 内存视为常规内存而非交换空间，应用可通过加载 &#x2F; 存储指令直接访问 CXL 内存中的温页与冷页，避免页错误开销。需注意的是，基于交换的内存管理机制（如 TMO）与 TPP 并非竞争关系，而是互补：TMO 运行于用户态，通过反馈驱动回收内存；TPP 运行于内核态，优化本地内存与 CXL 内存间的页放置，二者可协同工作。</p>
+<h2 id="5-TPP-机制设计"><a href="#5-TPP-机制设计" class="headerlink" title="5 TPP 机制设计"></a>5 TPP 机制设计</h2><p>高效的页放置机制需实现：将冷页卸载到 CXL 内存，将 CXL 内存中的热页提升到本地内存；支持异构内存技术，适应 CXL 内存的无 CPU NUMA 节点特性；避免分配因回收缓慢而停滞，同时考虑应用对页面类型的敏感度。基于此，TPP 设计包含四大核心模块：轻量级 CXL 降级机制、分配 - 回收解耦、CXL 热页提升、页面类型感知分配。</p>
+<h3 id="5-1-轻量级-CXL-降级机制"><a href="#5-1-轻量级-CXL-降级机制" class="headerlink" title="5.1 轻量级 CXL 降级机制"></a>5.1 轻量级 CXL 降级机制</h3><p>Linux 默认将页面分配到进程运行 CPU 的本地内存节点，当本地内存节点满时，通过交换（swap）回收页面。在 NUMA 系统中，若本地内存回收缓慢，新分配页面会被分配到 CXL 节点，导致性能下降。</p>
+<p>TPP 的降级机制优化：本地内存触发回收时，不执行交换，而是将回收候选页面加入独立降级列表，异步迁移到 CXL 节点（迁移速度远快于交换）。降级候选页面通过 Linux 现有 LRU 机制选择，优先选择非活跃页面，降低热页误降级风险。若 CXL 节点内存不足导致迁移失败，再 fallback 到默认交换回收机制；CXL 节点本身仍使用默认交换回收（CXL 节点性能敏感度低）。</p>
+<p>若系统存在多个 CXL 节点，根据 CPU 到各 CXL 节点的距离选择降级目标（距离越近延迟越低）。该静态距离策略虽简单，但在实验中表现出良好有效性。</p>
+<h3 id="5-2-分配与回收解耦"><a href="#5-2-分配与回收解耦" class="headerlink" title="5.2 分配与回收解耦"></a>5.2 分配与回收解耦</h3><p>Linux 为每个内存节点的内存域维护三个水位线（min、low、high）：当空闲页低于 low 水位线时，触发回收；直到空闲页回升到 high 水位线，才允许新分配。在高分配速率场景下，回收速度难以跟上分配速度，导致本地内存频繁停止分配，新页面被分配到 CXL 节点，性能下降。</p>
+<p>TPP 通过解耦 “回收停止条件” 与 “分配允许条件”，在本地节点主动维持空闲页余量：</p>
+<ul>
+<li>回收逻辑：本地节点的回收持续运行，直到空闲页达到 “降级水位线”（demotion_watermark）；</li>
+<li>分配逻辑：只要空闲页达到 “分配水位线”（allocation_watermark），即可允许新分配。</li>
+</ul>
+<p>其中，降级水位线始终高于分配水位线与 low 水位线，确保本地节点预留充足空闲页。该设计的优势在于：（1）突发分配（通常与请求处理相关，短生命周期、高热）可直接分配到本地内存；（2）本地内存有充足空间接收从 CXL 节点提升的热页。</p>
+<p>为适应不同应用特性，TPP 提供用户态 sysctl 接口（<code>/proc/sys/vm/demote_scale_factor</code>），控制本地节点触发回收的空闲页阈值，默认值为 2%（即空闲页低于本地节点容量的 2% 时启动回收）。管理员可结合工作负载监控工具动态调整该值：若应用分配需求高且冷页占比大，可提高阈值以增强回收积极性；若应用热页占比超过本地节点容量，需降低阈值避免热页频繁迁移。</p>
+<h3 id="5-3-CXL-热页提升机制"><a href="#5-3-CXL-热页提升机制" class="headerlink" title="5.3 CXL 热页提升机制"></a>5.3 CXL 热页提升机制</h3><p>本地内存压力可能导致新页面被分配到 CXL 节点，且降级到 CXL 节点的页面可能重新变为热页。若缺乏提升机制，这些热页会长期滞留 CXL 节点，严重影响性能。TPP 通过增强 Linux NUMA Balancing 实现高效热页提升。</p>
+<h4 id="5-3-1-面向-CXL-的-NUMA-Balancing-优化"><a href="#5-3-1-面向-CXL-的-NUMA-Balancing-优化" class="headerlink" title="5.3.1 面向 CXL 的 NUMA Balancing 优化"></a>5.3.1 面向 CXL 的 NUMA Balancing 优化</h4><p>原生 NUMA Balancing 会采样所有内存节点的页面，对远程访问页面进行提升，但该机制在 CXL 系统中存在冗余：（1）本地内存的热页无需采样，采样会增加不必要的页错误开销；（2）无需将本地内存热页提升到其他节点。因此，TPP 将 NUMA Balancing 采样范围限制为 CXL 节点，仅分析 CXL 节点页面的访问情况。</p>
+<p>提升 CXL 节点热页时，TPP 忽略本地节点的分配水位线检查，通过增加本地节点内存压力，触发冷页回收以容纳提升的热页。若系统存在多个本地节点，优先选择进程当前运行的本地节点；若应用跨多个本地节点，选择内存压力最低的节点作为提升目标。</p>
+<h4 id="5-3-2-避免-“乒乓效应”-的热页识别"><a href="#5-3-2-避免-“乒乓效应”-的热页识别" class="headerlink" title="5.3.2 避免 “乒乓效应” 的热页识别"></a>5.3.2 避免 “乒乓效应” 的热页识别</h4><p>原生 NUMA Balancing 在检测到页面访问时立即提升，未考虑页面活跃状态，导致低频访问页面被误提升到本地节点。这些页面随后可能因本地内存压力被降级回 CXL 节点，形成 “乒乓效应”，浪费带宽与 CPU 资源。</p>
+<p>TPP 通过页面 LRU 状态判断页面活跃度，避免误提升：</p>
+<ul>
+<li>若 CXL 节点的采样页面处于非活跃 LRU 链表，不立即提升（可能为低频访问页）；</li>
+<li>仅当页面处于活跃 LRU 链表时，才将其视为提升候选。</li>
+</ul>
+<p>但 CXL 节点通常内存压力较低，回收不频繁，非活跃 LRU 链表中的页面可能无法自动迁移到活跃链表，导致热页被遗漏。为此，TPP 补充优化：当采样到非活跃 LRU 链表中的页面访问时，立即将页面标记为 “已访问” 并迁移到活跃 LRU 链表；若该页面在后续采样中再次被访问（此时已处于活跃链表），则执行提升。</p>
+<p>该设计为页面提升增加 “滞后性”，结合 Linux 为匿名页与文件页维护独立 LRU 链表的特性，使不同类型页面按自身活跃度独立调整提升速率，加速热页在内存层间的收敛。</p>
+<h3 id="5-4-页面类型感知分配"><a href="#5-4-页面类型感知分配" class="headerlink" title="5.4 页面类型感知分配"></a>5.4 页面类型感知分配</h3><p>上述页放置机制对页面类型无差别处理，但部分应用可通过类型感知分配进一步优化性能。例如，应用预热阶段常进行大量文件 I&#x2F;O，生成的文件缓存多为冷页，若这些文件缓存占据本地内存，会导致匿名页被分配到 CXL 节点，后续需频繁提升，增加迁移开销。</p>
+<p>TPP 支持可选的 “页面类型感知分配” 策略：</p>
+<ul>
+<li>匿名页：优先分配到本地内存（匿名页通常为热页，对性能敏感）；</li>
+<li>文件缓存（含 tmpfs）：优先分配到 CXL 节点（文件缓存多为冷页，对延迟敏感度低）。</li>
+</ul>
+<p>当该策略启用时，应用生命周期内生成的文件缓存初始分配到 CXL 节点；若文件缓存变为热页并被 NUMA Balancing 采样到，再提升到本地内存。该策略使小容量本地内存 + 大容量 CXL 内存的系统能高效支持文件缓存密集型应用，同时保持高性能。</p>
+<h3 id="5-5-TPP-可观测性设计"><a href="#5-5-TPP-可观测性设计" class="headerlink" title="5.5 TPP 可观测性设计"></a>5.5 TPP 可观测性设计</h3><p>为评估 TPP 有效性并排查生产环境问题，TPP 引入多组统计计数器，通过<code>/proc/vmstat</code>接口暴露给用户态，主要包括：</p>
+<ul>
+<li>降级统计：成功降级的匿名页与文件页数量、降级失败次数及原因；</li>
+<li>提升统计：CXL 节点页面采样数、提升尝试次数、成功提升的匿名页与文件页数量；</li>
+<li>乒乓效应跟踪：通过页面标志位（PG_demoted）标记降级页面，统计降级后被提升的页面数量（该值过高表明存在乒乓效应）；</li>
+<li>提升失败分类：按失败原因（本地节点内存不足、页面引用异常、系统级内存紧张等）统计提升失败次数，辅助定位问题。</li>
+</ul>
+<h2 id="6-评估"><a href="#6-评估" class="headerlink" title="6 评估"></a>6 评估</h2><p>本节通过生产环境工作负载对 TPP 进行全面评估，验证其在 CXL 分层内存系统中的性能表现，主要回答三个问题：（1）TPP 在内存层间页面分布与性能提升方面的有效性；（2）TPP 各组件的贡献；（3）TPP 与现有主流方案的性能对比。</p>
+<h3 id="6-1-实验环境"><a href="#6-1-实验环境" class="headerlink" title="6.1 实验环境"></a>6.1 实验环境</h3><ul>
+<li><strong>硬件平台</strong>：采用支持 CXL 1.1 的预生产 x86 CPU，搭配 FPGA-based CXL 内存扩展卡，CXL 内存以无 CPU NUMA 节点形式呈现。当前 FPGA 卡的延迟比目标产品高约 250ns，用于功能验证；主流 x86 CPU 厂商确认，最终产品的 CXL 内存访问延迟将接近双路服务器的远程 NUMA 访问延迟。</li>
+<li><strong>系统配置</strong>：基于双路服务器构建模拟 CXL 系统，配置 1 个含活跃 CPU 核心的本地内存节点与 1 个 CXL 节点；基准环境（全本地内存）通过禁用一个 CPU 插槽的内存与核心，仅保留单个本地节点实现。</li>
+<li><strong>内存配置</strong>：采用两种内存容量比例：（1）2:1（本地内存：CXL 内存）：模拟当前生产环境，本地内存可容纳全部热页；（2）1:4：模拟内存受限场景，本地内存仅能容纳部分热页，测试 TPP 的极限性能。</li>
+<li><strong>工作负载</strong>：选择 Web1、Cache1、Cache2、Data Warehouse 四类生产工作负载，覆盖不同服务领域，均处理真实流量。</li>
+<li><strong>对比方案</strong>：默认 Linux 系统、NUMA Balancing、AutoTiering、TMO（Transparent Memory Offloading）。</li>
+<li><strong>性能指标</strong>：应用吞吐量（核心指标）、本地内存访问占比（底层支撑指标），实验中均关闭磁盘交换，系统内存充足。</li>
+</ul>
+<h3 id="6-2-TPP-有效性评估"><a href="#6-2-TPP-有效性评估" class="headerlink" title="6.2 TPP 有效性评估"></a>6.2 TPP 有效性评估</h3><h4 id="6-2-1-默认生产环境（2-1-配置）"><a href="#6-2-1-默认生产环境（2-1-配置）" class="headerlink" title="6.2.1 默认生产环境（2:1 配置）"></a>6.2.1 默认生产环境（2:1 配置）</h4><ul>
+<li><strong>Web1</strong>：Web1 启动时需加载大量文件到内存，默认 Linux 的回收速度比 TPP 慢 44 倍，导致本地内存很快被文件缓存占满，新匿名页被分配到 CXL 节点且无法提升。默认 Linux 的本地内存访问占比仅 22%，吞吐量比基准低 16.5%。TPP 通过主动降级冷文件页，释放本地内存空间，使 92% 的匿名页分配到本地内存，本地访问占比提升至 90%，吞吐量仅比基准低 0.5%（如图 14a 所示）。</li>
+<li><strong>Cache1</strong>：Cache1 的匿名页与文件页占比稳定，匿名页初始分配到本地内存。默认 Linux 中，仅 8% 的热页滞留 CXL 节点，性能接近基准（吞吐量损失 3%）；TPP 通过提升所有滞留热页，使本地访问占比进一步提高，吞吐量损失降至 0.1%（如图 14b 所示）。</li>
+<li><strong>Cache2</strong>：Cache2 的匿名页虽多分配到本地内存，但两分钟内仅 75% 的匿名页为热页。TPP 可识别并降级冷匿名页，释放空间以提升热文件页，本地访问占比从默认 Linux 的 78% 提升至 91%，吞吐量损失从 2% 降至 0.4%（如图 14c 所示）。</li>
+<li><strong>Data Warehouse</strong>：数据仓库的文件页多为冷页，仅 1&#x2F;3 匿名页为热页，默认 Linux 已能将大部分热页保留在本地内存，因此 TPP 与默认 Linux 性能接近（吞吐量损失均为 0.5%-0.7%）。但 TPP 通过优化匿名页与文件页分布，使本地匿名页占比从 67% 提升至 94%，本地访问占比提高 4%（如图 14d 所示）。</li>
+</ul>
+<h4 id="6-2-2-大规模-CXL-扩展（1-4-配置）"><a href="#6-2-2-大规模-CXL-扩展（1-4-配置）" class="headerlink" title="6.2.2 大规模 CXL 扩展（1:4 配置）"></a>6.2.2 大规模 CXL 扩展（1:4 配置）</h4><p>该配置模拟 “小本地内存 + 大 CXL 内存” 的低成本场景，仅对 Cache 服务进行评估（Web 与数据仓库在该配置下不具生产实用性，但 TPP 仍能使其性能接近基准）。</p>
+<ul>
+<li><strong>Cache1</strong>：默认 Linux 中，文件页占据几乎全部本地内存，85% 的匿名页滞留 CXL 节点，吞吐量比基准低 14%。TPP 通过高效提升，将 97% 的 CXL 匿名热页（一分钟内访问）迁移到本地内存，同时降级冷文件页，使本地访问占比稳定在 85%，吞吐量损失仅 0.5%（如图 15a 所示）。</li>
+<li><strong>Cache2</strong>：默认 Linux 的吞吐量损失达 18%，本地匿名页占比仅 14%。TPP 将 80% 的 CXL 匿名热页提升到本地内存，尽管 41% 的内存访问仍来自 CXL 节点（文件缓存），但吞吐量损失降至 5%（如图 15b 所示）。</li>
+</ul>
+<h4 id="6-2-3-不同-CXL-延迟下的-TPP-表现"><a href="#6-2-3-不同-CXL-延迟下的-TPP-表现" class="headerlink" title="6.2.3 不同 CXL 延迟下的 TPP 表现"></a>6.2.3 不同 CXL 延迟下的 TPP 表现</h4><p>为验证 TPP 对 CXL 延迟变化的适应性，在 2:1 配置下，为 Cache2 设置不同 CXL 延迟（220ns-300ns）。结果显示（如图 16 所示）：</p>
+<ul>
+<li>无论 CXL 延迟如何，TPP 仅允许 4%-5% 的热页留在 CXL 节点，而默认 Linux 的 CXL 热页占比为 22%-25%；</li>
+<li>默认 Linux 的平均内存访问延迟比 TPP 高 7 倍，吞吐量损失是 TPP 的 2.2-2.8 倍。</li>
+</ul>
+<p>这表明 TPP 的热页识别与提升机制不受 CXL 延迟变化影响，始终能将热页高效迁移到本地内存。</p>
+<h3 id="6-3-TPP-组件贡献评估"><a href="#6-3-TPP-组件贡献评估" class="headerlink" title="6.3 TPP 组件贡献评估"></a>6.3 TPP 组件贡献评估</h3><p>以 Cache1 的 1:4 配置为例，分析 TPP 各核心组件的作用。</p>
+<h4 id="6-3-1-分配-回收解耦的影响"><a href="#6-3-1-分配-回收解耦的影响" class="headerlink" title="6.3.1 分配 - 回收解耦的影响"></a>6.3.1 分配 - 回收解耦的影响</h4><p>若关闭该特性，本地节点的回收触发延迟，高内存压力下，TPP 无法及时为提升页面预留空间，新分配页面也只能被分配到 CXL 节点：</p>
+<ul>
+<li>分配速率：无 decoupling 时，本地节点分配速率受回收速率限制，波动较大；有 decoupling 时，本地节点分配速率在 95 百分位提升 1.6 倍（如图 17a 所示）；</li>
+<li>提升速率：无 decoupling 时，本地节点内存频繁不足，提升几乎停滞；有 decoupling 时，提升速率稳定在 50KB&#x2F;s，峰值达 1.2MB&#x2F;s（99 百分位），确保 CXL 热页及时迁移，吞吐量损失从 12% 降至 0.5%（如图 17b 所示）。</li>
+</ul>
+<h4 id="6-3-2-活跃-LRU-热页识别的影响"><a href="#6-3-2-活跃-LRU-热页识别的影响" class="headerlink" title="6.3.2 活跃 LRU 热页识别的影响"></a>6.3.2 活跃 LRU 热页识别的影响</h4><p>仅将活跃 LRU 页面作为提升候选，可有效减少不必要的提升：</p>
+<ul>
+<li>提升速率降低 11 倍，降级后再提升的页面数量减少 50%；</li>
+<li>尽管降级速率降低 4%，但本地节点空闲页利用率提升，提升成功率提高 48%；</li>
+<li>本地内存访问占比提高 4%，吞吐量提升 2.4%；</li>
+<li>性能收敛时间仅增加 5 分钟，对整体性能影响可忽略（如图 18 所示）。</li>
+</ul>
+<h4 id="6-3-3-页面类型感知分配的影响"><a href="#6-3-3-页面类型感知分配的影响" class="headerlink" title="6.3.3 页面类型感知分配的影响"></a>6.3.3 页面类型感知分配的影响</h4><p>启用该策略后，Web 与 Cache 服务在小本地内存配置下仍能接近全本地性能（如表 2 所示）：</p>
+<ul>
+<li>Web1（2:1）：本地访问占比 97%，吞吐量损失 0.5%；</li>
+<li>Cache1（1:4）：本地访问占比 85%，吞吐量损失 0.2%；</li>
+<li>Cache2（1:4）：本地访问占比 72%，吞吐量损失 1.5%。</li>
+</ul>
+<p>该策略通过初始分配优化，减少后续迁移开销，为特定应用提供更优性能基线。</p>
+<h3 id="6-4-与现有方案的性能对比"><a href="#6-4-与现有方案的性能对比" class="headerlink" title="6.4 与现有方案的性能对比"></a>6.4 与现有方案的性能对比</h3><h4 id="6-4-1-TPP-vs-NUMA-Balancing-AutoTiering"><a href="#6-4-1-TPP-vs-NUMA-Balancing-AutoTiering" class="headerlink" title="6.4.1 TPP vs. NUMA Balancing &amp; AutoTiering"></a>6.4.1 TPP vs. NUMA Balancing &amp; AutoTiering</h4><ul>
+<li><p><strong>Web1（2:1 配置）</strong>：</p>
+<ul>
+<li>NUMA Balancing：回收速度比 TPP 慢 42 倍，提升速率慢 11 倍，本地访问占比仅 20%，吞吐量损失 17.2%，且因冗余采样，CPU 开销比 TPP 高 2%；</li>
+<li>AutoTiering：虽回收速度较快，但分配 - 回收耦合导致预留缓存很快耗尽，CXL 访问占比达 70%，吞吐量损失 13%；</li>
+<li>TPP：吞吐量损失仅 0.5%，显著优于两种方案（如图 19a 所示）。</li>
+</ul>
+</li>
+<li><p><strong>Cache1（1:4 配置）</strong>：</p>
+<ul>
+<li>NUMA Balancing：本地内存压力下停止提升，本地访问占比仅 46%，吞吐量损失 10%；</li>
+<li>AutoTiering：无法在 1:4 配置下运行（预热后查询阶段频繁崩溃）；在 2:1 配置下，TPP 的本地访问占比比 AutoTiering 高 10%，吞吐量提升 7%（如图 19b 所示）。</li>
+</ul>
+</li>
+</ul>
+<h4 id="6-4-2-TPP-vs-TMO"><a href="#6-4-2-TPP-vs-TMO" class="headerlink" title="6.4.2 TPP vs. TMO"></a>6.4.2 TPP vs. TMO</h4><p>TMO 通过监控应用资源 stall 情况，基于压力 stall 信息（PSI）将冷页卸载到交换空间，但该机制在 CXL 系统中存在局限：</p>
+<ul>
+<li>内存利用率：TMO 仅能利用 CXL 内存的 45%（Web1）、61%（Cache1）、7%（Data Warehouse），而 TPP 能利用 83%、92%、87%；</li>
+<li>性能开销：TMO 的交换机制需页错误触发页面加载，导致频繁 stall，而 TPP 无此开销。</li>
+</ul>
+<p>TPP 与 TMO 可协同工作：TMO 通过交换释放系统级内存，为 TPP 的页面迁移提供更多空间，降低迁移失败率。例如，Web1（2:1 配置）中，TPP+TMO 的迁移失败率从 20 页 &#x2F; 秒降至 5 页 &#x2F; 秒，CXL 访问占比从 3.1% 降至 2.7%（如表 3 所示）；同时，TPP 将 TMO 的交换转化为 “降级 - 交换” 两阶段过程，减少 TMO 的进程 stall（从 70% 降至 40%），内存节省提升 3%（如表 4 所示）。</p>
+<h2 id="7-讨论与未来工作"><a href="#7-讨论与未来工作" class="headerlink" title="7 讨论与未来工作"></a>7 讨论与未来工作</h2><p>TPP 为第一代 CXL 分层内存系统的生产部署提供了可行方案，但随着技术发展，仍有以下方向值得探索：</p>
+<h3 id="7-1-多租户云环境的分层内存"><a href="#7-1-多租户云环境的分层内存" class="headerlink" title="7.1 多租户云环境的分层内存"></a>7.1 多租户云环境的分层内存</h3><p>在多租户云环境中，TPP 需支持不同租户对内存层的竞争性共享。若本地内存占比高，现有机制可满足需求；但当租户具有不同优先级与 QoS 需求时，TPP 的无差别策略可能导致性能次优。未来需在 TPP 基础上集成 QoS 感知的内存管理，根据租户优先级分配本地内存资源，确保高优先级租户的性能保障。</p>
+<h3 id="7-2-面向带宽扩展的分配策略"><a href="#7-2-面向带宽扩展的分配策略" class="headerlink" title="7.2 面向带宽扩展的分配策略"></a>7.2 面向带宽扩展的分配策略</h3><p>对于内存带宽密集型应用，CPU-DRAM 带宽常成为瓶颈。CXL 的额外带宽可通过将部分带宽敏感、延迟不敏感的页面分配到 CXL 内存，实现带宽扩展。未来需研究如何识别这类页面，确定最优分配比例，甚至探索硬件支持以提升识别精度，实现 “延迟 - 带宽” 双维度的页放置优化。</p>
+<h3 id="7-3-硬件辅助的页放置优化"><a href="#7-3-硬件辅助的页放置优化" class="headerlink" title="7.3 硬件辅助的页放置优化"></a>7.3 硬件辅助的页放置优化</h3><p>硬件特性可进一步提升 TPP 性能：（1）CXL ASIC 上的内存侧缓存与预取器，可降低 CXL 内存的有效延迟；（2）硬件支持的页面迁移，可减少 CPU 参与的迁移开销。当前 TPP 的迁移带宽为 4-16MB&#x2F;s（1-4K 页 &#x2F; 秒），远低于 CXL 链路带宽，CPU 开销可忽略；但对于 “极小本地内存 + 极大 CXL 内存” 的极端配置，硬件辅助迁移将成为关键优化点。</p>
+<h2 id="8-相关工作"><a href="#8-相关工作" class="headerlink" title="8 相关工作"></a>8 相关工作</h2><h3 id="8-1-分层内存系统"><a href="#8-1-分层内存系统" class="headerlink" title="8.1 分层内存系统"></a>8.1 分层内存系统</h3><p>随着低延迟非 DRAM 技术的发展，异构内存系统成为研究热点，已有大量工作探索利用 NVM 扩展主内存。CXL 技术的出现，为分层内存系统提供了介于 DRAM 与 NVM 之间的中间层，实现灵活且高性能的服务器设计，主流厂商均在推进 CXL 分层内存系统的研发与部署。</p>
+<h3 id="8-2-分层内存的页放置技术"><a href="#8-2-分层内存的页放置技术" class="headerlink" title="8.2 分层内存的页放置技术"></a>8.2 分层内存的页放置技术</h3><p>现有页放置技术可分为三类：</p>
+<ul>
+<li><strong>硬件辅助</strong>：依赖特定硬件特性实现页热度检测与迁移，但跨平台兼容性差，难以大规模部署；</li>
+<li><strong>应用引导</strong>：需应用修改代码或提供内存访问信息，增加开发成本，无法适配现有应用；</li>
+<li><strong>透明页放置</strong>：通过分析物理或虚拟地址空间的访问模式识别热页，但常因 TLB 失效、中断等导致高开销。</li>
+</ul>
+<p>TPP 与现有透明页放置技术的核心差异在于：（1）复用 Linux 现有 LRU 机制与 NUMA Balancing，无需额外硬件支持，开销低；（2）解耦分配与回收逻辑，确保本地内存预留充足空间；（3）结合页面类型感知，优化初始分配与迁移策略。</p>
+<p>基于交换的内存管理（如 TMO）将 CXL 内存视为交换空间，需页错误触发页面加载，而 TPP 将 CXL 内存视为常规内存，支持直接访问，避免页错误开销。AutoTiering 等方案虽也采用背景迁移与 NUMA Balancing 优化，但缺乏分配 - 回收解耦与页面类型感知，在高压力场景下性能劣于 TPP。</p>
+<h3 id="8-3-内存解聚"><a href="#8-3-内存解聚" class="headerlink" title="8.3 内存解聚"></a>8.3 内存解聚</h3><p>内存解聚技术将远程主机的内存作为共享资源池，主要基于 RDMA 网络，延迟远高于 CXL（微秒级 vs 纳秒级），其内存管理机制与 TPP 正交 —— 可将 CXL 内存与远程解聚内存作为不同内存层，分别通过 TPP 与解聚管理方案优化。</p>
+<h2 id="9-结论"><a href="#9-结论" class="headerlink" title="9 结论"></a>9 结论</h2><p>本文通过轻量级用户态工具 Chameleon，分析数据中心应用的内存使用模式，证实了 CXL 分层内存系统的应用前景。基于分析结果，设计操作系统级透明页放置机制 TPP，实现热页在本地内存、冷页在 CXL 内存的高效放置。TPP 无需应用特定知识，通过轻量级降级、分配 - 回收解耦、精准热页提升与页面类型感知，最小化性能损失与开销。</p>
+<p>在支持 CXL 的生产服务器集群中，通过多种工作负载评估表明：TPP 使分层内存系统性能接近全本地内存（差距 &lt; 1%），相比默认 Linux 提升 18%，相比 NUMA Balancing、AutoTiering 提升 5%-17%。大部分 TPP 代码已整合到 Linux 内核，为超大规模数据中心的 CXL 分层内存部署提供实用解决方案。</p>
+</article>
+
+  <div class="related-wrap md-text" id="comments">
+    <section class='header cmt-title cap theme'>
+      <p>快来参与讨论吧~</p>
+
+    </section>
+    <section class='body cmt-body giscus'>
+      
+
+<svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg>
+
+<div id="giscus" src="https://giscus.app/client.js" data-repo="Zane-Jiang/hexo_blog_comments_repo" data-repo-id="R_kgDOPOKoVA" data-category="Announcements" data-category-id="DIC_kwDOPOKoVM4CtFQv" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous"></div>
+
+    </section>
+  </div>
+
+
+
+<footer class="page-footer footnote"><hr><div class="text"><div style="text-align:center; font-size:0.8rem; font-weight:bold; margin:2em 0;">
+  本站由 <a href="/">Zane Jiang</a> 使用
+  <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.33.1">Stellar 1.33.1</a>
+  主题创建，一款很棒的 Hexo 主题！
+
+<p>   <span id="busuanzi_container_site_pv">总访问   <span id="busuanzi_value_site_pv">  </span>  次    ||  <span id="busuanzi_container_page_pv">本页访问   <span id="busuanzi_value_page_pv">  </span>  次<br>   <span id="busuanzi_container_site_uv">总访客   <span id="busuanzi_value_site_uv">  </span>  人    ||  <span id="busuanzi_container_page_uv">本页访客   <span id="busuanzi_value_page_uv">  </span>  人<br>   </span> <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></p>
+</div>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#TPP%EF%BC%9A%E9%9D%A2%E5%90%91-CXL-%E4%BD%BF%E8%83%BD%E7%9A%84%E5%88%86%E5%B1%82%E5%86%85%E5%AD%98%E9%80%8F%E6%98%8E%E9%A1%B5%E6%94%BE%E7%BD%AE%E6%8A%80%E6%9C%AF"><span class="toc-text">TPP：面向 CXL 使能的分层内存透明页放置技术</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#title-ASPLOS%C2%B723-%E2%80%9825-TPPdate-2025-10-13-15-56-58tags-Paper-CXL-tiering-memory-notebook-paper"><span class="toc-text">title: ASPLOS·23 ‘25 TPPdate: 2025-10-13 15:56:58tags: [Paper&#x2F;CXL&#x2F;tiering-memory]notebook: paper</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%91%98%E8%A6%81"><span class="toc-text">摘要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%BC%95%E8%A8%80"><span class="toc-text">1 引言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E7%A0%94%E7%A9%B6%E8%83%8C%E6%99%AF%E4%B8%8E%E5%8A%A8%E6%9C%BA"><span class="toc-text">2 研究背景与动机</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E5%BA%94%E7%94%A8%E5%86%85%E5%AD%98%E9%9C%80%E6%B1%82%E5%A2%9E%E9%95%BF"><span class="toc-text">2.1 数据中心应用内存需求增长</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E5%90%8C%E6%9E%84%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%AE%BE%E8%AE%A1%E7%9A%84%E6%89%A9%E5%B1%95%E6%80%A7%E6%8C%91%E6%88%98"><span class="toc-text">2.2 同构服务器设计的扩展性挑战</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-CXL-%E5%AF%B9%E5%88%86%E5%B1%82%E5%86%85%E5%AD%98%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%94%AF%E6%92%91%E4%BD%9C%E7%94%A8"><span class="toc-text">2.3 CXL 对分层内存系统的支撑作用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-CXL-%E5%88%86%E5%B1%82%E5%86%85%E5%AD%98%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%BA%94%E7%94%A8%E5%89%8D%E6%99%AF"><span class="toc-text">2.4 CXL 分层内存系统的应用前景</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E5%BA%94%E7%94%A8%E5%86%85%E5%AD%98%E7%89%B9%E6%80%A7%E5%88%86%E6%9E%90"><span class="toc-text">3 数据中心应用内存特性分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-Chameleon-%E5%B7%A5%E5%85%B7%E8%AE%BE%E8%AE%A1"><span class="toc-text">3.1 Chameleon 工具设计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E7%94%9F%E4%BA%A7%E5%B7%A5%E4%BD%9C%E8%B4%9F%E8%BD%BD%E6%A6%82%E8%BF%B0"><span class="toc-text">3.2 生产工作负载概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E9%A1%B5%E9%9D%A2%E7%83%AD%E5%BA%A6%E7%89%B9%E5%BE%81"><span class="toc-text">3.3 页面热度特征</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-%E4%B8%8D%E5%90%8C%E9%A1%B5%E9%9D%A2%E7%B1%BB%E5%9E%8B%E7%9A%84%E7%83%AD%E5%BA%A6%E5%B7%AE%E5%BC%82"><span class="toc-text">3.4 不同页面类型的热度差异</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-5-%E9%A1%B5%E9%9D%A2%E7%B1%BB%E5%9E%8B%E4%BD%BF%E7%94%A8%E7%9A%84%E6%97%B6%E9%97%B4%E7%A8%B3%E5%AE%9A%E6%80%A7"><span class="toc-text">3.5 页面类型使用的时间稳定性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-6-%E9%A1%B5%E9%9D%A2%E7%B1%BB%E5%9E%8B%E5%AF%B9%E6%80%A7%E8%83%BD%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="toc-text">3.6 页面类型对性能的影响</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-7-%E5%86%B7%E9%A1%B5%E9%87%8D%E8%AE%BF%E9%97%AE%E6%97%B6%E9%97%B4%E7%89%B9%E5%BE%81"><span class="toc-text">3.7 冷页重访问时间特征</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-TPP-%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99"><span class="toc-text">4 TPP 设计原则</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E5%AE%9E%E7%8E%B0%E5%B1%82%E7%BA%A7%E9%80%89%E6%8B%A9"><span class="toc-text">4.1 实现层级选择</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E9%A1%B5%E9%9D%A2%E7%83%AD%E5%BA%A6%E6%A3%80%E6%B5%8B%E6%96%B9%E6%B3%95"><span class="toc-text">4.2 页面热度检测方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-CXL-%E5%86%85%E5%AD%98%E7%9A%84%E6%8A%BD%E8%B1%A1%E6%96%B9%E5%BC%8F"><span class="toc-text">4.3 CXL 内存的抽象方式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-TPP-%E6%9C%BA%E5%88%B6%E8%AE%BE%E8%AE%A1"><span class="toc-text">5 TPP 机制设计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E8%BD%BB%E9%87%8F%E7%BA%A7-CXL-%E9%99%8D%E7%BA%A7%E6%9C%BA%E5%88%B6"><span class="toc-text">5.1 轻量级 CXL 降级机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-%E5%88%86%E9%85%8D%E4%B8%8E%E5%9B%9E%E6%94%B6%E8%A7%A3%E8%80%A6"><span class="toc-text">5.2 分配与回收解耦</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-CXL-%E7%83%AD%E9%A1%B5%E6%8F%90%E5%8D%87%E6%9C%BA%E5%88%B6"><span class="toc-text">5.3 CXL 热页提升机制</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#5-3-1-%E9%9D%A2%E5%90%91-CXL-%E7%9A%84-NUMA-Balancing-%E4%BC%98%E5%8C%96"><span class="toc-text">5.3.1 面向 CXL 的 NUMA Balancing 优化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-3-2-%E9%81%BF%E5%85%8D-%E2%80%9C%E4%B9%92%E4%B9%93%E6%95%88%E5%BA%94%E2%80%9D-%E7%9A%84%E7%83%AD%E9%A1%B5%E8%AF%86%E5%88%AB"><span class="toc-text">5.3.2 避免 “乒乓效应” 的热页识别</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-4-%E9%A1%B5%E9%9D%A2%E7%B1%BB%E5%9E%8B%E6%84%9F%E7%9F%A5%E5%88%86%E9%85%8D"><span class="toc-text">5.4 页面类型感知分配</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-5-TPP-%E5%8F%AF%E8%A7%82%E6%B5%8B%E6%80%A7%E8%AE%BE%E8%AE%A1"><span class="toc-text">5.5 TPP 可观测性设计</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E8%AF%84%E4%BC%B0"><span class="toc-text">6 评估</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-%E5%AE%9E%E9%AA%8C%E7%8E%AF%E5%A2%83"><span class="toc-text">6.1 实验环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-TPP-%E6%9C%89%E6%95%88%E6%80%A7%E8%AF%84%E4%BC%B0"><span class="toc-text">6.2 TPP 有效性评估</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#6-2-1-%E9%BB%98%E8%AE%A4%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%EF%BC%882-1-%E9%85%8D%E7%BD%AE%EF%BC%89"><span class="toc-text">6.2.1 默认生产环境（2:1 配置）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-2-2-%E5%A4%A7%E8%A7%84%E6%A8%A1-CXL-%E6%89%A9%E5%B1%95%EF%BC%881-4-%E9%85%8D%E7%BD%AE%EF%BC%89"><span class="toc-text">6.2.2 大规模 CXL 扩展（1:4 配置）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-2-3-%E4%B8%8D%E5%90%8C-CXL-%E5%BB%B6%E8%BF%9F%E4%B8%8B%E7%9A%84-TPP-%E8%A1%A8%E7%8E%B0"><span class="toc-text">6.2.3 不同 CXL 延迟下的 TPP 表现</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-3-TPP-%E7%BB%84%E4%BB%B6%E8%B4%A1%E7%8C%AE%E8%AF%84%E4%BC%B0"><span class="toc-text">6.3 TPP 组件贡献评估</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#6-3-1-%E5%88%86%E9%85%8D-%E5%9B%9E%E6%94%B6%E8%A7%A3%E8%80%A6%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="toc-text">6.3.1 分配 - 回收解耦的影响</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-3-2-%E6%B4%BB%E8%B7%83-LRU-%E7%83%AD%E9%A1%B5%E8%AF%86%E5%88%AB%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="toc-text">6.3.2 活跃 LRU 热页识别的影响</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-3-3-%E9%A1%B5%E9%9D%A2%E7%B1%BB%E5%9E%8B%E6%84%9F%E7%9F%A5%E5%88%86%E9%85%8D%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="toc-text">6.3.3 页面类型感知分配的影响</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-4-%E4%B8%8E%E7%8E%B0%E6%9C%89%E6%96%B9%E6%A1%88%E7%9A%84%E6%80%A7%E8%83%BD%E5%AF%B9%E6%AF%94"><span class="toc-text">6.4 与现有方案的性能对比</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#6-4-1-TPP-vs-NUMA-Balancing-AutoTiering"><span class="toc-text">6.4.1 TPP vs. NUMA Balancing &amp; AutoTiering</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-4-2-TPP-vs-TMO"><span class="toc-text">6.4.2 TPP vs. TMO</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E8%AE%A8%E8%AE%BA%E4%B8%8E%E6%9C%AA%E6%9D%A5%E5%B7%A5%E4%BD%9C"><span class="toc-text">7 讨论与未来工作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-1-%E5%A4%9A%E7%A7%9F%E6%88%B7%E4%BA%91%E7%8E%AF%E5%A2%83%E7%9A%84%E5%88%86%E5%B1%82%E5%86%85%E5%AD%98"><span class="toc-text">7.1 多租户云环境的分层内存</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-2-%E9%9D%A2%E5%90%91%E5%B8%A6%E5%AE%BD%E6%89%A9%E5%B1%95%E7%9A%84%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5"><span class="toc-text">7.2 面向带宽扩展的分配策略</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-3-%E7%A1%AC%E4%BB%B6%E8%BE%85%E5%8A%A9%E7%9A%84%E9%A1%B5%E6%94%BE%E7%BD%AE%E4%BC%98%E5%8C%96"><span class="toc-text">7.3 硬件辅助的页放置优化</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C"><span class="toc-text">8 相关工作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8-1-%E5%88%86%E5%B1%82%E5%86%85%E5%AD%98%E7%B3%BB%E7%BB%9F"><span class="toc-text">8.1 分层内存系统</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-%E5%88%86%E5%B1%82%E5%86%85%E5%AD%98%E7%9A%84%E9%A1%B5%E6%94%BE%E7%BD%AE%E6%8A%80%E6%9C%AF"><span class="toc-text">8.2 分层内存的页放置技术</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-3-%E5%86%85%E5%AD%98%E8%A7%A3%E8%81%9A"><span class="toc-text">8.3 内存解聚</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-%E7%BB%93%E8%AE%BA"><span class="toc-text">9 结论</span></a></li></ol></li></ol></div><div class="widget-footer"><a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/><path d="M7 3.338A9.95 9.95 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5"/></g></svg><span>回到顶部</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M8 10.5h8M8 14h5.5M17 3.338A9.95 9.95 0 0 0 12 2C6.477 2 2 6.477 2 12c0 1.6.376 3.112 1.043 4.453c.178.356.237.763.134 1.148l-.595 2.226a1.3 1.3 0 0 0 1.591 1.592l2.226-.596a1.63 1.63 0 0 1 1.149.133A9.96 9.96 0 0 0 12 22c5.523 0 10-4.477 10-10c0-1.821-.487-3.53-1.338-5"/></svg><span>参与讨论</span></a></div></widget>
+</div></aside><div class='float-panel'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+
+
+<script type="text/javascript">
+  window.canonical = {"originalHost":"zane-jiang.github.io","officialHosts":["localhost"],"encoded":"emFuZS1qaWFuZy5naXRodWIuaW8="};
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+    tag_plugins: {
+      chat: Object.assign({"api":"https://siteinfo.listentothewind.cn/api/v1"}),
+    }
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"skip_search":null,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/cover/76b86c0226ffd.svg`,
+    loading: `https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd`,
+  };
+  const deps = {
+    jquery: `https://gcore.jsdelivr.net/npm/jquery@3.7/dist/jquery.min.js`,
+    marked: `https://gcore.jsdelivr.net/npm/marked@13.0/lib/marked.umd.min.js`,
+    lazyload: `/%5Bobject%20Object%5D`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  
+  function RunItem() {
+    this.list = []; // 存放回调函数
+    this.start = () => {
+      for (var i = 0; i < this.list.length; i++) {
+        this.list[i].run();
+      }
+    };
+    this.push = (fn, name, setRequestAnimationFrame = true) => {
+      let myfn = fn
+      if (setRequestAnimationFrame) {
+        myfn = () => {
+          utils.requestAnimationFrame(fn)
+        }
+      }
+      var f = new Item(myfn, name);
+      this.list.push(f);
+    };
+    this.remove = (name) => {
+      for (let index = 0; index < this.list.length; index++) {
+        const e = this.list[index];
+        if (e.name == name) {
+          this.list.splice(index, 1);
+        }
+      }
+    }
+    // 构造一个可以run的对象
+    function Item(fn, name) {
+      // 函数名称
+      this.name = name || fn.name;
+      // run方法
+      this.run = () => {
+        try {
+          fn()
+        } catch (error) {
+          console.log(error);
+        }
+      };
+    }
+  }
+
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')) {
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function () {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      const maxRetry = 3;
+      let retryCount = 0;
+
+      return new Promise((resolve, reject) => {
+        const load = () => {
+          utils.onLoading?.(el);
+
+          let timedOut = false;
+          const timeout = setTimeout(() => {
+            timedOut = true;
+            console.warn('[request] 超时:', url);
+
+            if (++retryCount >= maxRetry) {
+              utils.onLoadFailure?.(el);
+              onFailure?.();
+              reject('请求超时');
+            } else {
+              setTimeout(load, 1000);
+            }
+          }, 5000);
+
+          fetch(url).then(resp => {
+            if (timedOut) return;
+            clearTimeout(timeout);
+
+            if (!resp.ok) throw new Error('响应失败');
+            return resp;
+          }).then(data => {
+            if (timedOut) return;
+            utils.onLoadSuccess?.(el);
+            callback(data);
+            resolve(data);
+          }).catch(err => {
+            clearTimeout(timeout);
+            console.warn('[request] 错误:', err);
+
+            if (++retryCount >= maxRetry) {
+              utils.onLoadFailure?.(el);
+              onFailure?.();
+              reject(err);
+            } else {
+              setTimeout(load, 1000);
+            }
+          });
+        };
+
+        load();
+      });
+    },
+    requestWithoutLoading: (url, options = {}, maxRetry = 2, timeout = 5000) => {
+      return new Promise((resolve, reject) => {
+        let retryCount = 0;
+
+        const tryRequest = () => {
+          let timedOut = false;
+          const timer = setTimeout(() => {
+            timedOut = true;
+            if (++retryCount > maxRetry) reject('timeout');
+            else tryRequest();
+          }, timeout);
+
+          fetch(url, options)
+            .then(resp => {
+              clearTimeout(timer);
+              if (!resp.ok) throw new Error('bad response');
+              resolve(resp);
+            })
+            .catch(err => {
+              clearTimeout(timer);
+              if (++retryCount > maxRetry) reject(err);
+              else setTimeout(tryRequest, 500);
+            });
+        };
+
+        tryRequest();
+      });
+    },
+    /********************** requestAnimationFrame ********************************/
+    // 1、requestAnimationFrame 会把每一帧中的所有 DOM 操作集中起来，在一次重绘或回流中就完成，并且重绘或回流的时间间隔紧紧跟随浏览器的刷新频率，一般来说，这个频率为每秒60帧。
+    // 2、在隐藏或不可见的元素中，requestAnimationFrame 将不会进行重绘或回流，这当然就意味着更少的的 cpu，gpu 和内存使用量。
+    requestAnimationFrame: (fn) => {
+      if (!window.requestAnimationFrame) {
+        window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame;
+      }
+      window.requestAnimationFrame(fn)
+    },
+    dark: {},
+  };
+
+  // utils.dark.mode 当前模式 dark or light
+  // utils.dark.toggle() 暗黑模式触发器
+  // utils.dark.push(callBack[,"callBackName"]) 传入触发器回调函数
+  utils.dark.method = {
+    toggle: new RunItem(),
+  };
+  utils.dark = Object.assign(utils.dark, {
+    push: utils.dark.method.toggle.push,
+  });
+</script>
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+<script type="text/javascript">
+  (() => {
+    const tagSwitchers = document.querySelectorAll('.tag-subtree.parent-tag > a > .tag-switcher-wrapper')
+    for (const tagSwitcher of tagSwitchers) {
+      tagSwitcher.addEventListener('click', (e) => {
+        const parent = e.target.closest('.tag-subtree.parent-tag')
+        parent.classList.toggle('expanded')
+        e.preventDefault()
+      })
+    }
+
+    // Get active tag from query string, then activate it.
+    const urlParams = new URLSearchParams(window.location.search)
+    const activeTag = urlParams.get('tag')
+    if (activeTag) {
+      let tag = document.querySelector(`.tag-subtree[data-tag="${activeTag}"]`)
+      if (tag) {
+        tag.querySelector('a').classList.add('active')
+        
+        while (tag) {
+          tag.classList.add('expanded')
+          tag = tag.parentElement.closest('.tag-subtree.parent-tag')
+        }
+      }
+    }
+  })()
+</script>
+
+<script async src="https://gcore.jsdelivr.net/npm/vanilla-lazyload@19.1/dist/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+    callback_loaded: (el) => {
+      el.classList.add('loaded');
+      const wrapper = el.closest('.lazy-box');
+      const icon = wrapper?.querySelector('.lazy-icon');
+      if (icon) icon.remove();
+    }
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+
+  window.wrapLazyloadImages = (container) => {
+    if (typeof container === 'string') {
+      container = document.querySelector(container);
+    }
+    if (!container) return;
+    
+    const images = container.querySelectorAll('img');
+    images.forEach((img) => {
+      if (img.classList.contains('lazy')) return;
+
+      const src = img.getAttribute('src');
+      if (!src) return;
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'lazy-box';
+
+      const newImg = img.cloneNode();
+      newImg.removeAttribute('src');
+      newImg.setAttribute('data-src', src);
+      newImg.classList.add('lazy');
+
+      const icon = document.createElement('div');
+      icon.className = 'lazy-icon';
+      if (def.loading) {
+        icon.style.backgroundImage = `url("${def.loading}")`;
+      }
+
+      wrapper.appendChild(newImg);
+      wrapper.appendChild(icon);
+
+      img.replaceWith(wrapper);
+    });
+
+    // 通知 LazyLoad 更新
+    if (window.lazyLoadInstance?.update) {
+      window.lazyLoadInstance.update();
+    }
+  }
+  
+</script>
+
+<!-- required -->
+<script src="/js/main.js?v=1.33.1" defer></script>
+
+<script type="text/javascript">
+  const applyTheme = (theme) => {
+    if (theme === 'auto') {
+      document.documentElement.removeAttribute('data-theme')
+    } else {
+      document.documentElement.setAttribute('data-theme', theme)
+    }
+
+    // applyThemeToGiscus(theme)
+  }
+
+  // FIXME: 这会导致无法使用 preferred_color_scheme 以外的主题
+  const applyThemeToGiscus = (theme) => {
+    // theme = theme === 'auto' ? 'preferred_color_scheme' : theme
+    const cmt = document.getElementById('giscus')
+    if (cmt) {
+      // This works before giscus load.
+      cmt.setAttribute('data-theme', theme)
+    }
+
+    const iframe = document.querySelector('#comments > section.giscus > iframe')
+    if (iframe) {
+      // This works after giscus loaded.
+      const src = iframe.src
+      const newSrc = src.replace(/theme=[\w]+/, `theme=${theme}`)
+      iframe.src = newSrc
+    }
+  }
+
+  const switchTheme = () => {
+    // light -> dark -> auto -> light -> ...
+    const currentTheme = document.documentElement.getAttribute('data-theme')
+    let newTheme;
+    switch (currentTheme) {
+      case 'light':
+        newTheme = 'dark'
+        break
+      case 'dark':
+        newTheme = 'auto'
+        break
+      default:
+        newTheme = 'light'
+    }
+    applyTheme(newTheme)
+    window.localStorage.setItem('Stellar.theme', newTheme)
+    utils.dark.mode = newTheme === 'auto' ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : newTheme;
+    utils.dark.method.toggle.start();
+
+    const messages = {
+      light: `切换到浅色模式`,
+      dark: `切换到深色模式`,
+      auto: `切换到跟随系统配色`,
+    }
+    hud?.toast?.(messages[newTheme])
+  }
+
+  (() => {
+    // Apply user's preferred theme, if any.
+    const theme = window.localStorage.getItem('Stellar.theme')
+    if (theme !== null) {
+      applyTheme(theme)
+    } else {
+      utils.dark.mode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    utils.dark.method.toggle.start();
+  })()
+</script>
+
+
+<!-- optional -->
+
+  <script type="module">
+  const el = document.querySelector('#comments #giscus');
+  util.viewportLazyload(el, load_discus, false);
+
+  function load_discus() {
+    if (!el) return;
+    try {
+        el.innerHTML = '';
+      } catch (error) {
+        console.error(error);
+      }
+      const script = document.createElement('script');
+      script.async = true;
+      for (const key of Object.keys(el.attributes)) {
+        const attr = el.attributes[key];
+        if (['class', 'id'].includes(attr.name) === false) {
+          script.setAttribute(attr.name, attr.value);
+        }
+      }
+      el.appendChild(script);
+  }
+</script>
+
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"rating":{"js":"/js/services/rating.js","api":"https://star-vote.xaox.cc/api/rating"},"vote":{"js":"/js/services/vote.js","api":"https://star-vote.xaox.cc/api/vote"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"friends_and_posts":{"js":"/js/services/friends_and_posts.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"},"voice":{"js":"/js/plugins/voice.js"},"video":{"js":"/js/plugins/video.js"},"download-file":{"js":"/js/plugins/download-file.js"},"twikoo":{"js":"/js/services/twikoo_latest_comment.js"},"waline":{"js":"/js/services/waline_latest_comment.js"},"artalk":{"js":"/js/services/artalk_latest_comment.js"},"giscus":{"js":"/js/services/giscus_latest_comment.js"},"contributors":{"edit_this_page":{"_posts/":null,"wiki/stellar/":"https://github.com/xaoxuu/hexo-theme-stellar-docs/blob/main/"},"js":"/js/services/contributors.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else if (id == 'voice') {
+        ctx.voiceAudios = document.querySelectorAll('.voice>audio');
+        if (ctx.voiceAudios?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            createVoiceDom(ctx.voiceAudios);
+          });
+        }
+      } else if (id == 'video') {
+        ctx.videos = document.querySelectorAll('.video>video');
+        if (ctx.videos?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            videoEvents(ctx.videos);
+          });
+        }
+      } else if (id == 'download-file') {
+        ctx.files = document.querySelectorAll('.file');
+        if (ctx.files?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            downloadFileEvent(ctx.files);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+
+    // chat iphone time
+    let phoneTimes = document.querySelectorAll('.chat .status-bar .time');
+
+    if (phoneTimes.length > 0) {
+      NowTime();
+      var date = new Date();
+      var sec = date.getSeconds();
+      var firstAdjustInterval = setInterval(firstAdjustTime, 1000 * (60 - sec));
+    }
+
+    function firstAdjustTime() {
+      NowTime();
+      clearInterval(firstAdjustInterval);
+      setInterval(NowTime, 1000 * 60);
+    }
+
+    function NowTime() {
+      for (let i = 0; i < phoneTimes.length; ++i) {
+        var timeSpan = phoneTimes[i];
+        var date = new Date();
+        var hour = date.getHours();
+        var min = date.getMinutes();
+        timeSpan.innerHTML = check(hour) + ":" + check(min);
+      }
+    };
+
+    function check(val) {
+      if (val < 10) {
+        return ("0" + val);
+      }
+      return (val);
+    }
+
+    // chat quote
+    const chat_quote_obverser = new IntersectionObserver((entries, observer) => {
+      entries.filter((entry) => { return entry.isIntersecting }).sort((a, b) => a.intersectionRect.y !== b.intersectionRect.y ? a.intersectionRect.y - b.intersectionRect.y : a.intersectionRect.x - b.intersectionRect.x).forEach((entry, index) => {
+          observer.unobserve(entry.target);
+          setTimeout(() => {
+            entry.target.classList.add('quote-blink');
+            setTimeout(() => {
+              entry.target.classList.remove('quote-blink');
+            }, 1000);
+          }, Math.max(100, 16) * (index + 1));
+        });
+    });
+
+    var chatQuotes = document.querySelectorAll(".chat .talk .quote");
+    chatQuotes.forEach((quote) => {
+      quote.addEventListener('click', function () {
+        var chatCellDom = document.getElementById("quote-" + quote.getAttribute("quotedCellTag"));
+        if (chatCellDom) {
+          var chatDiv = chatCellDom.parentElement;
+          var mid = chatDiv.clientHeight / 2;
+          var offsetTop = chatCellDom.offsetTop;
+          if (offsetTop > mid - chatCellDom.clientHeight / 2) {
+            chatDiv.scrollTo({
+              top: chatCellDom.offsetTop - mid + chatCellDom.clientHeight / 2,
+              behavior: "smooth"
+            });
+          } else {
+            chatDiv.scrollTo({
+              top: 0,
+              behavior: "smooth"
+            });
+          }
+          chat_quote_obverser.observe(chatCellDom);
+        }
+      });
+    });
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://gcore.jsdelivr.net/npm/flying-pages@2/flying-pages.min.js"></script><script>
+  ctx.fancybox = {
+    selector: `.timenode p>img`,
+    css: `https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css`,
+    js: `https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js`
+  };
+  var selector = '[data-fancybox]:not(.error), .with-fancybox .atk-content img:not([atk-emoticon])';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const memos = document.getElementsByClassName('ds-memos');
+    if (memos != undefined && memos.length > 0) {
+      needFancybox = true;
+    }
+    const fancybox = document.getElementsByClassName('with-fancybox');
+    if (fancybox != undefined && fancybox.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || slide.triggerEl.dataset.caption || null
+        }
+      });
+    })
+  }
+</script>
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          rewind: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script>
+
+
+<!-- inject -->
+
+</div></body></html>
