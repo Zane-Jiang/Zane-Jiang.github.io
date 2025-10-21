@@ -28,8 +28,8 @@
 <meta property="og:description" content="声明，本文中相关内容只做学习交流。不涉及核心技术。 智能电力储物柜介绍简介本项目中的工具柜已经商用，主要为某国企的电力相关的子公司需要对其电力工地中的工具智能化管理，因此提出了软件实现需求，相关工具柜设计也是依照该公司需求完成。项目分为三部分：柜体及硬件实现(电路设计)、设备端软件、服务中心监控管理系统。 本人利用工作读研gap期处于能力提升与经济目的主导该项目推进，主要一个3人团队主要参与设备端">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://zane-jiang.github.io/images/avatar.jpg">
-<meta property="article:published_time" content="2025-10-21T06:45:12.684Z">
-<meta property="article:modified_time" content="2025-10-21T06:45:12.684Z">
+<meta property="article:published_time" content="2025-10-21T06:49:47.166Z">
+<meta property="article:modified_time" content="2025-10-21T06:49:47.166Z">
 <meta property="article:author" content="Zane Jiang">
 <meta property="article:tag" content="OS">
 <meta name="twitter:card" content="summary">
@@ -59,7 +59,7 @@
 <div class="l_body content" id="start" layout="page" type="tech" ><aside class="l_left"><div class="sidebg"></div><div class="leftbar-container">
 
 
-<header class="header"><div class="logo-wrap"><div class="icon"><img no-lazy class="icon" src="https://gcore.jsdelivr.net/gh/cdn-x/wiki/stellar/icon.svg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></div><a class="title" href="/project/SmartLocker/"><div class="main">SmartLocker</div><div class="sub normal cap">SmartLocker</div><div class="sub hover cap" style="opacity:0"> Qt</div></a></div></header>
+<header class="header"><div class="logo-wrap"><div class="icon"><img no-lazy class="icon" src="/images/smartLocker.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></div><a class="title" href="/project/SmartLocker/"><div class="main">SmartLocker</div><div class="sub normal cap">SmartLocker</div><div class="sub hover cap" style="opacity:0"> Qt</div></a></div></header>
 
 <div class="nav-area">
 
@@ -84,7 +84,7 @@
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
 <span class="sep"></span><a class="cap breadcrumb" id="menu" href="/project/">文档</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/project/SmartLocker/">SmartLocker</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">更新于：<time datetime="2025-10-21T06:45:12.684Z">2025-10-21</time></span></div></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">更新于：<time datetime="2025-10-21T06:49:47.166Z">2025-10-21</time></span></div></div></div>
     
     <div class="bottom only-title">
       
@@ -121,12 +121,11 @@
 <p>采取的方案是数据库增量更新+本地文件记录的方案。每次发生本地数据库更新操作以后，生成特定的更新事件ID号，并写入缓冲文件，能够通过这个ID找到对应的数据库列。</p>
 <p>后台有一个守护线程，定时扫描缓冲文件中的ID号，如果联网则将缓存文件中ID对应的最终数据库列进行上报，如果找不到这个列，则上报该列以删除，并通过该列号计算此前缓冲文件中的ID，不上报删除以前对该列的其他操作。完成上报以后，删除该ID。若没有联网，则ID会一直累计，直到下次联网时一并上报。</p>
 <p>这样的机制保证了弱网环境下最大程度的可靠数据同步。</p>
-<h5 id="多软件设备调试"><a href="#多软件设备调试" class="headerlink" title="多软件设备调试"></a>多软件设备调试</h5><p>本项目最大工作量之一，调试各种硬件设备，尤其是RFID的SDK中自身存在bug，最终在厂家更改SDK后解决：<br><img src="/file-20251021143724730.png"></p>
+<h5 id="多软件设备调试"><a href="#多软件设备调试" class="headerlink" title="多软件设备调试"></a>多软件设备调试</h5><p>本项目最大工作量之一，调试各种硬件设备，尤其是RFID的SDK中自身存在bug，最终在厂家更改SDK后解决：<br><img src="/project/SmartLocker/index/file-20251021143724730.png"></p>
 <h2 id="项目展示"><a href="#项目展示" class="headerlink" title="项目展示"></a>项目展示</h2><p>第一版柜体原型：<br>可以看到左侧主柜依次包含了摄像头、主显示屏、酒精检测仪，用于录入的RFID与URFID读写器，从柜包含钥匙以及各种工具。</p>
-<p><img src="/file-20251021143951435.png"><br><img src="/file-20251021144002473.png"></p>
+<p><img src="/project/SmartLocker/index/file-20251021143951435.png"><br><img src="/file-20251021144002473.png"></p>
 <p>第一版部分界面实现</p>
-<p><img src="/file-20251021144145535.png"><br><img src="/file-20251021144202746.png"><br><img src="/file-20251021144232698.png"><br><img src="/file-20251021144345834.png"><br>第二版UI优化<br><img src="/file-20251021144314756.png"></p>
-<p>开发Git提交部分记录<br><img src="/file-20251021144435296.png"></p>
+<p><img src="/project/SmartLocker/index/file-20251021144145535.png"><br><img src="/project/SmartLocker/index/file-20251021144202746.png"><br><img src="/project/iSet/index/file-20251021144232698.png"><br><img src="/project/SmartLocker/index/file-20251021144345834.png"><br>第二版UI优化<br><img src="/project/SmartLocker/index/file-20251021144314756.png"></p>
 </article>
 <div class="article-footer">
 
