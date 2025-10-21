@@ -1,0 +1,931 @@
+
+<!DOCTYPE html><html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.33.1" theme-name="Stellar" theme-version="1.33.1">
+  <link rel="canonical" href="https://zane-jiang.github.io/notebooks/paper/MICRO-25-LongSight:%20Compute-Enabled%20Memory%20to%20Accelerate%20Large-Context%20LLMs%20via%20Sparse%20Attention/">
+  
+  <meta name="generator" content="Hexo 7.3.0">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
+  <meta name="theme-color" content="#f9fafb">
+  <title>MICRO-25-LongSight ｜Compute-Enabled Memory to Accelerate Large-Context LLMs via Sparse Attention - Zane Jiang</title>
+
+  
+    <meta name="description" content="摘要基于 Transformer 的大型语言模型（LLMs）中的大输入上下文窗口有助于减少幻觉现象，提高输出准确性和个性化程度。然而，随着上下文窗口的扩大，注意力阶段在执行时间中的占比逐渐增加。键值（KV）缓存通过避免重复计算缓解了部分成本，但 KV 缓存本身可能很快超出当今 GPU 高带宽内存（HBM）的容量。在本研究中，我们提出了 LongSight，这是一种用于在大上下文场景下加速注意力计">
+<meta property="og:type" content="website">
+<meta property="og:title" content="MICRO-25-LongSight ｜Compute-Enabled Memory to Accelerate Large-Context LLMs via Sparse Attention">
+<meta property="og:url" content="https://zane-jiang.github.io/notebooks/paper/MICRO-25-LongSight:%20Compute-Enabled%20Memory%20to%20Accelerate%20Large-Context%20LLMs%20via%20Sparse%20Attention/">
+<meta property="og:site_name" content="Zane Jiang">
+<meta property="og:description" content="摘要基于 Transformer 的大型语言模型（LLMs）中的大输入上下文窗口有助于减少幻觉现象，提高输出准确性和个性化程度。然而，随着上下文窗口的扩大，注意力阶段在执行时间中的占比逐渐增加。键值（KV）缓存通过避免重复计算缓解了部分成本，但 KV 缓存本身可能很快超出当今 GPU 高带宽内存（HBM）的容量。在本研究中，我们提出了 LongSight，这是一种用于在大上下文场景下加速注意力计">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zane-jiang.github.io/images/avatar.jpg">
+<meta property="article:published_time" content="2025-10-21T05:22:57.000Z">
+<meta property="article:modified_time" content="2025-10-21T07:11:32.413Z">
+<meta property="article:author" content="Zane Jiang">
+<meta property="article:tag" content="CXL">
+<meta property="article:tag" content="LLM">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zane-jiang.github.io/images/avatar.jpg">
+  
+  
+  
+  <meta name="keywords" content=",">
+
+  <!-- feed -->
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.33.1">
+
+
+  
+
+  
+
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Website","@id":"https://zane-jiang.github.io/notebooks/paper/MICRO-25-LongSight:%20Compute-Enabled%20Memory%20to%20Accelerate%20Large-Context%20LLMs%20via%20Sparse%20Attention/","author":{"@type":"Person","name":"Zane Jiang","sameAs":[],"image":"/images/avatar.jpg"},"name":"MICRO-25-LongSight ｜Compute-Enabled Memory to Accelerate Large-Context LLMs via Sparse Attention","description":"\n摘要基于 Transformer 的大型语言模型（LLMs）中的大输入上下文窗口有助于减少幻觉现象，提高输出准确性和个性化程度。然而，随着上下文窗口的扩大，注意力阶段在执行时间中的占比逐渐增加。键值（KV）缓存通过避免重复计算缓解了部分成本，但 KV 缓存本身可能很快超出当今 GPU 高带宽内存（HBM）的容量。在本研究中，我们提出了 LongSight，这是一种用于在大上下文场景下加速注...","url":"https://zane-jiang.github.io/notebooks/paper/MICRO-25-LongSight:%20Compute-Enabled%20Memory%20to%20Accelerate%20Large-Context%20LLMs%20via%20Sparse%20Attention/","keywords":"OS"}</script>
+  
+</head>
+<body>
+
+<div class="l_body content" id="start" layout="page" type="tech" ><aside class="l_left"><div class="sidebg"></div><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/images/avatar.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main">Zane Jiang</div><div class="sub cap">My notebooks & blog</div></a></div></header>
+
+<div class="nav-area">
+
+<nav class="menu dis-select"><a class="nav-item active" title="Blog" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="notebooks" href="/notebooks/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.25 4.48v3.057c0 .111 0 .27.02.406a.936.936 0 0 0 .445.683a.96.96 0 0 0 .783.072c.13-.04.272-.108.378-.159L17 8.005l1.124.534c.106.05.248.119.378.16a.958.958 0 0 0 .783-.073a.936.936 0 0 0 .444-.683c.021-.136.021-.295.021-.406V3.031c.113-.005.224-.01.332-.013C21.154 2.98 22 3.86 22 4.933v11.21c0 1.112-.906 2.01-2.015 2.08c-.97.06-2.108.179-2.985.41c-1.082.286-1.99 1.068-3.373 1.436c-.626.167-1.324.257-1.627.323V5.174c.32-.079 1.382-.203 1.674-.371c.184-.107.377-.216.576-.323m5.478 8.338a.75.75 0 0 1-.546.91l-4 1a.75.75 0 0 1-.364-1.456l4-1a.75.75 0 0 1 .91.546" clip-rule="evenodd"/><path fill="currentColor" d="M18.25 3.151c-.62.073-1.23.18-1.75.336a8.2 8.2 0 0 0-.75.27v3.182l.75-.356l.008-.005a1.13 1.13 0 0 1 .492-.13c.047 0 .094.004.138.01c.175.029.315.1.354.12l.009.005l.749.356V3.647z"/><path fill="currentColor" d="M12 5.214c-.334-.064-1.057-.161-1.718-.339C8.938 4.515 8.05 3.765 7 3.487c-.887-.234-2.041-.352-3.018-.412C2.886 3.007 2 3.9 2 4.998v11.146c0 1.11.906 2.01 2.015 2.079c.97.06 2.108.179 2.985.41c.486.129 1.216.431 1.873.726c1.005.451 2.052.797 3.127 1.034z" opacity=".5"/><path fill="currentColor" d="M4.273 12.818a.75.75 0 0 1 .91-.545l4 1a.75.75 0 1 1-.365 1.455l-4-1a.75.75 0 0 1-.545-.91m.909-4.545a.75.75 0 1 0-.364 1.455l4 1a.75.75 0 0 0 .364-1.455z"/></svg></a><a class="nav-item" title="Project" href="/project/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none"><path stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M19.647 15.536V8c0-1.886 0-2.828-.586-3.414C18.476 4 17.533 4 15.647 4H12m7.647 11.536l1.744 1.8l.088.092a2 2 0 0 1 .52 1.284l.001.127c0 .15 0 .224-.004.287a2 2 0 0 1-1.87 1.87a5 5 0 0 1-.287.004H4.161c-.15 0-.224 0-.287-.004a2 2 0 0 1-1.87-1.87C2 19.063 2 18.988 2 18.84l.001-.127a2 2 0 0 1 .52-1.284l.088-.092l1.744-1.8m15.294 0h-2.611m-12.683 0V8c0-1.886 0-2.828.586-3.414S6.467 4 8.353 4m-4 11.536H13M9.5 18.5h5"/><path fill="currentColor" d="M12.75 6.75a.75.75 0 1 1-1.5 0a.75.75 0 0 1 1.5 0"/></g></svg></a></nav>
+</div>
+<div class="widgets">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+<widget class="widget-wrapper recent post-list"><div class="widget-header dis-select"><span class="name">最近更新</span></div><div class="widget-body fs14"><a class="item title" href="/notebooks/paper/MICRO-25-LongSight:%20Compute-Enabled%20Memory%20to%20Accelerate%20Large-Context%20LLMs%20via%20Sparse%20Attention/"><span class="title">MICRO-25-LongSight ｜Compute-Enabled Memory to Accelerate Large-Context LLMs via Sparse Attention</span></a></div></widget>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/Zane-Jiang" target="_blank" rel="external nofollow noopener noreferrer"><img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/08a41b181ce68.svg"/></a></div></footer>
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span>
+<a class="cap breadcrumb" href="/notebooks/">笔记本</a>
+
+
+</div>
+<div class="flex-row" id="post-meta"><span class="text created">更新于：<time datetime="2025-10-21T07:11:32.413Z">2025-10-21</time></span><span class="sep updated"></span><span class="text updated">发布于：<time datetime="2025-10-21T05:22:57.000Z">2025-10-21</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>MICRO-25-LongSight ｜Compute-Enabled Memory to Accelerate Large-Context LLMs via Sparse Attention</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><p><img src="/MICRO-25-LongSight-%20Compute-Enabled%20Memory%20to%20Accelerate%20Large-Context%20LLMs%20via%20Sparse%20Attention/file-20251021132414768.png"></p>
+<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>基于 Transformer 的大型语言模型（LLMs）中的大输入上下文窗口有助于减少幻觉现象，提高输出准确性和个性化程度。然而，随着上下文窗口的扩大，注意力阶段在执行时间中的占比逐渐增加。键值（KV）缓存通过避免重复计算缓解了部分成本，但 KV 缓存本身可能很快超出当今 GPU 高带宽内存（HBM）的容量。在本研究中，我们提出了 LongSight，这是一种用于在大上下文场景下加速注意力计算的算法 - 硬件协同设计框架。LongSight 利用原本为密集检索加速设计的计算使能 CXL 内存设备，实现 KV 缓存存储和检索的卸载。因此，LongSight 有效地将成本相对较低的 LPDDR DRAM 的价值提升至高端 HBM 的水平。我们的实验表明，仅使用单个 GPU 和单个计算使能 CXL 内存扩展器，LongSight 就能为最先进的 Llama 模型高效支持高达 100 万个令牌的上下文长度。</p>
+<h2 id="1-引言"><a href="#1-引言" class="headerlink" title="1 引言"></a>1 引言</h2><p>预训练大型语言模型（LLMs）需要获取最新且相关的信息，以减少幻觉现象并生成准确、个性化的输出。这些信息通常作为模型输入上下文的一部分提供。事实上，在测试时技术（如思维链、少样本提示、草稿本提示、ReAct 等）、检索增强生成 以及输入数据（如长文档、代码或多轮交互）复杂度不断提升的推动下，LLMs 正越来越多地应用于需要扩展上下文窗口的场景中。</p>
+<p>随着上下文长度的增加，推理过程的计算和内存需求也随之增长。特别是，随着上下文窗口的扩大，基于 Transformer 的 LLMs 中的注意力阶段往往会主导执行时间。键值（KV）缓存通过以增加内存压力为代价避免重复计算，在一定程度上缓解了这一问题。然而，对于更大的上下文窗口，KV 缓存的大小可能很快超出当前神经处理单元（NPUs）（如 GPU 或 TPU）上可用的高带宽内存（HBM）容量。</p>
+<p>DReX是一种最新的计算使能 CXL 内存扩展器，用于加速密集检索。密集检索正越来越多地被用于实现检索增强生成（RAG），其中可检索项以高维嵌入向量的形式存储在向量数据库中，通过计算查询向量与嵌入向量之间的余弦相似度来识别语义相关项。DReX 在高容量 CXL 内存扩展器的 LPDDR DRAM 芯片内部及附近集成了轻量级加速器。它还引入了符号位过滤机制，无需从 DRAM 中获取完整的嵌入向量即可快速修剪搜索空间，从而显著提高密集检索的性能。</p>
+<p>在本研究中，我们提出了 LongSight，这是一种用于在大上下文推理中加速注意力计算的算法 - 硬件协同设计框架。基于 DReX 的基础，LongSight 将其功能扩展到检索增强生成（RAG）之外，重新利用相同的计算使能 CXL 内存扩展器来加速基于 Transformer 的 LLMs 中的注意力机制。因此，LongSight 能够在极长的注意力上下文下实现高性能。</p>
+<p>具体而言，LongSight 使神经处理单元（NPU）能够通过 DReX 中 CXL 提供的加载 &#x2F; 存储接口存储 KV 缓存。LongSight 实现了一种混合密集 - 稀疏注意力算法：神经处理单元（NPU）在其本地高带宽内存（HBM）中保留最近的键值（KV）对滑动窗口，并对该窗口执行密集注意力计算，同时将稀疏注意力计算卸载到 DReX。对于稀疏部分，神经处理单元（NPU）通过 CXL 接口向 DReX 提交包含查询向量的注意力请求。然后，DReX 高效检索与查询向量点积相似度最高的前 k 个键。最后，神经处理单元（NPU）通过对密集键和稀疏键的组合集应用 softmax 函数，完成注意力操作。</p>
+<p>我们的实验表明，配备单个 GPU 和单个 DReX 单元的 LongSight，能够为最先进的 Llama-3 1B 和 8B 模型高效支持高达 100 万个令牌的上下文长度。在当前系统中，只有使用 2 个 H100 GPU 才能支持如此长的上下文长度。在单个 GPU 支持的最大上下文长度下，LongSight 为 Llama-3 模型实现了高达 8.1-9.6 倍的吞吐量提升，以及每用户每秒 3.6-11.9 倍的令牌生成速度提升。</p>
+<p>我们的主要贡献如下：</p>
+<ol>
+<li>我们证实了先前的研究发现，即 Transformer 中的注意力主要受一小部分历史令牌的影响，这些令牌的键向量与当前查询向量表现出高的点积相似度。基于这一见解，我们利用密集检索加速的最新进展，实现了大上下文注意力计算。</li>
+<li>我们提出了一种混合密集 - 稀疏注意力算法，该算法将短期注意力窗口保留在神经处理单元（NPU）的高带宽内存（HBM）中，并将长期注意力实现为键值向量数据库，通过前 k 点积相似度进行访问。</li>
+<li>我们重新利用了最近提出的计算使能 CXL 内存扩展器 DReX（其最初设计用于密集检索），以加速我们的混合注意力机制。</li>
+</ol>
+<h2 id="2-背景"><a href="#2-背景" class="headerlink" title="2 背景"></a>2 背景</h2><h3 id="2-1-基于-Transformer-的大型语言模型（LLM）"><a href="#2-1-基于-Transformer-的大型语言模型（LLM）" class="headerlink" title="2.1 基于 Transformer 的大型语言模型（LLM）"></a>2.1 基于 Transformer 的大型语言模型（LLM）</h3><p><img src="/MICRO-25-LongSight-%20Compute-Enabled%20Memory%20to%20Accelerate%20Large-Context%20LLMs%20via%20Sparse%20Attention/file-20251021133711019.png"><br>图 1 展示了最先进的大型语言模型（LLM）架构。大型语言模型（LLM）推理包括预填充阶段和解码阶段。预填充阶段为用户输入提示构建键值（KV）缓存，而解码阶段则利用键值（KV）缓存以自回归方式生成新令牌。两个阶段共享相同的权重矩阵和模型架构，包括令牌嵌入层和多个解码器层。每个解码器层依次执行查询 - 键 - 值（QKV）生成、多头注意力计算、输出投影和前馈网络操作。查询 - 键 - 值（QKV）生成利用该层的权重矩阵，为每个输入令牌并行创建查询（Q）、键（K）和值（V）张量。之后，查询（Q）、键（K）和值（V）张量被划分为多个头，并传递到多头注意力层。在多头注意力层中，每个头计算每个查询（Q）张量与输入序列中所有先前的键（K）张量的注意力分数。注意力分数经过 softmax 函数处理后，再与相应的值（V）张量相乘。使用多个头使模型能够关注不同位置的不同表示子空间的信息。多头注意力使 Transformer 能够捕获多样化的上下文关系 ；例如，一个头可能用于确定词性，而另一个头可能用于确定情感。得到的向量通过输出投影层进行投影，并通过残差连接与输入嵌入相加，随后进入前馈网络。</p>
+<p>图 1 的左侧和右侧分别展示了预填充阶段和解码阶段的解码器层。无论处于哪个阶段，查询 - 键 - 值（QKV）生成、输出投影和前馈网络都可以通过在多个用户之间共享权重矩阵来从批处理中受益，从而实现矩阵 - 矩阵乘法。相比之下，由于注意力计算利用的是编码每个输入令牌信息的查询（Q）、键（K）和值（V）张量，因此由于用户提示的差异，键值（KV）数据无法在一个批次中重复使用。输入长度因提示而异：在预填充阶段，输入长度对应于完整的用户提示长度，而解码阶段仅接收单个输入令牌。因此，预填充阶段的注意力计算涉及矩阵 - 矩阵乘法，而解码阶段则需要向量 - 矩阵乘法。</p>
+<p>总之，除了解码阶段的注意力计算外，大多数大型语言模型（LLM）操作都是矩阵 - 矩阵乘法，这使得 GPU 能够高效利用计算资源。然而，解码阶段的注意力计算涉及向量 - 矩阵乘法，导致对内存带宽的高需求，并使 GPU 计算资源未得到充分利用。此外，随着输入上下文长度的增加，注意力计算需要更多的键（K）和值（V）张量。先前的研究表明，由于这些原因，解码器阶段的注意力计算可能成为主要的性能瓶颈，显著影响令牌生成吞吐量 。</p>
+<h3 id="2-2-分层-GPU-内存与-CXL"><a href="#2-2-分层-GPU-内存与-CXL" class="headerlink" title="2.2 分层 GPU 内存与 CXL"></a>2.2 分层 GPU 内存与 CXL</h3><p>近年来，以 GPU 为中心的架构和系统的进步推动了分层 GPU 内存的发展，将 GPU 的字节可寻址内存空间从本地高带宽内存（HBM）扩展到包括主机 DDR 内存甚至 NVMe 固态硬盘 。这些以 GPU 为中心的方法<strong>允许 GPU 按需访问内存或存储中的数据，而无需依赖 CPU 来启动或触发此类访问</strong>。</p>
+<p>分层 GPU 内存的最简单实现是将主机内存映射到 GPU 的地址空间，使 GPU 能够通过 GPU 线程执行的加载 &#x2F; 存储指令访问主机内存，或启动直接内存访问（DMA）传输。NVIDIA 最近推出的可扩展加速数据访问（SCADA）API，使 GPU 线程能够跨分层内存层次结构对无限大小的数据集执行多粒度和随机访问 。</p>
+<p>计算快速链路（CXL）是一项行业标准，旨在提供对分布式内存的低延迟、字节级访问，同时支持传统上通过 PCIe 互连连接且无一致性的设备之间的缓存一致性。CXL 已被超大规模数据中心采用 ，并正被用于构建机架级共享内存系统 。在本研究中，我们重点关注 CXL 通过 PCIe 将基于 DDR 的内存（“3 类” 设备）连接到处理器的能力，使其能够通过标准加载 &#x2F; 存储指令直接访问。</p>
+<h2 id="3-大上下文生成的最新技术"><a href="#3-大上下文生成的最新技术" class="headerlink" title="3 大上下文生成的最新技术"></a>3 大上下文生成的最新技术</h2><p>先前的研究表明，随着序列长度的增加，全注意力计算的成本会逐渐主导运行时间。总序列长度包括输入上下文的大小和推理过程中生成的输出令牌数量。这两个维度在现代大型语言模型（LLM）应用中都变得越来越重要。需要更长的输入上下文来提供背景信息，并使大型语言模型（LLM）能够获取新鲜、相关的信息，以进行准确和最新的生成。同时，在需要推理和多步骤规划的任务中，生成更长的输出序列至关重要，特别是在智能体人工智能系统中，如 OpenAI 的 DeepResearch ，该系统利用强化学习，基于先前生成的令牌指导多轮生成和推理。这些系统需要大型语言模型（LLM）能够同时关注大量输入令牌和不断增加的生成输出令牌。</p>
+<p>随着总上下文长度的增加，注意力机制在浮点运算次数（FLOPs）和内存容量方面都成为一个显著的瓶颈。此外，与前馈网络或其他受益于批处理的组件不同，注意力计算的成本无法在多个用户之间分摊。随着批处理大小的增加以提高计算效率，这一限制变得越来越突出。因此，这些挑战推动了非二次部分注意力机制（即稀疏注意力）的发展，以及利用内存内和近内存计算架构加速注意力执行的研究。</p>
+<h3 id="3-1-基于软件的稀疏注意力"><a href="#3-1-基于软件的稀疏注意力" class="headerlink" title="3.1 基于软件的稀疏注意力"></a>3.1 基于软件的稀疏注意力</h3><p>首先，我们讨论基于软件的稀疏注意力方法，这种方法已成为降低注意力计算成本的一种流行手段。Reformer [15] 通过使用局部敏感哈希（LSH）过滤掉不太可能相关的上下文令牌，在软件中实现了稀疏注意力。然后，仅将保留的令牌传递到注意力机制。这种概率过滤降低了后续注意力阶段的计算复杂度。</p>
+<p>然而，Reformer 的基于局部敏感哈希（LSH）的过滤引入了具有线性时间复杂度的每令牌开销。此外，Reformer 执行多轮过滤，每轮过滤都需要额外的存储或重新计算哈希桶。因此，在针对密集点积计算进行高度优化的现代硬件上执行时，稀疏性带来的好处可能会被这些开销所抵消。</p>
+<p>此外，Reformer 假设查询和键是相同的，这使得无法使用键值头数量少于查询头数量的配置 —— 这是一种常用的最新技术，用于减少内存占用并提高注意力计算效率。</p>
+<p>Longformer [2] 采用了不同的稀疏注意力方法，通过结合滑动窗口和有限的全局注意力来实现非精确注意力。滑动窗口机制的一个关键优势是其计算简单性以及与当前硬件的兼容性，能够实现高效执行。</p>
+<p>然而，仅靠滑动窗口注意力本身在捕获长距离依赖关系方面存在固有的局限性。为了解决这个问题，Longformer 通过一组少量的全局注意力令牌来增强局部滑动窗口注意力，这些全局注意力令牌可以广泛地关注整个序列。Longformer 中的稀疏注意力掩码是预定义且静态的，允许模型针对特定任务进行微调，以实现可定制的注意力模式。通过根据每个任务的结构定制掩码，这种方法能够相对于基准模型提高稀疏性。</p>
+<p>尽管有这些优点，Longformer 设计的一个关键局限性是，注意力掩码必须针对每个任务进行手动配置，这被认为是一个显著的可用性和泛化性挑战 [2]。</p>
+<p>深度求索人工智能（DeepSeek AI）[44] 报告称，“块级选择对于在现代 GPU 上实现高效计算至关重要。” 基于这一见解，他们提出了 NSA（可原生训练的稀疏注意力），该方法将块级稀疏性与压缩密集注意力和滑动窗口注意力相结合。虽然块级稀疏性能够在 GPU 硬件上高效实现，但由于其粗粒度，它限制了可实现的整体稀疏性。此外，NSA 需要进行长上下文微调才能有效执行，这带来了额外的计算和财务成本。</p>
+<p>总之，现有的基于软件的稀疏注意力实现难以在不进行重大模型或任务特定修改的情况下，同时实现高稀疏性和低过滤开销。</p>
+<h3 id="3-2-基于硬件的注意力加速"><a href="#3-2-基于硬件的注意力加速" class="headerlink" title="3.2 基于硬件的注意力加速"></a>3.2 基于硬件的注意力加速</h3><p>NeuPIMs [9] 和 AttAcc [29] 探索了混合架构，将传统的神经处理单元（NPUs）（如 GPU）与内存内处理（PIM）硬件相结合，用于大规模大型语言模型（LLM）推理。批处理大型语言模型（LLM）推理工作负载具有显著的异构性；因此，NeuPIMs&#x2F;AttAcc 在神经处理单元（NPU）上执行计算密集型流水线阶段（如预填充和前馈网络），同时将解码阶段的内存密集型注意力计算卸载到内存内处理（PIM）单元。然而，这些研究的一个关键局限性是它们使用全密集注意力，即使在内存内处理（PIM）硬件上执行，这种注意力计算仍然成本高昂。此外，NeuPIMs 依赖于双行缓冲机制，这带来了重大的实现挑战，需要对 DRAM 电路设计进行大量修改。</p>
+<p>CENT [8] 采用了一种系统级、内存中心的方法，将所有 Transformer 操作卸载到近内存和内存内设备。CENT 的一个关键优势是它利用高带宽内存内处理（PIM）单元来加速内存密集型计算。然而，CENT 在内存内为注意力计算实现了 BFloat16 乘加（MAC）单元，这导致了显著的面积和能量开销。此外，CENT 的全系统设计用定制硬件替代了高度优化的 GPU 或神经处理单元（NPUs），以处理计算密集型 Transformer 组件，从而增加了整体系统成本。与 NeuPIMs 一样，CENT 也实现了密集注意力，这使得难以扩展该架构以支持高效的稀疏注意力。</p>
+<p>DynaX [42] 采用了不同的方法，利用查询向量中的稀疏性，并对查询和键采用 4 位或 6 位量化，以降低计算近似注意力分数的成本。然后，这些近似分数被用于构建基于块的稀疏注意力掩码。DynaX 通过定制硬件进一步利用过滤块内的结构化稀疏性。然而，其性能最终受到过滤过程中加载键的成本的限制。即使采用量化，至少需要加载键内存占用的 1&#x2F;4・6&#x2F;16≈9.4% 来评估注意力分数，这对可实现的加速比构成了限制。</p>
+<h2 id="4-LongSight：大上下文注意力的算法-系统协同设计"><a href="#4-LongSight：大上下文注意力的算法-系统协同设计" class="headerlink" title="4 LongSight：大上下文注意力的算法 - 系统协同设计"></a>4 LongSight：大上下文注意力的算法 - 系统协同设计</h2><p>为了克服现有的基于软件和硬件的大上下文注意力方法的局限性，我们提出了 LongSight。LongSight 将基于 Transformer 的大型语言模型（LLM）中的注意力算法与系统和硬件架构进行协同设计，以实现任意长的上下文注意力，同时不影响现有基于 GPU 的机器学习框架的可组合性或可编程性。LongSight 基于以下观察结果引入了一种稀疏注意力算法：Transformer 主要关注先前的令牌，这些令牌对应的键向量与当前查询向量表现出高的点积相似度 [12]。在高层级上，LongSight 将键值（KV）缓存视为一个向量数据库，通过前 k 点积相似度查询进行访问，仅检索语义最相关的键，而不是关注整个键值（KV）缓存历史。</p>
+<p>然而，这个向量数据库在几个关键方面与传统向量数据库有显著差异：</p>
+<ol>
+<li>粒度和规模：它为每个键值头、层和用户维护独立的数据库。例如，在 Llama-3-8B（具有 8 个键值头和 32 个解码器层）中，每个用户对应 256 个独立的数据库。随着用户数量的增加，这个数字呈线性增长。</li>
+<li>访问速率：数据库的访问速率为每秒令牌数（TPS）× 层数（L）× 注意力头数（H）× 批处理用户数（U），其中每秒令牌数（TPS）是令牌生成速率，层数（L）是解码器层数，注意力头数（H）是注意力头的数量，批处理用户数（U）是批处理中的用户数量。对于在优化系统上运行的 Llama-3-8B，即使是中等批处理大小，每秒令牌数（TPS）也可以达到数百个令牌 &#x2F; 秒，这意味着每秒需要执行数十万个向量数据库查询。</li>
+<li>延迟敏感性：由于基于 Transformer 的模型的自回归和顺序特性，这些向量数据库访问位于令牌生成的关键路径上。对于单用户批处理和 32 层，每秒生成 100 个令牌的情况下，每个层的注意力计算延迟预算约为几百微秒。我们将这个延迟预算称为注意力请求的服务水平目标（SLO）。</li>
+<li>动态更新：与通常静态或变化缓慢的传统向量数据库不同，这个向量数据库需要频繁更新。在预填充阶段，整个数据库被初始化。在解码阶段，为每个用户生成的每个令牌添加一个新的键值对，导致高更新速率。</li>
+</ol>
+<p>当前的方法无法满足上述要求。传统向量数据库通常使用穷举最近邻搜索（ENNS）或近似最近邻搜索（ANNS）来检索前 k 个最相似的向量。穷举最近邻搜索（ENNS）速度极慢，违反了注意力请求的服务水平目标（SLO）。实际上，密集注意力相当于对整个键值（KV）缓存执行穷举最近邻搜索（ENNS），使得基于穷举最近邻搜索（ENNS）的 LongSight 操作具有倒退性。</p>
+<p>基于聚类和基于图的近似最近邻搜索（ANNS）虽然速度较快，但在索引构建和维护方面会产生显著开销。每次添加新向量时，都必须更新索引 —— 这个过程既昂贵又耗时。这就是为什么先前的研究只能使用近似最近邻搜索（ANNS）支持固定的长上下文 [12]。</p>
+<p>为了在大上下文规模下实现准确且高性能的稀疏注意力，LongSight 使神经处理单元（NPU）（如 GPU）能够将用户的键值（KV）缓存存储在单独的计算使能内存设备上，并将大部分注意力计算卸载到该计算使能内存设备。LongSight 基于三个关键思想构建：</p>
+<p><strong>思想 1：多阶段内存内和近内存过滤与检索</strong>。第一个思想是摆脱依赖预处理索引的传统近似最近邻搜索（ANNS）方法，转而采用由 DReX [34] 开创的分层过滤机制，该机制通过多个阶段提供穷举最近邻搜索（ENNS）的准确性和近似最近邻搜索（ANNS）的速度：</p>
+<ul>
+<li>阶段 1：内存内过滤。所有量化的键向量都排列在 DRAM 中，以便内存内处理（PIM）单元能够高效访问（图 2b ②’）。内存内处理（PIM）单元快速计算量化查询和键之间的相似度。我们基于键向量维度的全精度数据表示的符号位，对键向量维度进行一位量化（第 5 节）。使用宽松的阈值来过滤掉距离较远的键，同时确保不过滤掉语义相关的键。这极大地简化了存储，并消除了对复杂索引的需求。这使得低开销、动态过滤和高更新速率成为可能。此外，与其他仅支持有限数据类型的内存内处理方法不同，内存内过滤与任何有符号数据类型兼容。</li>
+<li>阶段 2：近内存前 k 检索。通过阶段 1 过滤的向量被转发到近内存加速器，该加速器执行穷举全精度点积相似度搜索，以识别最相关的键和值（图 2b ③, ④）。然后，得到的前 k 个集合被返回给 GPU，用于最终的注意力计算（图 2b ⑤）。</li>
+</ul>
+<p><strong>思想 2：利用 CXL 实现 GPU 的细粒度访问</strong>。DReX 内部的这种多阶段内存内和近内存过滤满足了高带宽、低延迟和高精度的要求。为了支持细粒度访问，DReX 使用 CXL 将其内部内存和内存映射 I&#x2F;O（MMIO）寄存器直接暴露到 GPU 地址空间。现代 GPU API 通过诸如 SCADA [24] 之类的机制支持这一点，允许 GPU 使用标准加载 &#x2F; 存储指令访问远程内存。</p>
+<p><strong>思想 3：混合密集和稀疏注意力</strong>。由于 LongSight 需要在生成过程中频繁更新每个头、每层和每个用户的键值（KV）数据库，我们实现了一种混合密集 - 稀疏注意力策略。GPU 在其高带宽内存（HBM）中保留最近的 W 个键值对的滑动窗口，并对该窗口执行密集注意力计算，同时将稀疏注意力计算卸载到 DReX（图 2b ②, ②’, ③, ④）。一旦 DReX 返回其前 k 个结果，GPU 对密集和稀疏的查询 - 键转置（QKT）组合集应用 softmax 函数（图 2b ⑤, ⑥）。随后，从高带宽内存（HBM）加载最近的值向量，并与从 DReX 检索到的接收到的前 k 个值向量组合。然后，应用混合密集 - 稀疏值向量加权和（SV）注意力（图 2b ⑦）。</p>
+<p>这种混合设计具有两个优点：（1）时间上较近的令牌通常相关性最高，因此对最近令牌执行密集注意力可以提高准确性；（2）该窗口用作批处理键值（KV）更新到 DReX 的暂存缓冲区，将它们从推理时间的关键路径中移除。</p>
+<p>在接下来的章节中，我们将介绍 LongSight 的三个子部分：算法设计（第 5 节）、系统集成（第 6 节）和硬件架构（第 7 节）。</p>
+</article>
+
+  <div class="related-wrap md-text" id="comments">
+    <section class='header cmt-title cap theme'>
+      <p>快来参与讨论吧~</p>
+
+    </section>
+    <section class='body cmt-body giscus'>
+      
+
+<svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg>
+
+<div id="giscus" src="https://giscus.app/client.js" data-repo="Zane-Jiang/hexo_blog_comments_repo" data-repo-id="R_kgDOPOKoVA" data-category="Announcements" data-category-id="DIC_kwDOPOKoVM4CtFQv" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous"></div>
+
+    </section>
+  </div>
+
+
+
+<footer class="page-footer footnote"><hr><div class="text"><div style="text-align:center; font-size:0.8rem; font-weight:bold; margin:2em 0;">
+  本站由 <a href="/">Zane Jiang</a> 使用
+  <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.33.1">Stellar 1.33.1</a>
+  主题创建，一款很棒的 Hexo 主题！
+
+<p>   <span id="busuanzi_container_site_pv">总访问   <span id="busuanzi_value_site_pv">  </span>  次    ||  <span id="busuanzi_container_page_pv">本页访问   <span id="busuanzi_value_page_pv">  </span>  次<br>   <span id="busuanzi_container_site_uv">总访客   <span id="busuanzi_value_site_uv">  </span>  人    ||  <span id="busuanzi_container_page_uv">本页访客   <span id="busuanzi_value_page_uv">  </span>  人<br>   </span> <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></p>
+</div>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%91%98%E8%A6%81"><span class="toc-text">摘要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%BC%95%E8%A8%80"><span class="toc-text">1 引言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E8%83%8C%E6%99%AF"><span class="toc-text">2 背景</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E5%9F%BA%E4%BA%8E-Transformer-%E7%9A%84%E5%A4%A7%E5%9E%8B%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%EF%BC%88LLM%EF%BC%89"><span class="toc-text">2.1 基于 Transformer 的大型语言模型（LLM）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E5%88%86%E5%B1%82-GPU-%E5%86%85%E5%AD%98%E4%B8%8E-CXL"><span class="toc-text">2.2 分层 GPU 内存与 CXL</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%A4%A7%E4%B8%8A%E4%B8%8B%E6%96%87%E7%94%9F%E6%88%90%E7%9A%84%E6%9C%80%E6%96%B0%E6%8A%80%E6%9C%AF"><span class="toc-text">3 大上下文生成的最新技术</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E5%9F%BA%E4%BA%8E%E8%BD%AF%E4%BB%B6%E7%9A%84%E7%A8%80%E7%96%8F%E6%B3%A8%E6%84%8F%E5%8A%9B"><span class="toc-text">3.1 基于软件的稀疏注意力</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E5%9F%BA%E4%BA%8E%E7%A1%AC%E4%BB%B6%E7%9A%84%E6%B3%A8%E6%84%8F%E5%8A%9B%E5%8A%A0%E9%80%9F"><span class="toc-text">3.2 基于硬件的注意力加速</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-LongSight%EF%BC%9A%E5%A4%A7%E4%B8%8A%E4%B8%8B%E6%96%87%E6%B3%A8%E6%84%8F%E5%8A%9B%E7%9A%84%E7%AE%97%E6%B3%95-%E7%B3%BB%E7%BB%9F%E5%8D%8F%E5%90%8C%E8%AE%BE%E8%AE%A1"><span class="toc-text">4 LongSight：大上下文注意力的算法 - 系统协同设计</span></a></li></ol></div><div class="widget-footer"><a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/><path d="M7 3.338A9.95 9.95 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5"/></g></svg><span>回到顶部</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M8 10.5h8M8 14h5.5M17 3.338A9.95 9.95 0 0 0 12 2C6.477 2 2 6.477 2 12c0 1.6.376 3.112 1.043 4.453c.178.356.237.763.134 1.148l-.595 2.226a1.3 1.3 0 0 0 1.591 1.592l2.226-.596a1.63 1.63 0 0 1 1.149.133A9.96 9.96 0 0 0 12 22c5.523 0 10-4.477 10-10c0-1.821-.487-3.53-1.338-5"/></svg><span>参与讨论</span></a></div></widget>
+</div></aside><div class='float-panel'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+
+
+<script type="text/javascript">
+  window.canonical = {"originalHost":"zane-jiang.github.io","officialHosts":["localhost"],"encoded":"emFuZS1qaWFuZy5naXRodWIuaW8="};
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+    tag_plugins: {
+      chat: Object.assign({"api":"https://siteinfo.listentothewind.cn/api/v1"}),
+    }
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"skip_search":null,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/cover/76b86c0226ffd.svg`,
+    loading: `https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd`,
+  };
+  const deps = {
+    jquery: `https://gcore.jsdelivr.net/npm/jquery@3.7/dist/jquery.min.js`,
+    marked: `https://gcore.jsdelivr.net/npm/marked@13.0/lib/marked.umd.min.js`,
+    lazyload: `/%5Bobject%20Object%5D`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  
+  function RunItem() {
+    this.list = []; // 存放回调函数
+    this.start = () => {
+      for (var i = 0; i < this.list.length; i++) {
+        this.list[i].run();
+      }
+    };
+    this.push = (fn, name, setRequestAnimationFrame = true) => {
+      let myfn = fn
+      if (setRequestAnimationFrame) {
+        myfn = () => {
+          utils.requestAnimationFrame(fn)
+        }
+      }
+      var f = new Item(myfn, name);
+      this.list.push(f);
+    };
+    this.remove = (name) => {
+      for (let index = 0; index < this.list.length; index++) {
+        const e = this.list[index];
+        if (e.name == name) {
+          this.list.splice(index, 1);
+        }
+      }
+    }
+    // 构造一个可以run的对象
+    function Item(fn, name) {
+      // 函数名称
+      this.name = name || fn.name;
+      // run方法
+      this.run = () => {
+        try {
+          fn()
+        } catch (error) {
+          console.log(error);
+        }
+      };
+    }
+  }
+
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')) {
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function () {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      const maxRetry = 3;
+      let retryCount = 0;
+
+      return new Promise((resolve, reject) => {
+        const load = () => {
+          utils.onLoading?.(el);
+
+          let timedOut = false;
+          const timeout = setTimeout(() => {
+            timedOut = true;
+            console.warn('[request] 超时:', url);
+
+            if (++retryCount >= maxRetry) {
+              utils.onLoadFailure?.(el);
+              onFailure?.();
+              reject('请求超时');
+            } else {
+              setTimeout(load, 1000);
+            }
+          }, 5000);
+
+          fetch(url).then(resp => {
+            if (timedOut) return;
+            clearTimeout(timeout);
+
+            if (!resp.ok) throw new Error('响应失败');
+            return resp;
+          }).then(data => {
+            if (timedOut) return;
+            utils.onLoadSuccess?.(el);
+            callback(data);
+            resolve(data);
+          }).catch(err => {
+            clearTimeout(timeout);
+            console.warn('[request] 错误:', err);
+
+            if (++retryCount >= maxRetry) {
+              utils.onLoadFailure?.(el);
+              onFailure?.();
+              reject(err);
+            } else {
+              setTimeout(load, 1000);
+            }
+          });
+        };
+
+        load();
+      });
+    },
+    requestWithoutLoading: (url, options = {}, maxRetry = 2, timeout = 5000) => {
+      return new Promise((resolve, reject) => {
+        let retryCount = 0;
+
+        const tryRequest = () => {
+          let timedOut = false;
+          const timer = setTimeout(() => {
+            timedOut = true;
+            if (++retryCount > maxRetry) reject('timeout');
+            else tryRequest();
+          }, timeout);
+
+          fetch(url, options)
+            .then(resp => {
+              clearTimeout(timer);
+              if (!resp.ok) throw new Error('bad response');
+              resolve(resp);
+            })
+            .catch(err => {
+              clearTimeout(timer);
+              if (++retryCount > maxRetry) reject(err);
+              else setTimeout(tryRequest, 500);
+            });
+        };
+
+        tryRequest();
+      });
+    },
+    /********************** requestAnimationFrame ********************************/
+    // 1、requestAnimationFrame 会把每一帧中的所有 DOM 操作集中起来，在一次重绘或回流中就完成，并且重绘或回流的时间间隔紧紧跟随浏览器的刷新频率，一般来说，这个频率为每秒60帧。
+    // 2、在隐藏或不可见的元素中，requestAnimationFrame 将不会进行重绘或回流，这当然就意味着更少的的 cpu，gpu 和内存使用量。
+    requestAnimationFrame: (fn) => {
+      if (!window.requestAnimationFrame) {
+        window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame;
+      }
+      window.requestAnimationFrame(fn)
+    },
+    dark: {},
+  };
+
+  // utils.dark.mode 当前模式 dark or light
+  // utils.dark.toggle() 暗黑模式触发器
+  // utils.dark.push(callBack[,"callBackName"]) 传入触发器回调函数
+  utils.dark.method = {
+    toggle: new RunItem(),
+  };
+  utils.dark = Object.assign(utils.dark, {
+    push: utils.dark.method.toggle.push,
+  });
+</script>
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+<script type="text/javascript">
+  (() => {
+    const tagSwitchers = document.querySelectorAll('.tag-subtree.parent-tag > a > .tag-switcher-wrapper')
+    for (const tagSwitcher of tagSwitchers) {
+      tagSwitcher.addEventListener('click', (e) => {
+        const parent = e.target.closest('.tag-subtree.parent-tag')
+        parent.classList.toggle('expanded')
+        e.preventDefault()
+      })
+    }
+
+    // Get active tag from query string, then activate it.
+    const urlParams = new URLSearchParams(window.location.search)
+    const activeTag = urlParams.get('tag')
+    if (activeTag) {
+      let tag = document.querySelector(`.tag-subtree[data-tag="${activeTag}"]`)
+      if (tag) {
+        tag.querySelector('a').classList.add('active')
+        
+        while (tag) {
+          tag.classList.add('expanded')
+          tag = tag.parentElement.closest('.tag-subtree.parent-tag')
+        }
+      }
+    }
+  })()
+</script>
+
+<script async src="https://gcore.jsdelivr.net/npm/vanilla-lazyload@19.1/dist/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+    callback_loaded: (el) => {
+      el.classList.add('loaded');
+      const wrapper = el.closest('.lazy-box');
+      const icon = wrapper?.querySelector('.lazy-icon');
+      if (icon) icon.remove();
+    }
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+
+  window.wrapLazyloadImages = (container) => {
+    if (typeof container === 'string') {
+      container = document.querySelector(container);
+    }
+    if (!container) return;
+    
+    const images = container.querySelectorAll('img');
+    images.forEach((img) => {
+      if (img.classList.contains('lazy')) return;
+
+      const src = img.getAttribute('src');
+      if (!src) return;
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'lazy-box';
+
+      const newImg = img.cloneNode();
+      newImg.removeAttribute('src');
+      newImg.setAttribute('data-src', src);
+      newImg.classList.add('lazy');
+
+      const icon = document.createElement('div');
+      icon.className = 'lazy-icon';
+      if (def.loading) {
+        icon.style.backgroundImage = `url("${def.loading}")`;
+      }
+
+      wrapper.appendChild(newImg);
+      wrapper.appendChild(icon);
+
+      img.replaceWith(wrapper);
+    });
+
+    // 通知 LazyLoad 更新
+    if (window.lazyLoadInstance?.update) {
+      window.lazyLoadInstance.update();
+    }
+  }
+  
+</script>
+
+<!-- required -->
+<script src="/js/main.js?v=1.33.1" defer></script>
+
+<script type="text/javascript">
+  const applyTheme = (theme) => {
+    if (theme === 'auto') {
+      document.documentElement.removeAttribute('data-theme')
+    } else {
+      document.documentElement.setAttribute('data-theme', theme)
+    }
+
+    // applyThemeToGiscus(theme)
+  }
+
+  // FIXME: 这会导致无法使用 preferred_color_scheme 以外的主题
+  const applyThemeToGiscus = (theme) => {
+    // theme = theme === 'auto' ? 'preferred_color_scheme' : theme
+    const cmt = document.getElementById('giscus')
+    if (cmt) {
+      // This works before giscus load.
+      cmt.setAttribute('data-theme', theme)
+    }
+
+    const iframe = document.querySelector('#comments > section.giscus > iframe')
+    if (iframe) {
+      // This works after giscus loaded.
+      const src = iframe.src
+      const newSrc = src.replace(/theme=[\w]+/, `theme=${theme}`)
+      iframe.src = newSrc
+    }
+  }
+
+  const switchTheme = () => {
+    // light -> dark -> auto -> light -> ...
+    const currentTheme = document.documentElement.getAttribute('data-theme')
+    let newTheme;
+    switch (currentTheme) {
+      case 'light':
+        newTheme = 'dark'
+        break
+      case 'dark':
+        newTheme = 'auto'
+        break
+      default:
+        newTheme = 'light'
+    }
+    applyTheme(newTheme)
+    window.localStorage.setItem('Stellar.theme', newTheme)
+    utils.dark.mode = newTheme === 'auto' ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : newTheme;
+    utils.dark.method.toggle.start();
+
+    const messages = {
+      light: `切换到浅色模式`,
+      dark: `切换到深色模式`,
+      auto: `切换到跟随系统配色`,
+    }
+    hud?.toast?.(messages[newTheme])
+  }
+
+  (() => {
+    // Apply user's preferred theme, if any.
+    const theme = window.localStorage.getItem('Stellar.theme')
+    if (theme !== null) {
+      applyTheme(theme)
+    } else {
+      utils.dark.mode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    utils.dark.method.toggle.start();
+  })()
+</script>
+
+
+<!-- optional -->
+
+  <script type="module">
+  const el = document.querySelector('#comments #giscus');
+  util.viewportLazyload(el, load_discus, false);
+
+  function load_discus() {
+    if (!el) return;
+    try {
+        el.innerHTML = '';
+      } catch (error) {
+        console.error(error);
+      }
+      const script = document.createElement('script');
+      script.async = true;
+      for (const key of Object.keys(el.attributes)) {
+        const attr = el.attributes[key];
+        if (['class', 'id'].includes(attr.name) === false) {
+          script.setAttribute(attr.name, attr.value);
+        }
+      }
+      el.appendChild(script);
+  }
+</script>
+
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"rating":{"js":"/js/services/rating.js","api":"https://star-vote.xaox.cc/api/rating"},"vote":{"js":"/js/services/vote.js","api":"https://star-vote.xaox.cc/api/vote"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"friends_and_posts":{"js":"/js/services/friends_and_posts.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"},"voice":{"js":"/js/plugins/voice.js"},"video":{"js":"/js/plugins/video.js"},"download-file":{"js":"/js/plugins/download-file.js"},"twikoo":{"js":"/js/services/twikoo_latest_comment.js"},"waline":{"js":"/js/services/waline_latest_comment.js"},"artalk":{"js":"/js/services/artalk_latest_comment.js"},"giscus":{"js":"/js/services/giscus_latest_comment.js"},"contributors":{"edit_this_page":{"_posts/":null,"wiki/stellar/":"https://github.com/xaoxuu/hexo-theme-stellar-docs/blob/main/"},"js":"/js/services/contributors.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else if (id == 'voice') {
+        ctx.voiceAudios = document.querySelectorAll('.voice>audio');
+        if (ctx.voiceAudios?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            createVoiceDom(ctx.voiceAudios);
+          });
+        }
+      } else if (id == 'video') {
+        ctx.videos = document.querySelectorAll('.video>video');
+        if (ctx.videos?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            videoEvents(ctx.videos);
+          });
+        }
+      } else if (id == 'download-file') {
+        ctx.files = document.querySelectorAll('.file');
+        if (ctx.files?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            downloadFileEvent(ctx.files);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+
+    // chat iphone time
+    let phoneTimes = document.querySelectorAll('.chat .status-bar .time');
+
+    if (phoneTimes.length > 0) {
+      NowTime();
+      var date = new Date();
+      var sec = date.getSeconds();
+      var firstAdjustInterval = setInterval(firstAdjustTime, 1000 * (60 - sec));
+    }
+
+    function firstAdjustTime() {
+      NowTime();
+      clearInterval(firstAdjustInterval);
+      setInterval(NowTime, 1000 * 60);
+    }
+
+    function NowTime() {
+      for (let i = 0; i < phoneTimes.length; ++i) {
+        var timeSpan = phoneTimes[i];
+        var date = new Date();
+        var hour = date.getHours();
+        var min = date.getMinutes();
+        timeSpan.innerHTML = check(hour) + ":" + check(min);
+      }
+    };
+
+    function check(val) {
+      if (val < 10) {
+        return ("0" + val);
+      }
+      return (val);
+    }
+
+    // chat quote
+    const chat_quote_obverser = new IntersectionObserver((entries, observer) => {
+      entries.filter((entry) => { return entry.isIntersecting }).sort((a, b) => a.intersectionRect.y !== b.intersectionRect.y ? a.intersectionRect.y - b.intersectionRect.y : a.intersectionRect.x - b.intersectionRect.x).forEach((entry, index) => {
+          observer.unobserve(entry.target);
+          setTimeout(() => {
+            entry.target.classList.add('quote-blink');
+            setTimeout(() => {
+              entry.target.classList.remove('quote-blink');
+            }, 1000);
+          }, Math.max(100, 16) * (index + 1));
+        });
+    });
+
+    var chatQuotes = document.querySelectorAll(".chat .talk .quote");
+    chatQuotes.forEach((quote) => {
+      quote.addEventListener('click', function () {
+        var chatCellDom = document.getElementById("quote-" + quote.getAttribute("quotedCellTag"));
+        if (chatCellDom) {
+          var chatDiv = chatCellDom.parentElement;
+          var mid = chatDiv.clientHeight / 2;
+          var offsetTop = chatCellDom.offsetTop;
+          if (offsetTop > mid - chatCellDom.clientHeight / 2) {
+            chatDiv.scrollTo({
+              top: chatCellDom.offsetTop - mid + chatCellDom.clientHeight / 2,
+              behavior: "smooth"
+            });
+          } else {
+            chatDiv.scrollTo({
+              top: 0,
+              behavior: "smooth"
+            });
+          }
+          chat_quote_obverser.observe(chatCellDom);
+        }
+      });
+    });
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://gcore.jsdelivr.net/npm/flying-pages@2/flying-pages.min.js"></script><script>
+  ctx.fancybox = {
+    selector: `.timenode p>img`,
+    css: `https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css`,
+    js: `https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js`
+  };
+  var selector = '[data-fancybox]:not(.error), .with-fancybox .atk-content img:not([atk-emoticon])';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const memos = document.getElementsByClassName('ds-memos');
+    if (memos != undefined && memos.length > 0) {
+      needFancybox = true;
+    }
+    const fancybox = document.getElementsByClassName('with-fancybox');
+    if (fancybox != undefined && fancybox.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || slide.triggerEl.dataset.caption || null
+        }
+      });
+    })
+  }
+</script>
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          rewind: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script>
+
+
+<!-- inject -->
+
+</div></body></html>
