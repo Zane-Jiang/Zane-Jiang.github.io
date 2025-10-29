@@ -269,20 +269,18 @@
   
     <a
       class="post-card post"
-      href="/notebooks/Interview/%E4%BE%AF%E6%8D%B7C++%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E6%9C%BA%E5%88%B6/"
+      href="/notebooks/Interview/ai_hpc_cuda/"
     >
       
 <article class="md-text">
   
-  <h2 class="post-title">侯捷C++内存管理机制</h2>
+  <h2 class="post-title">ai_hpc_cuda</h2>
   <div class="excerpt">
     <p>
       
-        C++内存调用
-
-第一节 C++ primitives
-
-
+        Nvidia&amp;#x2F;GPU&amp;#x2F;CUDA相关：1.描述一下SM的结构，在写kernel的时候共享内存大小和寄存器文件数量需要注意吗？
+SM是NVIDIA GPU的核心计算单元,包含
+CUDA core，最核心的基本计算单元，处理整形和单精度...
       
     </p>
   </div>
@@ -290,12 +288,16 @@
     
     <span class="cap" id="post-meta">
       <svg style="margin-bottom:2px" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M6.94 2c.416 0 .753.324.753.724v1.46c.668-.012 1.417-.012 2.26-.012h4.015c.842 0 1.591 0 2.259.013v-1.46c0-.4.337-.725.753-.725s.753.324.753.724V4.25c1.445.111 2.394.384 3.09 1.055c.698.67.982 1.582 1.097 2.972L22 9H2v-.724c.116-1.39.4-2.302 1.097-2.972c.697-.67 1.645-.944 3.09-1.055V2.724c0-.4.337-.724.753-.724"/><path fill="currentColor" d="M22 14v-2c0-.839-.004-2.335-.017-3H2.01c-.013.665-.01 2.161-.01 3v2c0 3.771 0 5.657 1.172 6.828C4.343 22 6.228 22 10 22h4c3.77 0 5.656 0 6.828-1.172C22 19.658 22 17.772 22 14" opacity=".5"/><path fill="currentColor" d="M18 17a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m-5 4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m-5 4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0"/></svg>
-      <time datetime="2025-08-28T14:40:32.196Z">2025-08-28</time>
+      <time datetime="2025-09-30T07:36:43.247Z">2025-09-30</time>
     </span>
     
       
         <span class="cap breadcrumb" >
-          <span class="tag">cpp</span>
+          <span class="tag">hpc</span>
+        </span>
+      
+        <span class="cap breadcrumb" >
+          <span class="tag">cuda</span>
         </span>
       
     
@@ -322,7 +324,7 @@
 </div></footer>
 <div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
 <div class="widgets">
-<widget class="widget-wrapper recent post-list"><div class="widget-header dis-select"><span class="name">最近更新</span></div><div class="widget-body fs14"><a class="item title" href="/notebooks/Interview/%E9%9D%A2%E7%BB%8F%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%EF%BC%9A%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8E%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E7%AF%87/"><span class="title">面经常见问题：操作系统与体系结构篇</span></a><a class="item title" href="/notebooks/Interview/C++11%E6%96%B0%E7%89%B9%E6%80%A7/"><span class="title">C++11新特性</span></a><a class="item title" href="/notebooks/Interview/%E9%9D%A2%E7%BB%8F%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%EF%BC%9A%E6%89%8B%E6%92%95%E7%AF%87/"><span class="title">面经常见问题：手撕篇</span></a><a class="item title" href="/notebooks/Interview/Qt%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/"><span class="title">Qt技能点整理</span></a><a class="item title" href="/notebooks/Interview/%E9%9D%A2%E7%BB%8F%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%EF%BC%9A%E7%BD%91%E7%BB%9C%E7%AF%87/"><span class="title">面经常见问题：网络篇</span></a><a class="item title" href="/notebooks/Interview/%E9%9D%A2%E7%BB%8F%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%EF%BC%9A%E8%B0%83%E8%AF%95%E4%B8%8E%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98%E7%AF%87/"><span class="title">面经常见问题：调试性能调优篇</span></a><a class="item title" href="/notebooks/Interview/%E5%8A%9B%E6%89%A3%E5%88%B7%E9%A2%98%E7%AC%94%E8%AE%B0(%E4%B9%B1%E5%BA%8F)/"><span class="title">力扣刷题笔记乱序</span></a><a class="item title" href="/notebooks/Interview/C++%E7%AE%97%E6%B3%95%E5%88%B7%E9%A2%98%E5%B8%B8%E7%94%A8API/"><span class="title">C++算法刷题常用API</span></a><a class="item title" href="/notebooks/Interview/CPP%E6%9D%82%E8%AE%B0/"><span class="title">CPP杂记</span></a><a class="item title" href="/notebooks/Interview/ai_hpc_cuda/"><span class="title">ai_hpc_cuda</span></a></div></widget>
+<widget class="widget-wrapper recent post-list"><div class="widget-header dis-select"><span class="name">最近更新</span></div><div class="widget-body fs14"><a class="item title" href="/notebooks/Interview/%E9%9D%A2%E7%BB%8F%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%EF%BC%9A%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8E%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E7%AF%87/"><span class="title">面经常见问题：操作系统与体系结构篇</span></a><a class="item title" href="/notebooks/Interview/C++11%E6%96%B0%E7%89%B9%E6%80%A7/"><span class="title">C++11新特性</span></a><a class="item title" href="/notebooks/Interview/%E9%9D%A2%E7%BB%8F%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%EF%BC%9A%E6%89%8B%E6%92%95%E7%AF%87/"><span class="title">面经常见问题：手撕篇</span></a><a class="item title" href="/notebooks/Interview/Qt%E6%8A%80%E8%83%BD%E7%82%B9%E6%95%B4%E7%90%86/"><span class="title">Qt技能点整理</span></a><a class="item title" href="/notebooks/Interview/%E9%9D%A2%E7%BB%8F%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%EF%BC%9A%E7%BD%91%E7%BB%9C%E7%AF%87/"><span class="title">面经常见问题：网络篇</span></a><a class="item title" href="/notebooks/Interview/%E9%9D%A2%E7%BB%8F%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%EF%BC%9A%E8%B0%83%E8%AF%95%E4%B8%8E%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98%E7%AF%87/"><span class="title">面经常见问题：调试性能调优篇</span></a><a class="item title" href="/notebooks/Interview/%E5%8A%9B%E6%89%A3%E5%88%B7%E9%A2%98%E7%AC%94%E8%AE%B0(%E4%B9%B1%E5%BA%8F)/"><span class="title">力扣刷题笔记乱序</span></a><a class="item title" href="/notebooks/Interview/C++%E7%AE%97%E6%B3%95%E5%88%B7%E9%A2%98%E5%B8%B8%E7%94%A8API/"><span class="title">C++算法刷题常用API</span></a><a class="item title" href="/notebooks/Interview/%E4%BE%AF%E6%8D%B7C++%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E6%9C%BA%E5%88%B6/"><span class="title">侯捷C++内存管理机制</span></a><a class="item title" href="/notebooks/Interview/CPP%E6%9D%82%E8%AE%B0/"><span class="title">CPP杂记</span></a></div></widget>
 </div></aside><div class='float-panel'>
   <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>

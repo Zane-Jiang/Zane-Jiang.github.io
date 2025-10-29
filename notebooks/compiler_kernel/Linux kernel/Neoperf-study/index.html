@@ -29,7 +29,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://zane-jiang.github.io/images/avatar.jpg">
 <meta property="article:published_time" content="2024-11-28T11:55:34.000Z">
-<meta property="article:modified_time" content="2025-07-18T12:01:22.791Z">
+<meta property="article:modified_time" content="2025-09-30T07:36:43.153Z">
 <meta property="article:author" content="Zane Jiang">
 <meta property="article:tag" content="CXL">
 <meta property="article:tag" content="kernel">
@@ -361,7 +361,7 @@
   <a class="cap breadcrumb" href="/notebooks/compiler_kernel/">compiler_kernel</a>
 
 </div>
-<div class="flex-row" id="post-meta"><span class="text created">更新于：<time datetime="2025-07-18T12:01:22.791Z">2025-07-18</time></span><span class="sep updated"></span><span class="text updated">发布于：<time datetime="2024-11-28T11:55:34.000Z">2024-11-28</time></span></div></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">更新于：<time datetime="2025-09-30T07:36:43.153Z">2025-09-30</time></span><span class="sep updated"></span><span class="text updated">发布于：<time datetime="2024-11-28T11:55:34.000Z">2024-11-28</time></span></div></div></div>
     
     <div class="bottom only-title">
       
@@ -420,14 +420,14 @@
 <h2 id="FPGA端侧"><a href="#FPGA端侧" class="headerlink" title="FPGA端侧"></a>FPGA端侧</h2><h3 id="模块结构"><a href="#模块结构" class="headerlink" title="模块结构"></a>模块结构</h3><p>顶层模块：</p>
 <p><code>cxltyp3_memexp_ddr4_top</code>-&gt;<code>ed_top_wrapper_typ3</code></p>
 <h4 id="ddr内存参数调整"><a href="#ddr内存参数调整" class="headerlink" title="ddr内存参数调整"></a>ddr内存参数调整</h4><p>cxl ip考虑了不同ddr的，包括是否支持DBI、内存通道数量等。采用宏的方式区分，设置不同的方式时，需要对ip内通过宏定义来确定相关的内存参数，同时也需要在顶层模块对相关参数进行修改。</p>
-<style>.qbluyxirhyrk{zoom:50%;}</style>
+<style>.mnjtnxxedwlh{zoom:50%;}</style>
 
-<style>.afhbswqndgtc{zoom:50%;}</style>
+<style>.ylhxcolnjqou{zoom:50%;}</style>
 
-<style>.gcccmhmdxspk{zoom:50%;}</style>
+<style>.bbnufufllvlr{zoom:50%;}</style>
 
 <p>或者通过更改ip文件，重新生成新的IP文件夹</p>
-<style>.xqviikzffrmr{zoom:50%;}</style>
+<style>.lloblrbpeart{zoom:50%;}</style>
 
 <h3 id="quartus"><a href="#quartus" class="headerlink" title="quartus"></a>quartus</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set_global_assignment -name OPTIMIZATION_MODE <span class="string">&quot;AGGRESSIVE COMPILE TIME&quot;</span></span><br></pre></td></tr></table></figure>
 
