@@ -1,0 +1,1016 @@
+
+<!DOCTYPE html><html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.33.1" theme-name="Stellar" theme-version="1.33.1">
+  <link rel="canonical" href="https://zane-jiang.github.io/2025/11/05/%E5%BC%82%E6%9E%84%E5%86%85%E5%AD%98%E6%9C%80%E4%BD%B3%E6%94%BE%E7%BD%AE%E7%9A%84%E6%89%8B%E5%8A%A8%E6%8E%A2%E7%B4%A2/">
+  
+  <meta name="generator" content="Hexo 7.3.0">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
+  <meta name="theme-color" content="#f9fafb">
+  <title>异构内存最佳放置的手动探索 - Zane Jiang</title>
+
+  
+    <meta name="description" content="分析不同工作负载在CXL异构内存中的最佳放置方法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="异构内存最佳放置的手动探索">
+<meta property="og:url" content="https://zane-jiang.github.io/2025/11/05/%E5%BC%82%E6%9E%84%E5%86%85%E5%AD%98%E6%9C%80%E4%BD%B3%E6%94%BE%E7%BD%AE%E7%9A%84%E6%89%8B%E5%8A%A8%E6%8E%A2%E7%B4%A2/">
+<meta property="og:site_name" content="Zane Jiang">
+<meta property="og:description" content="分析不同工作负载在CXL异构内存中的最佳放置方法">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zane-jiang.github.io/images/avatar.jpg">
+<meta property="article:published_time" content="2025-11-05T08:24:30.000Z">
+<meta property="article:modified_time" content="2025-11-07T09:13:02.945Z">
+<meta property="article:author" content="Zane Jiang">
+<meta property="article:tag" content="内存性能分析workloads">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zane-jiang.github.io/images/avatar.jpg">
+  
+  
+  
+  <meta name="keywords" content="内存性能分析workloads">
+
+  <!-- feed -->
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.33.1">
+
+
+  
+
+  
+
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Zane Jiang","sameAs":[],"image":"/images/avatar.jpg"},"dateCreated":"2025-11-05T16:24:30+08:00","dateModified":"2025-11-07T17:13:02+08:00","datePublished":"2025-11-05T16:24:30+08:00","description":"","headline":"异构内存最佳放置的手动探索","mainEntityOfPage":{"@type":"WebPage","@id":"https://zane-jiang.github.io/2025/11/05/%E5%BC%82%E6%9E%84%E5%86%85%E5%AD%98%E6%9C%80%E4%BD%B3%E6%94%BE%E7%BD%AE%E7%9A%84%E6%89%8B%E5%8A%A8%E6%8E%A2%E7%B4%A2/"},"publisher":{"@type":"Organization","name":"Zane Jiang","sameAs":[],"image":"/images/avatar.jpg","logo":{"@type":"ImageObject","url":"/images/avatar.jpg"}},"url":"https://zane-jiang.github.io/2025/11/05/%E5%BC%82%E6%9E%84%E5%86%85%E5%AD%98%E6%9C%80%E4%BD%B3%E6%94%BE%E7%BD%AE%E7%9A%84%E6%89%8B%E5%8A%A8%E6%8E%A2%E7%B4%A2/","keywords":"内存性能分析workloads","thumbnailUrl":null,"image":[]}</script>
+  
+</head>
+<body>
+
+<div class="l_body content" id="start" layout="post" type="tech" ><aside class="l_left"><div class="sidebg"></div><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/images/avatar.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main">Zane Jiang</div><div class="sub cap">My notebooks & blog</div></a></div></header>
+
+<div class="nav-area">
+
+<nav class="menu dis-select"><a class="nav-item active" title="Blog" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="notebooks" href="/notebooks/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.25 4.48v3.057c0 .111 0 .27.02.406a.936.936 0 0 0 .445.683a.96.96 0 0 0 .783.072c.13-.04.272-.108.378-.159L17 8.005l1.124.534c.106.05.248.119.378.16a.958.958 0 0 0 .783-.073a.936.936 0 0 0 .444-.683c.021-.136.021-.295.021-.406V3.031c.113-.005.224-.01.332-.013C21.154 2.98 22 3.86 22 4.933v11.21c0 1.112-.906 2.01-2.015 2.08c-.97.06-2.108.179-2.985.41c-1.082.286-1.99 1.068-3.373 1.436c-.626.167-1.324.257-1.627.323V5.174c.32-.079 1.382-.203 1.674-.371c.184-.107.377-.216.576-.323m5.478 8.338a.75.75 0 0 1-.546.91l-4 1a.75.75 0 0 1-.364-1.456l4-1a.75.75 0 0 1 .91.546" clip-rule="evenodd"/><path fill="currentColor" d="M18.25 3.151c-.62.073-1.23.18-1.75.336a8.2 8.2 0 0 0-.75.27v3.182l.75-.356l.008-.005a1.13 1.13 0 0 1 .492-.13c.047 0 .094.004.138.01c.175.029.315.1.354.12l.009.005l.749.356V3.647z"/><path fill="currentColor" d="M12 5.214c-.334-.064-1.057-.161-1.718-.339C8.938 4.515 8.05 3.765 7 3.487c-.887-.234-2.041-.352-3.018-.412C2.886 3.007 2 3.9 2 4.998v11.146c0 1.11.906 2.01 2.015 2.079c.97.06 2.108.179 2.985.41c.486.129 1.216.431 1.873.726c1.005.451 2.052.797 3.127 1.034z" opacity=".5"/><path fill="currentColor" d="M4.273 12.818a.75.75 0 0 1 .91-.545l4 1a.75.75 0 1 1-.365 1.455l-4-1a.75.75 0 0 1-.545-.91m.909-4.545a.75.75 0 1 0-.364 1.455l4 1a.75.75 0 0 0 .364-1.455z"/></svg></a><a class="nav-item" title="Project" href="/project/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none"><path stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M19.647 15.536V8c0-1.886 0-2.828-.586-3.414C18.476 4 17.533 4 15.647 4H12m7.647 11.536l1.744 1.8l.088.092a2 2 0 0 1 .52 1.284l.001.127c0 .15 0 .224-.004.287a2 2 0 0 1-1.87 1.87a5 5 0 0 1-.287.004H4.161c-.15 0-.224 0-.287-.004a2 2 0 0 1-1.87-1.87C2 19.063 2 18.988 2 18.84l.001-.127a2 2 0 0 1 .52-1.284l.088-.092l1.744-1.8m15.294 0h-2.611m-12.683 0V8c0-1.886 0-2.828.586-3.414S6.467 4 8.353 4m-4 11.536H13M9.5 18.5h5"/><path fill="currentColor" d="M12.75 6.75a.75.75 0 1 1-1.5 0a.75.75 0 0 1 1.5 0"/></g></svg></a></nav>
+</div>
+<div class="widgets">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+
+
+<widget class="widget-wrapper recent post-list"><div class="widget-header dis-select"><span class="name">最近更新</span></div><div class="widget-body fs14"><a class="item title" href="/2025/11/05/%E5%BC%82%E6%9E%84%E5%86%85%E5%AD%98%E6%9C%80%E4%BD%B3%E6%94%BE%E7%BD%AE%E7%9A%84%E6%89%8B%E5%8A%A8%E6%8E%A2%E7%B4%A2/"><span class="title">异构内存最佳放置的手动探索</span></a><a class="item title" href="/2025/07/27/%E8%AE%BA%E6%96%87%E4%B8%AD%E5%B8%B8%E8%A7%81%E5%86%85%E5%AD%98%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90workloads/"><span class="title">论文中常见内存性能分析workloads</span></a><a class="item title" href="/2025/07/29/%E5%87%A0%E7%A7%8D%E7%A8%8B%E5%BA%8F%E6%8E%A5%E5%8F%A3%E9%87%8D%E5%AE%9A%E5%90%91%E3%80%81%E6%8F%92%E6%A1%A9%E6%96%B9%E5%BC%8F%E6%AF%94%E8%BE%83/"><span class="title">几种程序接口重定向、插桩方式比较</span></a><a class="item title" href="/2025/07/18/Qt%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E4%B8%8E%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"><span class="title">Qt源码阅读与设计模式</span></a><a class="item title" href="/2025/08/01/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90/"><span class="title">GGML源码浅析(1) 基础数据结构、内存管理、后端管理</span></a><a class="item title" href="/2025/09/06/CUDA%20%E7%AE%97%E5%AD%90%E4%BC%98%E5%8C%96%E7%B3%BB%E5%88%97/CUDA%E7%AE%97%E5%AD%90%E4%BC%98%E5%8C%96-SoftMax/"><span class="title">CUDA算子优化-SoftMax</span></a><a class="item title" href="/2025/09/06/CUDA%20%E7%AE%97%E5%AD%90%E4%BC%98%E5%8C%96%E7%B3%BB%E5%88%97/CUDA%E7%AE%97%E5%AD%90%E4%BC%98%E5%8C%96-Reduce/"><span class="title">CUDA算子优化-Reduce</span></a><a class="item title" href="/2025/09/06/CUDA%20%E7%AE%97%E5%AD%90%E4%BC%98%E5%8C%96%E7%B3%BB%E5%88%97/CUDA%E7%AE%97%E5%AD%90%E4%BC%98%E5%8C%96-GEMM/"><span class="title">CUDA算子优化-GEMM</span></a></div></widget>
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/Zane-Jiang" target="_blank" rel="external nofollow noopener noreferrer"><img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/08a41b181ce68.svg"/></a></div></footer>
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/CXL/">CXL</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2025-11-05T08:24:30.000Z">2025-11-05</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2025-11-07T09:13:02.945Z">2025-11-07</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>异构内存最佳放置的手动探索</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><h1 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h1><h2 id="测量方法"><a href="#测量方法" class="headerlink" title="测量方法"></a>测量方法</h2><p>CXL内存分配采用hmsdk中的hmalloc库，其中包含一组c语言的malloc接口，为了快速验证，对于C++，没有单独开接口，直接基于hmalloc进行二次封装，定义了新的new接口，对于int等平凡类型的数组，跳过构造，尽量使得初始化构造的时间接近原平台。</p>
+<h2 id="实验平台"><a href="#实验平台" class="headerlink" title="实验平台"></a>实验平台</h2><p>CPU Intel(R) Xeon(R) Silver 4410Y 2</p>
+<p>内核： 6.17.0<br>numa node0为计算节点</p>
+<p>numa node2为CXL真实设备</p>
+<p>node1使用numabind的方式禁用，由于CXL内存节点较小，实际情况下应用内存足迹很难恰好node0 的本地内存装不完然后装到CXL内存，CXL内存也装不完的情况下可能超一点到node1，这里可能引入难以避免的部分误差。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line">jz@x13-0 ~ % /home/cxl_public/mlc/Linux/mlc                             [130</span><br><span class="line">Intel(R) Memory Latency Checker - v3.11a</span><br><span class="line">*** Unable to modify prefetchers (try executing <span class="string">&#x27;modprobe msr&#x27;</span>)</span><br><span class="line">*** So, enabling random access <span class="keyword">for</span> latency measurements</span><br><span class="line">Measuring idle latencies <span class="keyword">for</span> random access (<span class="keyword">in</span> ns)...</span><br><span class="line">		Numa node</span><br><span class="line">Numa node	     0	     1	     2	</span><br><span class="line">       0	 118.7	 181.9	 459.3	</span><br><span class="line"></span><br><span class="line">Measuring Peak Injection Memory Bandwidths <span class="keyword">for</span> the system</span><br><span class="line">Bandwidths are <span class="keyword">in</span> MB/sec (1 MB/sec = 1,000,000 Bytes/sec)</span><br><span class="line">Using all the threads from each core <span class="keyword">if</span> Hyper-threading is enabled</span><br><span class="line">Using traffic with the following read-write ratios</span><br><span class="line">ALL Reads        :	57803.8	</span><br><span class="line">3:1 Reads-Writes :	53330.0	</span><br><span class="line">2:1 Reads-Writes :	53100.0	</span><br><span class="line">1:1 Reads-Writes :	51779.3	</span><br><span class="line">Stream-triad like:	53621.7	</span><br><span class="line"></span><br><span class="line">Measuring Memory Bandwidths between nodes within system </span><br><span class="line">Bandwidths are <span class="keyword">in</span> MB/sec (1 MB/sec = 1,000,000 Bytes/sec)</span><br><span class="line">Using all the threads from each core <span class="keyword">if</span> Hyper-threading is enabled</span><br><span class="line">Using Read-only traffic <span class="built_in">type</span></span><br><span class="line">		Numa node</span><br><span class="line">Numa node	     0	     1	     2	</span><br><span class="line">       0	57766.5	56530.5	19603.1	</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Measuring Loaded Latencies <span class="keyword">for</span> the system</span><br><span class="line">Using all the threads from each core <span class="keyword">if</span> Hyper-threading is enabled</span><br><span class="line">Using Read-only traffic <span class="built_in">type</span></span><br><span class="line">Inject	Latency	Bandwidth</span><br><span class="line">Delay	(ns)	MB/sec</span><br><span class="line">==========================</span><br><span class="line"> 00000	416.74	  57863.2</span><br><span class="line"> 00002	410.21	  57858.9</span><br><span class="line"> 00008	404.11	  57826.6</span><br><span class="line"> 00015	380.24	  58019.6</span><br><span class="line"> 00050	300.75	  58132.6</span><br><span class="line"> 00100	176.43	  52034.6</span><br><span class="line"> 00200	129.71	  23403.0</span><br><span class="line"> 00300	126.26	  16850.7</span><br><span class="line"> 00400	124.65	  13166.0</span><br><span class="line"> 00500	123.84	  10842.2</span><br><span class="line"> 00700	122.84	   8075.5</span><br><span class="line"> 01000	121.99	   5909.4</span><br><span class="line"> 01300	121.52	   4709.1</span><br><span class="line"> 01700	121.16	   3753.8</span><br><span class="line"> 02500	120.91	   2740.7</span><br><span class="line"> 03500	120.67	   2117.5</span><br><span class="line"> 05000	120.42	   1647.7</span><br><span class="line"> 09000	120.17	   1153.3</span><br><span class="line"> 20000	120.03	    810.6</span><br><span class="line"></span><br><span class="line">Measuring cache-to-cache transfer latency (<span class="keyword">in</span> ns)...</span><br><span class="line">Local Socket L2-&gt;L2 HIT  latency	83.8</span><br><span class="line">Local Socket L2-&gt;L2 HITM latency	85.1```</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 二、不同工作负载放置</span></span><br><span class="line"><span class="comment">## 1.图</span></span><br><span class="line"><span class="comment">### 1.1 GAP Benchmark Suite (GAPBS)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#### 图的表示</span></span><br><span class="line">GAPBS中采用的是压缩稀疏行CSR格式来表示图中的结构；</span><br><span class="line">首先介绍**CSR**表示方法：</span><br><span class="line">针对邻接矩阵或者临接表在稀疏举证下占用空间较大的问题，采用压缩存储邻接表的方法。用三个数组表示一个图，详细见[链接](https://blog.csdn.net/m0_64204369/article/details/123035598)</span><br><span class="line">![](file-20251105163757443.png)</span><br><span class="line"></span><br><span class="line">在GAPBS中定义在src/graph.h</span><br><span class="line">```C++</span><br><span class="line">class CSRGraph&#123;</span><br><span class="line"> //...</span><br><span class="line">private:</span><br><span class="line">bool directed_;//是否有向图</span><br><span class="line">int64_t num_nodes_;</span><br><span class="line">int64_t num_edges_;//顶点数与（有向）边数</span><br><span class="line">DestID_** out_index_;//每个顶点的邻居起始指针 数组（指向扁平邻居数组）。</span><br><span class="line">DestID_* out_neighbors_;//扁平的邻居列表数组</span><br><span class="line">DestID_** in_index_;</span><br><span class="line">DestID_* in_neighbors_;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>举例：<br>对于矩阵，如果其邻接表表示如下：</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">0: 1,2</span></span><br><span class="line"><span class="section">1: 2</span></span><br><span class="line"><span class="section">2: (无出边)</span></span><br></pre></td></tr></table></figure>
+<p>则得到的表示</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">out_neighbors_: [<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>,<span class="number">-1</span>]</span><br><span class="line">index0 -&gt; out_neighbors_[<span class="number">0</span>]</span><br><span class="line">index1 -&gt; out_neighbors_[<span class="number">2</span>]</span><br><span class="line">index2 -&gt; out_neighbors_[<span class="number">3</span>]<span class="comment">//或者null</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="介数中心性-bc"><a href="#介数中心性-bc" class="headerlink" title="介数中心性 bc"></a>介数中心性 bc</h4><p><strong>介数</strong> 通常分为边介数和节点介数两种，其中</p>
+<ol>
+<li><strong>节点介数</strong>定义为网络中所有最短路径中经过该节点的路径的数目占最短路径数的比例。</li>
+<li><strong>边介数</strong>定义为网络中所有最短路径中经过该边的路径的数目占最短路径数的比例。<br>介数中心性 衡量一个节点在图中“信息流通”的重要性</li>
+</ol>
+<p>GAPBS 的 <code>bc</code> 实现使用的是 <strong>Brandes 算法</strong>（2001），时间复杂度为：</p>
+<ul>
+<li>O(V⋅(V+E))O(V \cdot (V + E))O(V⋅(V+E)) 对于一般图；</li>
+<li>对稀疏图性能较好。</li>
+<li>对每个源节点进行一次最短路径搜索，gapbs采用的是BFS，搜索过程中记录最短路径数，距离，前驱节点列表；回溯阶段从距离最大的节点开始反向遍历，计算每个节点的依赖值，反向推出bc</li>
+</ul>
+<p><strong>采用BFS的时候，out_neighbors_的方寸是具有局部顺序性和空间性的，同时在边比较多的情况下内存占用也比较大</strong>。</p>
+<h4 id="非bound测试"><a href="#非bound测试" class="headerlink" title="非bound测试"></a>非bound测试</h4><p>容量带宽均不bound场景；</p>
+<p>命令执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> HMALLOC_JEMALLOC=1</span><br><span class="line"><span class="built_in">export</span> HMALLOC_NODEMASK=4</span><br><span class="line"><span class="built_in">export</span> HMALLOC_MPOL_MODE=2</span><br><span class="line">numactl --cpunodebind=0 ./bc -f /home/jz/PCXL/benchmark/gapbs/benchmark/benchmark/graphs/urand.sg -i4 -n1</span><br></pre></td></tr></table></figure>
+<p>内存足迹：<br>20975848kbytes 约20GB</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>首次放置  全本地放置</th>
+<th>将neighbor放置在CXL上</th>
+<th>将 index 放置到CXL上</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Read Time:</td>
+<td>13.82815</td>
+<td>15.54345</td>
+<td>15.64945</td>
+</tr>
+<tr>
+<td>Average Time:</td>
+<td>124.49265</td>
+<td>152.72438</td>
+<td>157.79459</td>
+</tr>
+<tr>
+<td>CXL内存占用</td>
+<td>-</td>
+<td>15309MB</td>
+<td>1026MB</td>
+</tr>
+</tbody></table>
+<p>如果容量不bound、带宽bound的场景下，卸载一些数组访存会增加访存时延，负收益。</p>
+<h4 id="容量bound测试"><a href="#容量bound测试" class="headerlink" title="容量bound测试"></a>容量bound测试</h4><p>采用offline的方式隐藏了部分memory block，但是其物理带宽并没有影响。<br>实际运行时内存容量分布如下：<br><img src="/2025/08/01/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90/%E6%89%8B%E5%8A%A8%E6%8E%A2%E7%B4%A2/file-20251107111718207.png"></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>首次放置</th>
+<th>将neighbor放置在CXL上</th>
+<th>将 index 放置到CXL上</th>
+<th>全外置</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Read Time:</td>
+<td>21.50928</td>
+<td>21.48422</td>
+<td>21.38488</td>
+<td>21.32839</td>
+</tr>
+<tr>
+<td>Average Time:</td>
+<td>350.74094</td>
+<td>345.20542</td>
+<td>347.24548</td>
+<td>348.29016</td>
+</tr>
+<tr>
+<td>说明：中间数据结构：如path、queue还是保留在本地DDR内存当中</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h4 id="带宽bound测试"><a href="#带宽bound测试" class="headerlink" title="带宽bound测试"></a>带宽bound测试</h4><p>带宽监控与限制采用的是intel的<a target="_blank" rel="noopener" href="https://www.intel.com/content/www/us/en/architecture-and-technology/resource-director-technology.html">RDT</a><br>这里发现RDT对CXL numa节点的支持并不是很好，无法对其进行带宽监控。<br>&#x2F;&#x2F;todo </p>
+<h3 id="高性能计算LULESH"><a href="#高性能计算LULESH" class="headerlink" title="高性能计算LULESH"></a>高性能计算LULESH</h3><h4 id="内存足迹设置"><a href="#内存足迹设置" class="headerlink" title="内存足迹设置"></a>内存足迹设置</h4><p>LULESH的内存足迹根据输入的网格大小有所不同，可以通过<code>-S</code>控制 网格大小为620时，即10^620 时，内存足迹大约有190GB；设置为470 恰好90GB左右<br>由于很难设置最合适的内存足迹，恰好等于本地的DDR容量（64GB）+CXL容量（32GB）（最主要CXL容量不是很大），这里设置的网格数量就是470.</p>
+<h4 id="首次放置"><a href="#首次放置" class="headerlink" title="首次放置"></a>首次放置</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">Running problem size 470^3 per domain <span class="keyword">until</span> completion</span><br><span class="line">Num processors: 1</span><br><span class="line">Num threads: 64</span><br><span class="line">Total number of elements: 103823000 </span><br><span class="line"></span><br><span class="line">To run other sizes, use -s &lt;<span class="built_in">integer</span>&gt;.</span><br><span class="line">To run a fixed number of iterations, use -i &lt;<span class="built_in">integer</span>&gt;.</span><br><span class="line">To run a more or less balanced region <span class="built_in">set</span>, use -b &lt;<span class="built_in">integer</span>&gt;.</span><br><span class="line">To change the relative costs of regions, use -c &lt;<span class="built_in">integer</span>&gt;.</span><br><span class="line">To <span class="built_in">print</span> out progress, use -p</span><br><span class="line">To write an output file <span class="keyword">for</span> VisIt, use -v</span><br><span class="line">See <span class="built_in">help</span> (-h) <span class="keyword">for</span> more options</span><br><span class="line"></span><br><span class="line">Run completed:</span><br><span class="line">   Problem size        =  470</span><br><span class="line">   MPI tasks           =  1</span><br><span class="line">   Iteration count     =  5</span><br><span class="line">   Final Origin Energy =  3.393887e+10</span><br><span class="line">   Testing Plane 0 of Energy Array on rank 0:</span><br><span class="line">        MaxAbsDiff   = 1.490116e-08</span><br><span class="line">        TotalAbsDiff = 1.503710e-08</span><br><span class="line">        MaxRelDiff   = 1.240226e-13</span><br><span class="line"></span><br><span class="line">Elapsed <span class="keyword">time</span>         =    2.6e+02 (s)</span><br><span class="line">Grind <span class="keyword">time</span> (us/z/c)  = 0.49859992 (per dom)  (  258.8307 overall)</span><br><span class="line">FOM                  =   2005.616 (z/s)</span><br><span class="line"></span><br><span class="line">        Command being timed: <span class="string">&quot;numactl --cpunodebind=0 ./build/lulesh2.0 -i 5 -s 470&quot;</span></span><br><span class="line">        User <span class="keyword">time</span> (seconds): 2326.51</span><br><span class="line">        System <span class="keyword">time</span> (seconds): 387.85</span><br><span class="line">        Percent of CPU this job got: 797%</span><br><span class="line">        Elapsed (wall clock) <span class="keyword">time</span> (h:mm:ss or m:ss): 5:40.50</span><br><span class="line">        Average shared text size (kbytes): 0</span><br><span class="line">        Average unshared data size (kbytes): 0</span><br><span class="line">        Average stack size (kbytes): 0</span><br><span class="line">        Average total size (kbytes): 0</span><br><span class="line">        Maximum resident <span class="built_in">set</span> size (kbytes): 93396564</span><br><span class="line">        Average resident <span class="built_in">set</span> size (kbytes): 0</span><br><span class="line">        Major (requiring I/O) page faults: 44</span><br><span class="line">        Minor (reclaiming a frame) page faults: 138341227</span><br><span class="line">        Voluntary context switches: 328316</span><br><span class="line">        Involuntary context switches: 557995</span><br><span class="line">        Swaps: 0</span><br><span class="line">        File system inputs: 43440</span><br><span class="line">        File system outputs: 0</span><br><span class="line">        Socket messages sent: 0</span><br><span class="line">        Socket messages received: 0</span><br><span class="line">        Signals delivered: 0</span><br><span class="line">        Page size (bytes): 4096</span><br><span class="line">        Exit status: 0</span><br></pre></td></tr></table></figure>
+<p>观察到分配时采用的首次放置，先等numa node0放满以后在来放置numa node2<br><img src="/2025/08/01/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90/%E6%89%8B%E5%8A%A8%E6%8E%A2%E7%B4%A2/file-20251106212045947.png"></p>
+<h4 id="手动放置对变量"><a href="#手动放置对变量" class="headerlink" title="手动放置对变量"></a>手动放置对变量</h4><p>LULESH中按照生命周期长短分成两种：<br>第一组：<br><img src="/2025/08/01/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90/%E6%89%8B%E5%8A%A8%E6%8E%A2%E7%B4%A2/file-20251106212540713.png"></p>
+<p>第二组：<br><img src="/2025/08/01/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90/%E6%89%8B%E5%8A%A8%E6%8E%A2%E7%B4%A2/file-20251106212631890.png"><br>这些变量在每次迭代中都会分配、然后释放，生命周期都比较短，大小也不是很大。这种短生命周期直接放置到本地内存。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line">Running problem size 470^3 per domain <span class="keyword">until</span> completion</span><br><span class="line">Num processors: 1</span><br><span class="line">Num threads: 64</span><br><span class="line">Total number of elements: 103823000 </span><br><span class="line"></span><br><span class="line">To run other sizes, use -s &lt;<span class="built_in">integer</span>&gt;.</span><br><span class="line">To run a fixed number of iterations, use -i &lt;<span class="built_in">integer</span>&gt;.</span><br><span class="line">To run a more or less balanced region <span class="built_in">set</span>, use -b &lt;<span class="built_in">integer</span>&gt;.</span><br><span class="line">To change the relative costs of regions, use -c &lt;<span class="built_in">integer</span>&gt;.</span><br><span class="line">To <span class="built_in">print</span> out progress, use -p</span><br><span class="line">To write an output file <span class="keyword">for</span> VisIt, use -v</span><br><span class="line">See <span class="built_in">help</span> (-h) <span class="keyword">for</span> more options</span><br><span class="line"></span><br><span class="line">Allocating array of 103823000 elements of <span class="built_in">type</span> i</span><br><span class="line">Allocating array of 11 elements of <span class="built_in">type</span> i</span><br><span class="line">Allocating array of 11 elements of <span class="built_in">type</span> Pi</span><br><span class="line">Allocating array of 1808251 elements of <span class="built_in">type</span> i</span><br><span class="line">Allocating array of 3453623 elements of <span class="built_in">type</span> i</span><br><span class="line">Allocating array of 5121215 elements of <span class="built_in">type</span> i</span><br><span class="line">Allocating array of 6818313 elements of <span class="built_in">type</span> i</span><br><span class="line">Allocating array of 8151769 elements of <span class="built_in">type</span> i</span><br><span class="line">Allocating array of 9670156 elements of <span class="built_in">type</span> i</span><br><span class="line">Allocating array of 11179201 elements of <span class="built_in">type</span> i</span><br><span class="line">Allocating array of 12390644 elements of <span class="built_in">type</span> i</span><br><span class="line">Allocating array of 13846092 elements of <span class="built_in">type</span> i</span><br><span class="line">Allocating array of 15058857 elements of <span class="built_in">type</span> i</span><br><span class="line">Allocating array of 16324879 elements of <span class="built_in">type</span> i</span><br><span class="line">Run completed:</span><br><span class="line">   Problem size        =  470</span><br><span class="line">   MPI tasks           =  1</span><br><span class="line">   Iteration count     =  5</span><br><span class="line">   Final Origin Energy =  3.393887e+10</span><br><span class="line">   Testing Plane 0 of Energy Array on rank 0:</span><br><span class="line">        MaxAbsDiff   = 1.490116e-08</span><br><span class="line">        TotalAbsDiff = 1.503710e-08</span><br><span class="line">        MaxRelDiff   = 1.240226e-13</span><br><span class="line"></span><br><span class="line">Elapsed <span class="keyword">time</span>         =    2.5e+02 (s)</span><br><span class="line">Grind <span class="keyword">time</span> (us/z/c)  = 0.48033574 (per dom)  ( 249.34949 overall)</span><br><span class="line">FOM                  =  2081.8771 (z/s)</span><br><span class="line"></span><br><span class="line">        Command being timed: <span class="string">&quot;numactl --cpunodebind=0 ./build/lulesh2.0 -i 5 -s 470&quot;</span></span><br><span class="line">        User <span class="keyword">time</span> (seconds): 2201.61</span><br><span class="line">        System <span class="keyword">time</span> (seconds): 386.98</span><br><span class="line">        Percent of CPU this job got: 767%</span><br><span class="line">        Elapsed (wall clock) <span class="keyword">time</span> (h:mm:ss or m:ss): 5:37.12</span><br><span class="line">        Average shared text size (kbytes): 0</span><br><span class="line">        Average unshared data size (kbytes): 0</span><br><span class="line">        Average stack size (kbytes): 0</span><br><span class="line">        Average total size (kbytes): 0</span><br><span class="line">        Maximum resident <span class="built_in">set</span> size (kbytes): 93398132</span><br><span class="line">        Average resident <span class="built_in">set</span> size (kbytes): 0</span><br><span class="line">        Major (requiring I/O) page faults: 45</span><br><span class="line">        Minor (reclaiming a frame) page faults: 138341509</span><br><span class="line">        Voluntary context switches: 328210</span><br><span class="line">        Involuntary context switches: 603633</span><br><span class="line">        Swaps: 0</span><br><span class="line">        File system inputs: 56384</span><br><span class="line">        File system outputs: 136</span><br><span class="line">        Socket messages sent: 0</span><br><span class="line">        Socket messages received: 0</span><br><span class="line">        Signals delivered: 0</span><br><span class="line">        Page size (bytes): 4096</span><br><span class="line">        Exit status: 1</span><br></pre></td></tr></table></figure>
+
+<p>内存分配<br><img src="/2025/08/01/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90/%E6%89%8B%E5%8A%A8%E6%8E%A2%E7%B4%A2/file-20251106224832839.png"></p>
+<h4 id="同时手动放置std-vector中的元素"><a href="#同时手动放置std-vector中的元素" class="headerlink" title="同时手动放置std::vector中的元素"></a>同时手动放置std::vector中的元素</h4><p>类的单独分配问题</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Domain</span> &#123;</span><br><span class="line">	<span class="comment">//...</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line"><span class="comment">//这些变量是手动new出来的</span></span><br><span class="line">Index_t *m_regElemSize ; <span class="comment">// Size of region sets</span></span><br><span class="line">Index_t *m_regNumList ; <span class="comment">// Region number per domain element</span></span><br><span class="line">Index_t **m_regElemlist ; <span class="comment">// region indexset</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//这些变量是跟随类放置的</span></span><br><span class="line">std::vector&lt;Index_t&gt; m_lxim ; <span class="comment">/* element connectivity across each face */</span></span><br><span class="line">std::vector&lt;Index_t&gt; m_lxip ;</span><br><span class="line">std::vector&lt;Index_t&gt; m_letam ;</span><br><span class="line">std::vector&lt;Index_t&gt; m_letap ;</span><br><span class="line">std::vector&lt;Index_t&gt; m_lzetam ;</span><br><span class="line">std::vector&lt;Index_t&gt; m_lzetap ;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Domain * domain = <span class="keyword">new</span> Domain（）；</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/08/01/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90/%E6%89%8B%E5%8A%A8%E6%8E%A2%E7%B4%A2/file-20251107102203288.png"><br><strong>结果</strong>：<br><strong>组1：</strong><br>此时系统平稳后 CXL常驻内存为17%<br><img src="/2025/08/01/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90/%E6%89%8B%E5%8A%A8%E6%8E%A2%E7%B4%A2/file-20251107103152435.png"></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">unning problem size 470^3 per domain <span class="keyword">until</span> completion</span><br><span class="line">Num processors: 1</span><br><span class="line">Num threads: 64</span><br><span class="line">Total number of elements: 103823000 </span><br><span class="line"></span><br><span class="line">To run other sizes, use -s &lt;<span class="built_in">integer</span>&gt;.</span><br><span class="line">To run a fixed number of iterations, use -i &lt;<span class="built_in">integer</span>&gt;.</span><br><span class="line">To run a more or less balanced region <span class="built_in">set</span>, use -b &lt;<span class="built_in">integer</span>&gt;.</span><br><span class="line">To change the relative costs of regions, use -c &lt;<span class="built_in">integer</span>&gt;.</span><br><span class="line">To <span class="built_in">print</span> out progress, use -p</span><br><span class="line">To write an output file <span class="keyword">for</span> VisIt, use -v</span><br><span class="line">See <span class="built_in">help</span> (-h) <span class="keyword">for</span> more options</span><br><span class="line"></span><br><span class="line">Run completed:</span><br><span class="line">   Problem size        =  470</span><br><span class="line">   MPI tasks           =  1</span><br><span class="line">   Iteration count     =  5</span><br><span class="line">   Final Origin Energy =  3.393887e+10</span><br><span class="line">   Testing Plane 0 of Energy Array on rank 0:</span><br><span class="line">        MaxAbsDiff   = 1.490116e-08</span><br><span class="line">        TotalAbsDiff = 1.503710e-08</span><br><span class="line">        MaxRelDiff   = 1.240226e-13</span><br><span class="line"></span><br><span class="line">Elapsed <span class="keyword">time</span>         =    2.5e+02 (s)</span><br><span class="line">Grind <span class="keyword">time</span> (us/z/c)  = 0.48947892 (per dom)  ( 254.09585 overall)</span><br><span class="line">FOM                  =  2042.9889 (z/s)</span><br><span class="line"></span><br><span class="line">        Command being timed: <span class="string">&quot;numactl --cpunodebind=0 ./build/lulesh2.0 -i 5 -s 470&quot;</span></span><br><span class="line">        User <span class="keyword">time</span> (seconds): 2297.95</span><br><span class="line">        System <span class="keyword">time</span> (seconds): 369.77</span><br><span class="line">        Percent of CPU this job got: 760%</span><br><span class="line">        Elapsed (wall clock) <span class="keyword">time</span> (h:mm:ss or m:ss): 5:50.68</span><br><span class="line">        Average shared text size (kbytes): 0</span><br><span class="line">        Average unshared data size (kbytes): 0</span><br><span class="line">        Average stack size (kbytes): 0</span><br><span class="line">        Average total size (kbytes): 0</span><br><span class="line">        Maximum resident <span class="built_in">set</span> size (kbytes): 93398088</span><br><span class="line">        Average resident <span class="built_in">set</span> size (kbytes): 0</span><br><span class="line">        Major (requiring I/O) page faults: 42</span><br><span class="line">        Minor (reclaiming a frame) page faults: 138341483</span><br><span class="line">        Voluntary context switches: 328321</span><br><span class="line">        Involuntary context switches: 542896</span><br><span class="line">        Swaps: 0</span><br><span class="line">        File system inputs: 52304</span><br><span class="line">        File system outputs: 0</span><br><span class="line">        Socket messages sent: 0</span><br><span class="line">        Socket messages received: 0</span><br><span class="line">        Signals delivered: 0</span><br><span class="line">        Page size (bytes): 4096</span><br><span class="line">        Exit status: 0</span><br></pre></td></tr></table></figure>
+
+<p><strong>组2</strong><br>系统平稳后CXL常驻内存29%<br><img src="/2025/08/01/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90/%E6%89%8B%E5%8A%A8%E6%8E%A2%E7%B4%A2/file-20251107103255540.png"></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">~/PCXL/benchmark/LULESH</span><br><span class="line">Running problem size 470^3 per domain <span class="keyword">until</span> completion</span><br><span class="line">Num processors: 1</span><br><span class="line">Num threads: 64</span><br><span class="line">Total number of elements: 103823000 </span><br><span class="line"></span><br><span class="line">To run other sizes, use -s &lt;<span class="built_in">integer</span>&gt;.</span><br><span class="line">To run a fixed number of iterations, use -i &lt;<span class="built_in">integer</span>&gt;.</span><br><span class="line">To run a more or less balanced region <span class="built_in">set</span>, use -b &lt;<span class="built_in">integer</span>&gt;.</span><br><span class="line">To change the relative costs of regions, use -c &lt;<span class="built_in">integer</span>&gt;.</span><br><span class="line">To <span class="built_in">print</span> out progress, use -p</span><br><span class="line">To write an output file <span class="keyword">for</span> VisIt, use -v</span><br><span class="line">See <span class="built_in">help</span> (-h) <span class="keyword">for</span> more options</span><br><span class="line"></span><br><span class="line">Run completed:</span><br><span class="line">   Problem size        =  470</span><br><span class="line">   MPI tasks           =  1</span><br><span class="line">   Iteration count     =  5</span><br><span class="line">   Final Origin Energy =  3.393887e+10</span><br><span class="line">   Testing Plane 0 of Energy Array on rank 0:</span><br><span class="line">        MaxAbsDiff   = 1.490116e-08</span><br><span class="line">        TotalAbsDiff = 1.503710e-08</span><br><span class="line">        MaxRelDiff   = 1.240226e-13</span><br><span class="line"></span><br><span class="line">Elapsed <span class="keyword">time</span>         =    2.5e+02 (s)</span><br><span class="line">Grind <span class="keyword">time</span> (us/z/c)  = 0.48454247 (per dom)  ( 251.53327 overall)</span><br><span class="line">FOM                  =  2063.8026 (z/s)</span><br><span class="line"></span><br><span class="line">        Command being timed: <span class="string">&quot;numactl --cpunodebind=0 ./build/lulesh2.0 -i 5 -s 470&quot;</span></span><br><span class="line">        User <span class="keyword">time</span> (seconds): 2309.95</span><br><span class="line">        System <span class="keyword">time</span> (seconds): 353.41</span><br><span class="line">        Percent of CPU this job got: 733%</span><br><span class="line">        Elapsed (wall clock) <span class="keyword">time</span> (h:mm:ss or m:ss): 6:03.20</span><br><span class="line">        Average shared text size (kbytes): 0</span><br><span class="line">        Average unshared data size (kbytes): 0</span><br><span class="line">        Average stack size (kbytes): 0</span><br><span class="line">        Average total size (kbytes): 0</span><br><span class="line">        Maximum resident <span class="built_in">set</span> size (kbytes): 93398268</span><br><span class="line">        Average resident <span class="built_in">set</span> size (kbytes): 0</span><br><span class="line">        Major (requiring I/O) page faults: 44</span><br><span class="line">        Minor (reclaiming a frame) page faults: 138341555</span><br><span class="line">        Voluntary context switches: 328286</span><br><span class="line">        Involuntary context switches: 544170</span><br><span class="line">        Swaps: 0</span><br><span class="line">        File system inputs: 55048</span><br><span class="line">        File system outputs: 0</span><br><span class="line">        Socket messages sent: 0</span><br><span class="line">        Socket messages received: 0</span><br><span class="line">        Signals delivered: 0</span><br><span class="line">        Page size (bytes): 4096</span><br><span class="line">        Exit status: 0</span><br></pre></td></tr></table></figure>
+
+<h4 id="结果对比"><a href="#结果对比" class="headerlink" title="结果对比"></a>结果对比</h4><table>
+<thead>
+<tr>
+<th></th>
+<th>首次放置</th>
+<th>new数组放CXL</th>
+<th>vector放CXL(1)</th>
+<th>vector放CXL(2)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>FOM（每秒处理的区域,越大越好）</td>
+<td>2005.616</td>
+<td>2081.8771</td>
+<td>2042.9889</td>
+<td>2063.8026</td>
+</tr>
+</tbody></table>
+<p>收益：估计全部都是由于恰好冷数据分配到CXL以后导致热数据访问延迟减少。<br>并不是带宽受益。</p>
+<p>参考论文<a target="_blank" rel="noopener" href="https://dl.acm.org/doi/10.1145/3676151.3719378">Better Memory Tiering, Right from the First Placement</a>中的方法得到的结果，执行时间几乎翻倍：<br><img src="/2025/08/01/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90/%E6%89%8B%E5%8A%A8%E6%8E%A2%E7%B4%A2/file-20251106225534515.png"></p>
+<p> 某一时刻的瞬时带宽：<br><img src="/2025/08/01/GGML%E6%BA%90%E7%A0%81%E6%B5%85%E6%9E%90/%E6%89%8B%E5%8A%A8%E6%8E%A2%E7%B4%A2/file-20251107145640121.png"></p>
+<h3 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h3><h4 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h4><p>图应用和高性能计算，在容量不足的场景下，手动优化获得的收益很少，这部分收益是由访问频率更高的变量被放置到了本地DDR，所以总延迟更低。</p>
+<p>这两个程序都很难完全跑满本地的带宽，所以很难测量CXL带宽拓展带来的收益，目前这一部分还没有进行测试，下一步拔内存条测试一下带宽受益。</p>
+<h4 id="下一步"><a href="#下一步" class="headerlink" title="下一步"></a>下一步</h4><p>基于变量的放置到底能不能充分利用带宽进行提速？粒度比页面交错大。 拔内存条测试。</p>
+</article>
+<div class="article-footer">
+
+
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://zane-jiang.github.io/2025/11/05/%E5%BC%82%E6%9E%84%E5%86%85%E5%AD%98%E6%9C%80%E4%BD%B3%E6%94%BE%E7%BD%AE%E7%9A%84%E6%89%8B%E5%8A%A8%E6%8E%A2%E7%B4%A2/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://zane-jiang.github.io/2025/11/05/%E5%BC%82%E6%9E%84%E5%86%85%E5%AD%98%E6%9C%80%E4%BD%B3%E6%94%BE%E7%BD%AE%E7%9A%84%E6%89%8B%E5%8A%A8%E6%8E%A2%E7%B4%A2/&title=异构内存最佳放置的手动探索 - Zane Jiang&summary=分析不同工作负载在CXL异构内存中的最佳放置方法"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=异构内存最佳放置的手动探索 - Zane Jiang&amp;body=https://zane-jiang.github.io/2025/11/05/%E5%BC%82%E6%9E%84%E5%86%85%E5%AD%98%E6%9C%80%E4%BD%B3%E6%94%BE%E7%BD%AE%E7%9A%84%E6%89%8B%E5%8A%A8%E6%8E%A2%E7%B4%A2/"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://zane-jiang.github.io/2025/11/05/%E5%BC%82%E6%9E%84%E5%86%85%E5%AD%98%E6%9C%80%E4%BD%B3%E6%94%BE%E7%BD%AE%E7%9A%84%E6%89%8B%E5%8A%A8%E6%8E%A2%E7%B4%A2/"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2025/09/06/CUDA%20%E7%AE%97%E5%AD%90%E4%BC%98%E5%8C%96%E7%B3%BB%E5%88%97/CUDA%E7%AE%97%E5%AD%90%E4%BC%98%E5%8C%96-GEMM/">CUDA算子优化-GEMM</a></div></section></div>
+
+
+
+
+  <div class="related-wrap md-text" id="comments">
+    <section class='header cmt-title cap theme'>
+      <p>快来参与讨论吧~</p>
+
+    </section>
+    <section class='body cmt-body giscus'>
+      
+
+<svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg>
+
+<div id="giscus" src="https://giscus.app/client.js" data-repo="Zane-Jiang/hexo_blog_comments_repo" data-repo-id="R_kgDOPOKoVA" data-category="Announcements" data-category-id="DIC_kwDOPOKoVM4CtFQv" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous"></div>
+
+    </section>
+  </div>
+
+
+
+<footer class="page-footer footnote"><hr><div class="text"><div style="text-align:center; font-size:0.8rem; font-weight:bold; margin:2em 0;">
+  本站由 <a href="/">Zane Jiang</a> 使用
+  <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.33.1">Stellar 1.33.1</a>
+  主题创建，一款很棒的 Hexo 主题！
+
+<p>   <span id="busuanzi_container_site_pv">总访问   <span id="busuanzi_value_site_pv">  </span>  次    ||  <span id="busuanzi_container_page_pv">本页访问   <span id="busuanzi_value_page_pv">  </span>  次<br>   <span id="busuanzi_container_site_uv">总访客   <span id="busuanzi_value_site_uv">  </span>  人    ||  <span id="busuanzi_container_page_uv">本页访客   <span id="busuanzi_value_page_uv">  </span>  人<br>   </span> <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></p>
+</div>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%89%8D%E8%A8%80"><span class="toc-text">一、前言</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8B%E9%87%8F%E6%96%B9%E6%B3%95"><span class="toc-text">测量方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E5%B9%B3%E5%8F%B0"><span class="toc-text">实验平台</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%8B%E6%95%B0%E4%B8%AD%E5%BF%83%E6%80%A7-bc"><span class="toc-text">介数中心性 bc</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9D%9Ebound%E6%B5%8B%E8%AF%95"><span class="toc-text">非bound测试</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%B9%E9%87%8Fbound%E6%B5%8B%E8%AF%95"><span class="toc-text">容量bound测试</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B8%A6%E5%AE%BDbound%E6%B5%8B%E8%AF%95"><span class="toc-text">带宽bound测试</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%AB%98%E6%80%A7%E8%83%BD%E8%AE%A1%E7%AE%97LULESH"><span class="toc-text">高性能计算LULESH</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E8%B6%B3%E8%BF%B9%E8%AE%BE%E7%BD%AE"><span class="toc-text">内存足迹设置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A6%96%E6%AC%A1%E6%94%BE%E7%BD%AE"><span class="toc-text">首次放置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%89%8B%E5%8A%A8%E6%94%BE%E7%BD%AE%E5%AF%B9%E5%8F%98%E9%87%8F"><span class="toc-text">手动放置对变量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%8C%E6%97%B6%E6%89%8B%E5%8A%A8%E6%94%BE%E7%BD%AEstd-vector%E4%B8%AD%E7%9A%84%E5%85%83%E7%B4%A0"><span class="toc-text">同时手动放置std::vector中的元素</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%93%E6%9E%9C%E5%AF%B9%E6%AF%94"><span class="toc-text">结果对比</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%93%E8%AE%BA"><span class="toc-text">结论</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="toc-text">实验结果</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%8B%E4%B8%80%E6%AD%A5"><span class="toc-text">下一步</span></a></li></ol></li></ol></li></ol></li></ol></div><div class="widget-footer"><a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/><path d="M7 3.338A9.95 9.95 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5"/></g></svg><span>回到顶部</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M8 10.5h8M8 14h5.5M17 3.338A9.95 9.95 0 0 0 12 2C6.477 2 2 6.477 2 12c0 1.6.376 3.112 1.043 4.453c.178.356.237.763.134 1.148l-.595 2.226a1.3 1.3 0 0 0 1.591 1.592l2.226-.596a1.63 1.63 0 0 1 1.149.133A9.96 9.96 0 0 0 12 22c5.523 0 10-4.477 10-10c0-1.821-.487-3.53-1.338-5"/></svg><span>参与讨论</span></a></div></widget>
+</div></aside><div class='float-panel'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+
+
+<script type="text/javascript">
+  window.canonical = {"originalHost":"zane-jiang.github.io","officialHosts":["localhost"],"encoded":"emFuZS1qaWFuZy5naXRodWIuaW8="};
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+    tag_plugins: {
+      chat: Object.assign({"api":"https://siteinfo.listentothewind.cn/api/v1"}),
+    }
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"skip_search":null,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/cover/76b86c0226ffd.svg`,
+    loading: `https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd`,
+  };
+  const deps = {
+    jquery: `https://gcore.jsdelivr.net/npm/jquery@3.7/dist/jquery.min.js`,
+    marked: `https://gcore.jsdelivr.net/npm/marked@13.0/lib/marked.umd.min.js`,
+    lazyload: `/%5Bobject%20Object%5D`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  
+  function RunItem() {
+    this.list = []; // 存放回调函数
+    this.start = () => {
+      for (var i = 0; i < this.list.length; i++) {
+        this.list[i].run();
+      }
+    };
+    this.push = (fn, name, setRequestAnimationFrame = true) => {
+      let myfn = fn
+      if (setRequestAnimationFrame) {
+        myfn = () => {
+          utils.requestAnimationFrame(fn)
+        }
+      }
+      var f = new Item(myfn, name);
+      this.list.push(f);
+    };
+    this.remove = (name) => {
+      for (let index = 0; index < this.list.length; index++) {
+        const e = this.list[index];
+        if (e.name == name) {
+          this.list.splice(index, 1);
+        }
+      }
+    }
+    // 构造一个可以run的对象
+    function Item(fn, name) {
+      // 函数名称
+      this.name = name || fn.name;
+      // run方法
+      this.run = () => {
+        try {
+          fn()
+        } catch (error) {
+          console.log(error);
+        }
+      };
+    }
+  }
+
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')) {
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function () {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      const maxRetry = 3;
+      let retryCount = 0;
+
+      return new Promise((resolve, reject) => {
+        const load = () => {
+          utils.onLoading?.(el);
+
+          let timedOut = false;
+          const timeout = setTimeout(() => {
+            timedOut = true;
+            console.warn('[request] 超时:', url);
+
+            if (++retryCount >= maxRetry) {
+              utils.onLoadFailure?.(el);
+              onFailure?.();
+              reject('请求超时');
+            } else {
+              setTimeout(load, 1000);
+            }
+          }, 5000);
+
+          fetch(url).then(resp => {
+            if (timedOut) return;
+            clearTimeout(timeout);
+
+            if (!resp.ok) throw new Error('响应失败');
+            return resp;
+          }).then(data => {
+            if (timedOut) return;
+            utils.onLoadSuccess?.(el);
+            callback(data);
+            resolve(data);
+          }).catch(err => {
+            clearTimeout(timeout);
+            console.warn('[request] 错误:', err);
+
+            if (++retryCount >= maxRetry) {
+              utils.onLoadFailure?.(el);
+              onFailure?.();
+              reject(err);
+            } else {
+              setTimeout(load, 1000);
+            }
+          });
+        };
+
+        load();
+      });
+    },
+    requestWithoutLoading: (url, options = {}, maxRetry = 2, timeout = 5000) => {
+      return new Promise((resolve, reject) => {
+        let retryCount = 0;
+
+        const tryRequest = () => {
+          let timedOut = false;
+          const timer = setTimeout(() => {
+            timedOut = true;
+            if (++retryCount > maxRetry) reject('timeout');
+            else tryRequest();
+          }, timeout);
+
+          fetch(url, options)
+            .then(resp => {
+              clearTimeout(timer);
+              if (!resp.ok) throw new Error('bad response');
+              resolve(resp);
+            })
+            .catch(err => {
+              clearTimeout(timer);
+              if (++retryCount > maxRetry) reject(err);
+              else setTimeout(tryRequest, 500);
+            });
+        };
+
+        tryRequest();
+      });
+    },
+    /********************** requestAnimationFrame ********************************/
+    // 1、requestAnimationFrame 会把每一帧中的所有 DOM 操作集中起来，在一次重绘或回流中就完成，并且重绘或回流的时间间隔紧紧跟随浏览器的刷新频率，一般来说，这个频率为每秒60帧。
+    // 2、在隐藏或不可见的元素中，requestAnimationFrame 将不会进行重绘或回流，这当然就意味着更少的的 cpu，gpu 和内存使用量。
+    requestAnimationFrame: (fn) => {
+      if (!window.requestAnimationFrame) {
+        window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame;
+      }
+      window.requestAnimationFrame(fn)
+    },
+    dark: {},
+  };
+
+  // utils.dark.mode 当前模式 dark or light
+  // utils.dark.toggle() 暗黑模式触发器
+  // utils.dark.push(callBack[,"callBackName"]) 传入触发器回调函数
+  utils.dark.method = {
+    toggle: new RunItem(),
+  };
+  utils.dark = Object.assign(utils.dark, {
+    push: utils.dark.method.toggle.push,
+  });
+</script>
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+<script type="text/javascript">
+  (() => {
+    const tagSwitchers = document.querySelectorAll('.tag-subtree.parent-tag > a > .tag-switcher-wrapper')
+    for (const tagSwitcher of tagSwitchers) {
+      tagSwitcher.addEventListener('click', (e) => {
+        const parent = e.target.closest('.tag-subtree.parent-tag')
+        parent.classList.toggle('expanded')
+        e.preventDefault()
+      })
+    }
+
+    // Get active tag from query string, then activate it.
+    const urlParams = new URLSearchParams(window.location.search)
+    const activeTag = urlParams.get('tag')
+    if (activeTag) {
+      let tag = document.querySelector(`.tag-subtree[data-tag="${activeTag}"]`)
+      if (tag) {
+        tag.querySelector('a').classList.add('active')
+        
+        while (tag) {
+          tag.classList.add('expanded')
+          tag = tag.parentElement.closest('.tag-subtree.parent-tag')
+        }
+      }
+    }
+  })()
+</script>
+
+<script async src="https://gcore.jsdelivr.net/npm/vanilla-lazyload@19.1/dist/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+    callback_loaded: (el) => {
+      el.classList.add('loaded');
+      const wrapper = el.closest('.lazy-box');
+      const icon = wrapper?.querySelector('.lazy-icon');
+      if (icon) icon.remove();
+    }
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+
+  window.wrapLazyloadImages = (container) => {
+    if (typeof container === 'string') {
+      container = document.querySelector(container);
+    }
+    if (!container) return;
+    
+    const images = container.querySelectorAll('img');
+    images.forEach((img) => {
+      if (img.classList.contains('lazy')) return;
+
+      const src = img.getAttribute('src');
+      if (!src) return;
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'lazy-box';
+
+      const newImg = img.cloneNode();
+      newImg.removeAttribute('src');
+      newImg.setAttribute('data-src', src);
+      newImg.classList.add('lazy');
+
+      const icon = document.createElement('div');
+      icon.className = 'lazy-icon';
+      if (def.loading) {
+        icon.style.backgroundImage = `url("${def.loading}")`;
+      }
+
+      wrapper.appendChild(newImg);
+      wrapper.appendChild(icon);
+
+      img.replaceWith(wrapper);
+    });
+
+    // 通知 LazyLoad 更新
+    if (window.lazyLoadInstance?.update) {
+      window.lazyLoadInstance.update();
+    }
+  }
+  
+</script>
+
+<!-- required -->
+<script src="/js/main.js?v=1.33.1" defer></script>
+
+<script type="text/javascript">
+  const applyTheme = (theme) => {
+    if (theme === 'auto') {
+      document.documentElement.removeAttribute('data-theme')
+    } else {
+      document.documentElement.setAttribute('data-theme', theme)
+    }
+
+    // applyThemeToGiscus(theme)
+  }
+
+  // FIXME: 这会导致无法使用 preferred_color_scheme 以外的主题
+  const applyThemeToGiscus = (theme) => {
+    // theme = theme === 'auto' ? 'preferred_color_scheme' : theme
+    const cmt = document.getElementById('giscus')
+    if (cmt) {
+      // This works before giscus load.
+      cmt.setAttribute('data-theme', theme)
+    }
+
+    const iframe = document.querySelector('#comments > section.giscus > iframe')
+    if (iframe) {
+      // This works after giscus loaded.
+      const src = iframe.src
+      const newSrc = src.replace(/theme=[\w]+/, `theme=${theme}`)
+      iframe.src = newSrc
+    }
+  }
+
+  const switchTheme = () => {
+    // light -> dark -> auto -> light -> ...
+    const currentTheme = document.documentElement.getAttribute('data-theme')
+    let newTheme;
+    switch (currentTheme) {
+      case 'light':
+        newTheme = 'dark'
+        break
+      case 'dark':
+        newTheme = 'auto'
+        break
+      default:
+        newTheme = 'light'
+    }
+    applyTheme(newTheme)
+    window.localStorage.setItem('Stellar.theme', newTheme)
+    utils.dark.mode = newTheme === 'auto' ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : newTheme;
+    utils.dark.method.toggle.start();
+
+    const messages = {
+      light: `切换到浅色模式`,
+      dark: `切换到深色模式`,
+      auto: `切换到跟随系统配色`,
+    }
+    hud?.toast?.(messages[newTheme])
+  }
+
+  (() => {
+    // Apply user's preferred theme, if any.
+    const theme = window.localStorage.getItem('Stellar.theme')
+    if (theme !== null) {
+      applyTheme(theme)
+    } else {
+      utils.dark.mode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    utils.dark.method.toggle.start();
+  })()
+</script>
+
+
+<!-- optional -->
+
+  <script type="module">
+  const el = document.querySelector('#comments #giscus');
+  util.viewportLazyload(el, load_discus, false);
+
+  function load_discus() {
+    if (!el) return;
+    try {
+        el.innerHTML = '';
+      } catch (error) {
+        console.error(error);
+      }
+      const script = document.createElement('script');
+      script.async = true;
+      for (const key of Object.keys(el.attributes)) {
+        const attr = el.attributes[key];
+        if (['class', 'id'].includes(attr.name) === false) {
+          script.setAttribute(attr.name, attr.value);
+        }
+      }
+      el.appendChild(script);
+  }
+</script>
+
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"rating":{"js":"/js/services/rating.js","api":"https://star-vote.xaox.cc/api/rating"},"vote":{"js":"/js/services/vote.js","api":"https://star-vote.xaox.cc/api/vote"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"friends_and_posts":{"js":"/js/services/friends_and_posts.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"},"voice":{"js":"/js/plugins/voice.js"},"video":{"js":"/js/plugins/video.js"},"download-file":{"js":"/js/plugins/download-file.js"},"twikoo":{"js":"/js/services/twikoo_latest_comment.js"},"waline":{"js":"/js/services/waline_latest_comment.js"},"artalk":{"js":"/js/services/artalk_latest_comment.js"},"giscus":{"js":"/js/services/giscus_latest_comment.js"},"contributors":{"edit_this_page":{"_posts/":null,"wiki/stellar/":"https://github.com/xaoxuu/hexo-theme-stellar-docs/blob/main/"},"js":"/js/services/contributors.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else if (id == 'voice') {
+        ctx.voiceAudios = document.querySelectorAll('.voice>audio');
+        if (ctx.voiceAudios?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            createVoiceDom(ctx.voiceAudios);
+          });
+        }
+      } else if (id == 'video') {
+        ctx.videos = document.querySelectorAll('.video>video');
+        if (ctx.videos?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            videoEvents(ctx.videos);
+          });
+        }
+      } else if (id == 'download-file') {
+        ctx.files = document.querySelectorAll('.file');
+        if (ctx.files?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            downloadFileEvent(ctx.files);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+
+    // chat iphone time
+    let phoneTimes = document.querySelectorAll('.chat .status-bar .time');
+
+    if (phoneTimes.length > 0) {
+      NowTime();
+      var date = new Date();
+      var sec = date.getSeconds();
+      var firstAdjustInterval = setInterval(firstAdjustTime, 1000 * (60 - sec));
+    }
+
+    function firstAdjustTime() {
+      NowTime();
+      clearInterval(firstAdjustInterval);
+      setInterval(NowTime, 1000 * 60);
+    }
+
+    function NowTime() {
+      for (let i = 0; i < phoneTimes.length; ++i) {
+        var timeSpan = phoneTimes[i];
+        var date = new Date();
+        var hour = date.getHours();
+        var min = date.getMinutes();
+        timeSpan.innerHTML = check(hour) + ":" + check(min);
+      }
+    };
+
+    function check(val) {
+      if (val < 10) {
+        return ("0" + val);
+      }
+      return (val);
+    }
+
+    // chat quote
+    const chat_quote_obverser = new IntersectionObserver((entries, observer) => {
+      entries.filter((entry) => { return entry.isIntersecting }).sort((a, b) => a.intersectionRect.y !== b.intersectionRect.y ? a.intersectionRect.y - b.intersectionRect.y : a.intersectionRect.x - b.intersectionRect.x).forEach((entry, index) => {
+          observer.unobserve(entry.target);
+          setTimeout(() => {
+            entry.target.classList.add('quote-blink');
+            setTimeout(() => {
+              entry.target.classList.remove('quote-blink');
+            }, 1000);
+          }, Math.max(100, 16) * (index + 1));
+        });
+    });
+
+    var chatQuotes = document.querySelectorAll(".chat .talk .quote");
+    chatQuotes.forEach((quote) => {
+      quote.addEventListener('click', function () {
+        var chatCellDom = document.getElementById("quote-" + quote.getAttribute("quotedCellTag"));
+        if (chatCellDom) {
+          var chatDiv = chatCellDom.parentElement;
+          var mid = chatDiv.clientHeight / 2;
+          var offsetTop = chatCellDom.offsetTop;
+          if (offsetTop > mid - chatCellDom.clientHeight / 2) {
+            chatDiv.scrollTo({
+              top: chatCellDom.offsetTop - mid + chatCellDom.clientHeight / 2,
+              behavior: "smooth"
+            });
+          } else {
+            chatDiv.scrollTo({
+              top: 0,
+              behavior: "smooth"
+            });
+          }
+          chat_quote_obverser.observe(chatCellDom);
+        }
+      });
+    });
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://gcore.jsdelivr.net/npm/flying-pages@2/flying-pages.min.js"></script><script>
+  ctx.fancybox = {
+    selector: `.timenode p>img`,
+    css: `https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css`,
+    js: `https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js`
+  };
+  var selector = '[data-fancybox]:not(.error), .with-fancybox .atk-content img:not([atk-emoticon])';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const memos = document.getElementsByClassName('ds-memos');
+    if (memos != undefined && memos.length > 0) {
+      needFancybox = true;
+    }
+    const fancybox = document.getElementsByClassName('with-fancybox');
+    if (fancybox != undefined && fancybox.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || slide.triggerEl.dataset.caption || null
+        }
+      });
+    })
+  }
+</script>
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          rewind: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script>
+
+
+<!-- inject -->
+
+</div></body></html>
